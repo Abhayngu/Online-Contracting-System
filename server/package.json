@@ -1,0 +1,19 @@
+{
+  "name": "online_contracting_system",
+  "version": "1.0.0",
+  "description": "Blockchain based contracting system where a party will post a project in which multiple interested parties will bid after the project has been validated. The tech stack used is MERN with solidity.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Abhay Kumar Dwivedi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.3",
+    "nodemon": "^2.0.21"
+  }
+}
