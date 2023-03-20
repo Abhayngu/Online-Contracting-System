@@ -52,8 +52,8 @@ exports.login = async (req, res, next) => {
 
 exports.updateParty = async (req,res,next) => {
   const { name, description} = req.body;
-  // const email = req.session.email;
-  const email = "abhay@gmail.com";
+  const email = req.session.email;
+
   console.log(email);
   console.log(req.isAuthenticated());
 
@@ -80,7 +80,7 @@ exports.updateParty = async (req,res,next) => {
 
 exports.deleteParty = async (req,res,next) => {
 
-  const email = "abhay@gmail.com";
+  const email = req.session.email;
 
   try {
     const deletedUser = await Party.findOneAndDelete(email);
