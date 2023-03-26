@@ -51,6 +51,44 @@ function Home() {
 		topProjectBox: {
 			background: '#fff',
 		},
+		boldCenteredHeading: {
+			textAlign: 'center',
+			fontWeight: 'bold',
+			fontSize: '24px',
+			marginBottom: '50px',
+		},
+		signUpDesc: {
+			width: '80%',
+			margin: '0 auto 20px auto',
+		},
+		signUpContainer: {
+			padding: '0 50px 0 50px',
+			display: 'flex',
+			justifyContent: 'space-between',
+			marginTop: '50px',
+		},
+		signUpLeftContainer: {
+			maxWidth: '50%',
+			display: 'flex',
+			flexDirection: 'column',
+			justifyContent: 'center',
+			alignItems: 'center',
+		},
+		signUpLeft: {
+			width: '50%',
+			marginBottom: '50px',
+		},
+		signUpLeftHeading: {
+			fontSize: '18px',
+			textAlign: 'center',
+			fontWeight: 'bold',
+			marginBottom: '8px',
+		},
+		signUpLeftDesc: {},
+		signUpRightContainer: {
+			display: 'flex',
+			flexDirection: 'column',
+		},
 	};
 
 	const issuerWorkingSteps = [
@@ -139,7 +177,7 @@ function Home() {
 					);
 				})}
 			</div>
-			<div style={customStyle.issuerStepsHeading}>
+			<div style={customStyle.boldCenteredHeading}>
 				Some of the top bidding projects
 			</div>
 			<div style={customStyle.topProjectsContainer}>
@@ -152,6 +190,45 @@ function Home() {
 						/>
 					);
 				})}
+			</div>
+			<div style={customStyle.boldCenteredHeading}>
+				What do you get on Sign up?
+			</div>
+			<div style={customStyle.signUpDesc}>
+				This Platform helps you to let your project done by some of the
+				top contractors as well as to bid for projects with no hassle
+				and 100% transparency!
+			</div>
+			<div style={customStyle.signUpContainer}>
+				<div style={customStyle.signUpLeftContainer}>
+					<div style={customStyle.signUpLeft}>
+						<div style={customStyle.signUpLeftHeading}>
+							Web Dashboard
+						</div>
+						<div style={customStyle.signUpLeftDesc}>
+							Manage all your projects and bidding at one place
+						</div>
+					</div>
+					<div style={customStyle.signUpLeft}>
+						<div style={customStyle.signUpLeftHeading}>
+							API integration
+						</div>
+						<div style={customStyle.signUpLeftDesc}>
+							Integration with third party APIs to manage all your
+							projects
+						</div>
+					</div>
+					<div style={customStyle.signUpLeft}>
+						<div style={customStyle.signUpLeftHeading}>
+							Blockchain integration
+						</div>
+						<div style={customStyle.signUpLeftDesc}>
+							Integration with Blockchain to give full
+							transparency and consistency in the bidding process
+						</div>
+					</div>
+				</div>
+				<div style={customStyle.signUpRightContainer}></div>
 			</div>
 		</React.Fragment>
 	);
