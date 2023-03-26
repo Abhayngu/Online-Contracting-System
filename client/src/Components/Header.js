@@ -10,7 +10,7 @@ function Header() {
 		header: {
 			display: 'flex',
 			justifyContent: 'space-between',
-			marginBottom: '52px',
+			// marginBottom: '52px',
 			width: '100%',
 			alignItems: 'center',
 			height: '60px',
