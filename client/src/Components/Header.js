@@ -16,6 +16,7 @@ function Header() {
 			height: '60px',
 		},
 		logo: {
+			'&:hover': { display: 'none' },
 			fontWeight: 'normal',
 			fontSize: '24px',
 			paddingLeft: '20px',
