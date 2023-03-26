@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import homepageimg from './homepage.jpg';
 import StepBox from '../Components/StepBox';
+import TopProject from '../Components/TopProject';
 import { greenColor, blueColor } from '../globalVars';
 function Home() {
 	const customStyle = {
@@ -38,6 +39,17 @@ function Home() {
 			display: 'flex',
 			justifyContent: 'space-evenly',
 			marginBottom: '100px',
+		},
+		topProjectsContainer: {
+			height: '300px',
+			display: 'flex',
+			justifyContent: 'space-evenly',
+			alignItems: 'center',
+			background: '#46B6A6',
+			marginBottom: '80px',
+		},
+		topProjectBox: {
+			background: '#fff',
 		},
 	};
 
@@ -82,6 +94,15 @@ function Home() {
 			bgColor: blueColor,
 		},
 	];
+
+	// API call to fetch these projects
+	// Hardcoded as of now
+	const topBiddingProjects = [
+		{ id: 1, name: 'abc', desc: 'sadfsdf' },
+		{ id: 2, name: 'def', desc: 'sagasdgdf' },
+		{ id: 3, name: 'ghi', desc: 'dsgjds' },
+	];
+
 	return (
 		<React.Fragment>
 			<Header />
@@ -114,6 +135,20 @@ function Home() {
 							imgsrc={step.imgsrc}
 							desc={step.desc}
 							bgColor={step.bgColor}
+						/>
+					);
+				})}
+			</div>
+			<div style={customStyle.issuerStepsHeading}>
+				Some of the top bidding projects
+			</div>
+			<div style={customStyle.topProjectsContainer}>
+				{topBiddingProjects.map((project) => {
+					return (
+						<TopProject
+							id={project.id}
+							name={project.name}
+							desc={project.desc}
 						/>
 					);
 				})}
