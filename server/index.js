@@ -35,6 +35,8 @@ app.use(express.static('public'));
 
 app.use(userRoutes);
 
+dotenv.config({ path: './config/config.env' });
+
 // Connecting to data base
 const connectToDataBase = async () => {
 	const c = await mongoose.connect(process.env.DB_CONNECTION, {});
