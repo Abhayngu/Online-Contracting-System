@@ -66,5 +66,5 @@ const PartySchema = new mongoose.Schema(
 	}
 );
 
-partyScheme.plugin(passportLocalMongoose, { usernameField: 'email' });
-module.exports = mongoose.model('User', partyScheme);
+PartySchema.plugin(passportLocalMongoose, { usernameField: 'email' });
+module.exports = mongoose.model('User', PartySchema);

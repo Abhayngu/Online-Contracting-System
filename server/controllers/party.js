@@ -12,19 +12,19 @@ exports.createParty = async (req, res)=> {
 
     const existingUser = await Party.findOne({ email });
     if (existingUser) {
-      return res.status(422).json({ message: 'User already exists with this email' });
+      return res.status(422).json({ message: 'Party already exists with this email' });
     }
 
     Party.register(userData, password, (err, user)=> {
         if(err) {
-            req.flash('error_msg', 'ERROR: '+err);
+           
             // res.redirect('/signup');
             res.send(err);
         }
         passport.authenticate('local') (req, res, ()=> {
-            req.flash('success_msg', 'Account created successfully');
+            return res.json({ message: 'Party registered sucessfully' });
             // res.redirect('/login');
-            res.send('success');
+            // res.send('success');
         });
     });
 
