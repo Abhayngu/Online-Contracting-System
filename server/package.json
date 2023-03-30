@@ -4,7 +4,9 @@
   "description": "Blockchain based contracting system where a party will post a project in which multiple interested parties will bid after the project has been validated. The tech stack used is MERN with solidity.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start" : "node index.js",
+    "dev" : "nodemon index.js"
   },
   "author": "Abhay Kumar Dwivedi",
   "license": "ISC",
