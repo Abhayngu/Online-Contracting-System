@@ -9,8 +9,8 @@ const session = require('express-session');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const userRoutes = require('./routes/partyRoutes');
-const User = require('./models/Partymodel');
+const userRoutes = require('./routes/route');
+const User = require('./models/Party');
 
 app.use(
 	session({
