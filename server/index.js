@@ -12,7 +12,7 @@ dotenv.config({ path: './config/config.env' });
 
 // Connecting to data base
 const connectToDataBase = async () => {
-	const c = await mongoose.connect(process.env.DB, {});
+	const c = await mongoose.connect(process.env.DB_CONNECTION, {});
 	console.log('Database connected ', c.connection.host);
 };
 
