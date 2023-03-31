@@ -3,9 +3,18 @@ import '../styles/Login.css';
 import profile from  "../image/a.png";
 import email from "../image/b.png";
 import pass from "../image/c.png" ;
+import { RiCollageLine } from 'react-icons/ri';
 function Login(){
-    return (
 
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    
+    function login(){
+        console.log(username, password)
+    }
+
+
+    return (
         <div className="main">
         <div className="sub-main">
             <div>
@@ -18,14 +27,14 @@ function Login(){
                     <h1 className='margin'> Login Page</h1>
                     <div>
                         {/* <img src={email} alt="email" className="email"/> */}
-                        <input type="text" placeholder="user name" className="name"/>
+                        <input onChange={(e) => {setUsername(e.target.value)}} valuetype="text" placeholder="user name" className="name"/>
                     </div>
                     <div className="second-input">
                         {/* <img src={pass} alt="pass" className="pass"/> */}
-                        <input type="text" placeholder="password" className="name"/>
+                        <input onChange={(e) => {setPassword(e.target.value)}} type="text" placeholder="password" className="name"/>
                         <h1 className='margin'></h1>
                     </div>
-                    <button>Login</button>
+                    <button onClick={login}>Login</button>
                 </div>
             </div>
 
