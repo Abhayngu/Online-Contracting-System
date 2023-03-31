@@ -11,6 +11,8 @@ function Login(){
     
     function login(){
         console.log(username, password)
+        setPassword("")
+        setUsername("")
     }
 
 
@@ -27,11 +29,11 @@ function Login(){
                     <h1 className='margin'> Login Page</h1>
                     <div>
                         {/* <img src={email} alt="email" className="email"/> */}
-                        <input onChange={(e) => {setUsername(e.target.value)}} valuetype="text" placeholder="user name" className="name"/>
+                        <input value={username} onChange={(e) => {setUsername(e.target.value)}} valuetype="text" placeholder="user name" className="name"/>
                     </div>
                     <div className="second-input">
                         {/* <img src={pass} alt="pass" className="pass"/> */}
-                        <input onChange={(e) => {setPassword(e.target.value)}} type="text" placeholder="password" className="name"/>
+                        <input value={password} onChange={(e) => {setPassword(e.target.value)}} type="text" placeholder="password" className="name"/>
                         <h1 className='margin'></h1>
                     </div>
                     <button onClick={login}>Login</button>
