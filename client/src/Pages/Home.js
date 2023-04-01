@@ -3,7 +3,7 @@ import Header from '../Components/Header';
 import homepageimg from './homepage.jpg';
 import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
-import { greenColor, blueColor } from '../globalVars';
+import { greenColor, blueColor } from '../globalVars' ;
 function Home() {
 	const customStyle = {
 		titleImageContainer: {
