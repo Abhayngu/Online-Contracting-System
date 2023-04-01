@@ -21,13 +21,3 @@ exports.getProjectsByEmail = async (req, res, next) => {
         res.status(400).json({ msg: 'Server error'});
     }
 };
-
-exports.getUserProjects = async (req, res, next) => {
-    try {
-      const user = req.user; // get the authenticated user from the request object
-      const projects = await Project.find({ userId: user.id }); // find all projects associated with the user
-      res.status(200).json({ data: projects });
-    } catch (err) {
-      res.status(500).json({ msg: 'Server error' });
-    }
-  };
