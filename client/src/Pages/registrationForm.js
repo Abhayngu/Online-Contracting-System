@@ -1,42 +1,103 @@
 import React, {useState} from 'react';
 import style from '../styles/style.css' ;
-import Login from '../styles/Login.css';
+function Form() {
 
-function RegistrationForm() {
-    return(
-        
-        
-      <div className="form">
-                <nav class="bg-dark navbar-dark navbar">
-            <div className="row col-12 d-flex justify-content-center text-white">
-                <h1>Registration</h1>
-            </div>
-            
-        </nav>
-          <div className="form-body">
-              <div className="username">
-                  <label className="form__label" for="firstName">First Name </label>
-                  <input className="form__input" type="text" id="firstName" placeholder="First Name"/>
-              </div>
-              <div className="lastname">
-                  <label className="form__label" for="lastName">Last Name </label>
-                  <input  type="text" name="" id="lastName"  className="form__input"placeholder="LastName"/>
-              </div>
+// States for registration
+const [name, setName] = useState('');
+const [email, setEmail] = useState('');
+const [password, setPassword] = useState('');
 
-              <div className="password">
-                  <label className="form__label" for="password">Password </label>
-                  <input className="form__input" type="password"  id="password" placeholder="Password"/>
-              </div>
-              <div className="confirm-password">
-                  <label className="form__label" for="confirmPassword">Confirm Password </label>
-                  <input className="form__input" type="password" id="confirmPassword" placeholder="Confirm Password"/>
-              </div>
-              
-          </div>
-          <div class="footer">
-              <button type="submit" class="btn">Register</button>
-          </div>
-      </div>      
-    )       
+// States for checking the errors
+const [submitted, setSubmitted] = useState(false);
+const [error, setError] = useState(false);
+
+// Handling the name change
+const handleName = (e) => {
+	setName(e.target.value);
+	setSubmitted(false);
+};
+
+// Handling the email change
+const handleEmail = (e) => {
+	setEmail(e.target.value);
+	setSubmitted(false);
+};
+
+// Handling the password change
+const handlePassword = (e) => {
+	setPassword(e.target.value);
+	setSubmitted(false);
+};
+
+// Handling the form submission
+const handleSubmit = (e) => {
+	e.preventDefault();
+	if (name === '' || email === '' || password === '') {
+	setError(true);
+	} else {
+	setSubmitted(true);
+	setError(false);
+	}
+};
+
+// Showing success message
+const successMessage = () => {
+	return (
+	<div
+		className="success"
+		style={{
+		display: submitted ? '' : 'none',
+		}}>
+		<h1>User {name} successfully registered!!</h1>
+	</div>
+	);
+};
+
+// Showing error message if error is true
+const errorMessage = () => {
+	return (
+	<div
+		className="error"
+		style={{
+		display: error ? '' : 'none',
+		}}>
+		<h1>Please enter all the fields</h1>
+	</div>
+	);
+};
+
+return (
+	<div className="form">
+	<div>
+		<h1>User Registration</h1>
+	</div>
+
+	{/* Calling to the methods */}
+	<div className="messages">
+		{errorMessage()}
+		{successMessage()}
+	</div>
+
+	<form>
+		{/* Labels and inputs for form data */}
+		<label className="label">Name</label>
+		<input onChange={handleName} className="input"
+		value={name} type="text" />
+
+		<label className="label">Email</label>
+		<input onChange={handleEmail} className="input"
+		value={email} type="email" />
+
+		<label className="label">Password</label>
+		<input onChange={handlePassword} className="input"
+		value={password} type="password" />
+
+		<button onClick={handleSubmit} className="btn" type="submit">
+		Submit
+		</button>
+	</form>
+	</div>
+);
 }
-export default RegistrationForm;
+
+export default Form;
