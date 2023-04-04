@@ -60,7 +60,7 @@ button{
     width: 380px;
     height: 50px;
     border-radius: 60px;
-    background-color: #b103fc;
+    background-color: #774d8a;
     color: white;
     font-size: 25px;
     border: none;
@@ -70,4 +70,17 @@ button{
 }
 .m1{
     display: flex;
+    padding: 50px;
+}
+.button {
+    position: absolute;
+
+}
+.m2{
+    display: flex;
+    align-items: center;
+    margin-left: 10%;
+    margin-top: 50%;
+    padding: 50px;
+
 }

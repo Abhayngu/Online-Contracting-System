@@ -57,6 +57,22 @@
     .mgbtm{
         padding: 50px;
     }
-    .m1{
-        padding: 50px;
+    .m2{
+        display: flex;
+       
+        margin-bottom: 10%;
+        margin-top: 10%;
+        margin-left: 5%;
+    
     }
+    .form1{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        height: 40%;
+        padding: 60px;
+    }
+    .m3{
+margin-top: 10%;
+    }
+    

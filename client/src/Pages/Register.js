@@ -5,9 +5,7 @@ function Header() {
             <div className="row col-12 d-flex justify-content-center text-white">
                 <h1>Registration</h1>
             </div>
-            <div className="row col-12 d-flex justify-content-center text-white">
-                <h1>Registration</h1>
-            </div>
+            
         </nav>
     )
 }

@@ -67,10 +67,9 @@ const errorMessage = () => {
 };
 
 return (
-	<div className="form">
-	<div>
-		<h1>User Registration</h1>
-	</div>
+	
+	<div className="form1">
+
 
 	{/* Calling to the methods */}
 	<div className="messages">
@@ -95,8 +94,14 @@ return (
 		<button onClick={handleSubmit} className="btn" type="submit">
 		Submit
 		</button>
+		<div className='m2'>
+                    <button type="button" className="btn">Already have an account</button>
+                    </div>
+		
 	</form>
+	
 	</div>
+	
 );
 }
 
