@@ -37,10 +37,15 @@ function Login(){
                         <h1 className='margin'></h1>
                     </div>
                     <button onClick={login}>Login</button>
-                </div>
+                    </div>
+                    <div className='m1'>
+                    <button >Create an account</button>
+                    </div>
+                
             </div>
 
         </div>
+        
     </div>
 
 )

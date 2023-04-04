@@ -68,3 +68,6 @@ button{
 .margin{
     margin-bottom: 20px;
 }
+.m1{
+    display: flex;
+}
