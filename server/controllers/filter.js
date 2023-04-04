@@ -63,5 +63,5 @@ exports.filterProject = async (req, res, next) => {
 			page: page - 1,
 		};
 	}
-    res.status(200).json({data: projects});
+    res.status(200).json({data: projects, totalPages, pagination});
 };

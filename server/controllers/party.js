@@ -138,3 +138,13 @@ exports.changePassword = async (req, res, next) => {
     res.json({ message: 'An email has been sent to the provided email with further instructions.' });
   });
 };
+
+
+exports.getPartytById = async (req, res, next) => {
+  try{
+      const party = await Party.findById(req.params.id);
+      res.status(200).json({data: party});
+  } catch {
+      res.status(400).json({ msg: `Party not found with id of ${req.params.id}`});
+  }    
+};
