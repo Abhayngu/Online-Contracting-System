@@ -4,6 +4,7 @@ import Home from '../src/Pages/Home';
 import Login from '../src/Pages/Login';
 import Register from './Pages/Register';
 import Form from './Pages/registrationForm' ;
+import Validation from './Pages/Validation' ;
 
 function App() {
 	return (
@@ -13,6 +14,7 @@ function App() {
 				<Route path="/test" element={<div>test page</div>} />
 				<Route path="/login" element={<Login />}/>
 				<Route path="/Register" element={<Form />}/>
+				<Route path="/validation" element={<Validation />}/>
 			</Routes>
 		</BrowserRouter>
 	);
