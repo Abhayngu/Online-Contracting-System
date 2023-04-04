@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 import { RiArrowDropDownFill } from 'react-icons/ri';
 
-function Header() {
+function Header({ c }) {
+	const navigate = useNavigate();
 	const [display, setDisplay] = useState('hide-it');
 
 	const customStyle = {
@@ -14,8 +16,10 @@ function Header() {
 			width: '100%',
 			alignItems: 'center',
 			height: '60px',
+			backgroundColor: c ? c : '#fff',
 		},
 		logo: {
+			cursor: 'pointer',
 			'&:hover': { display: 'none' },
 			fontWeight: 'normal',
 			fontSize: '24px',
@@ -61,6 +65,10 @@ function Header() {
 		},
 	};
 
+	const navigateToHome = () => {
+		navigate('/');
+	};
+
 	const visibleOptions = () => {
 		if (display == 'hide-it') {
 			setDisplay('');
@@ -73,7 +81,9 @@ function Header() {
 		<React.Fragment>
 			<div style={customStyle.headerContainer}>
 				<div style={customStyle.header}>
-					<div style={customStyle.logo}>Contracting System</div>
+					<div onClick={navigateToHome} style={customStyle.logo}>
+						Contracting System
+					</div>
 					<div style={customStyle.headerIconContainer}>
 						<div
 							style={{
