@@ -3,9 +3,12 @@ const Party = require('../models/Party');
 
 exports.registerProject = async (req, res, next) => {
     let {name, description, proposedBy, expectedFinishTime, expectedTokens, biddingDuration} = req.body;
+    const party = await Party.findById(proposedBy.toString());
+    if (!party) {
+        return res.status(400).json({msg: 'No party exist with the id.'});
+    }
     try {
         const project = await Project.create({name, description, proposedBy, expectedFinishTime, expectedTokens, biddingDuration});
-
         const party = await Party.findByIdAndUpdate(
             proposedBy,
             { $push: { projectProposed: project._id } },

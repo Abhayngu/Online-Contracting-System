@@ -48,7 +48,7 @@ const ProjectSchema = new mongoose.Schema(
 			ref: 'Party',
 		},
 		milestonesAchieved: {
-			type: string,
+			type: String,
 			default: 'Nothing',
 			enum: ['Nothing', 'Design', 'Code', 'Test', 'Deploy'],
 		},
