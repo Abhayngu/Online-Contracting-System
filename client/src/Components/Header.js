@@ -37,6 +37,7 @@ function Header({ c }) {
 			height: '100%',
 			justifyContent: 'center',
 			alignItems: 'center',
+			cursor: 'pointer',
 		},
 		dropdownContainer: {
 			position: 'relative',
@@ -67,6 +68,14 @@ function Header({ c }) {
 
 	const navigateToHome = () => {
 		navigate('/');
+	};
+
+	const goToRegisterPage = () => {
+		navigate('/register');
+	};
+
+	const goToLoginPage = () => {
+		navigate('/login');
 	};
 
 	const visibleOptions = () => {
@@ -126,6 +135,7 @@ function Header({ c }) {
 							</ul>
 						</div>
 						<div
+							onClick={goToRegisterPage}
 							style={{
 								...customStyle.Register,
 								...customStyle.icons,
@@ -134,6 +144,7 @@ function Header({ c }) {
 							Register
 						</div>
 						<div
+							onClick={goToLoginPage}
 							style={{
 								...customStyle.SignIn,
 								...customStyle.icons,
