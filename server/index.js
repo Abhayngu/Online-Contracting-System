@@ -20,9 +20,7 @@ app.use(
 	})
 );
 
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+app.use(express.json())
 
 app.use(passport.session());
 app.use(passport.initialize());
@@ -39,10 +37,9 @@ app.use(express.static('public'));
 
 app.use(userRoutes);
 
-dotenv.config({ path: './config/config.env' })
+dotenv.config({ path: './config/config.env' });
 
 // Connecting to data base
-// uri = "mongodb+srv://shubhamrathore:ssss123@cluster-1.dl2zrmc.mongodb.net/test"
 const connectToDataBase = async () => {
 	const c = await mongoose.connect(process.env.DB_CONNECTION, {});
 	console.log('Database connected ', c.connection.host);

@@ -31,6 +31,10 @@ const ProjectSchema = new mongoose.Schema(
 			type: [mongoose.Schema.ObjectId],
 			ref: 'Party',
 		},
+		biddingDuration: {
+			type: String,
+			require: true,
+		},
 		isValidated: {
 			type: Boolean,
 			default: false,
@@ -44,7 +48,7 @@ const ProjectSchema = new mongoose.Schema(
 			ref: 'Party',
 		},
 		milestonesAchieved: {
-			type: string,
+			type: String,
 			default: 'Nothing',
 			enum: ['Nothing', 'Design', 'Code', 'Test', 'Deploy'],
 		},
