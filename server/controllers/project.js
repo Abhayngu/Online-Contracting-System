@@ -75,3 +75,12 @@ exports.validateProject =async (req, res, next) => {
         res.status(400).json({msg: 'Failed to validate Project'});
     }
 };
+
+exports.getAllValidatedProject = async (req, res, next) => {
+    try {
+        const project = await Project.find({isValidated : true, isIssued : false});
+        res.status(200).json({project});
+    } catch  {
+        res.status(400).json({msg: 'No Projects found!!!'});
+    }
+};

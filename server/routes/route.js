@@ -20,7 +20,8 @@ const {
 	getProjectsByEmail,
 	getProjectById,
 	issueProject,
-	validateProject
+	validateProject,
+	getAllValidatedProject
 } = require('../controllers/project');
 
 
@@ -50,5 +51,5 @@ router.get('/byEmail', getProjectsByEmail);
 router.get('/byId', getProjectById);
 router.put('/issueProj', issueProject);
 router.put('/validateProj', validateProject);
-
+router.get('/listOfValidProj', getAllValidatedProject);
 module.exports = router;
