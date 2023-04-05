@@ -2,6 +2,7 @@ const Party = require('../models/Party');
 const passport = require('passport');
 
 exports.createParty = async (req, res)=> {
+    console.log(req.body);
     let {name, email, password,description} = req.body;
 
     let userData = {
@@ -19,6 +20,7 @@ exports.createParty = async (req, res)=> {
         if(err) {
            
             // res.redirect('/signup');
+            console.log(err);
             res.send(err);
         }
         passport.authenticate('local') (req, res, ()=> {
