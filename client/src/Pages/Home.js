@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import homepageimg from './homepage.jpg';
+import { useNavigate } from 'react-router-dom';
 import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
-import { greenColor, blueColor } from '../globalVars' ;
+import { greenColor, blueColor } from '../globalVars';
 function Home() {
+	const navigate = useNavigate();
 	const customStyle = {
 		titleImageContainer: {
 			width: '100%',
 			height: '100vh',
 			marginBottom: '100px',
+			position: 'relative',
 		},
 		titleImage: {
 			display: 'inline-block',
@@ -17,6 +20,34 @@ function Home() {
 			width: '100%',
 			objectFit: 'cover',
 			overflow: 'hidden',
+		},
+		validationButton: {
+			position: 'absolute',
+			background: '#005B9A',
+			fontSize: '12px',
+			color: 'white',
+			// padding: '12px 40px 12px 40px',
+			padding: '12px 0',
+			textAlign: 'center',
+			width: '250px',
+			cursor: 'pointer',
+			borderRadius: '12px',
+			bottom: '250px',
+			right: '80px',
+		},
+		issueButton: {
+			position: 'absolute',
+			background: '#EA6A47',
+			fontSize: '12px',
+			color: 'white',
+			// padding: '12px 40px 12px 40px',
+			padding: '12px 0',
+			width: '250px',
+			textAlign: 'center',
+			cursor: 'pointer',
+			borderRadius: '12px',
+			bottom: '170px',
+			right: '80px',
 		},
 		issuerStepsHeading: {
 			textAlign: 'center',
@@ -141,11 +172,26 @@ function Home() {
 		{ id: 3, name: 'ghi', desc: 'dsgjds' },
 	];
 
+	const goToValidationPage = () => {
+		navigate('/validation');
+	};
+	const goToIssuePage = () => {
+		navigate('/issue');
+	};
 	return (
 		<React.Fragment>
 			<Header />
 			<div style={customStyle.titleImageContainer}>
 				<img style={customStyle.titleImage} src={homepageimg}></img>
+				<div
+					onClick={goToValidationPage}
+					style={customStyle.validationButton}
+				>
+					Get Your Project Validated
+				</div>
+				<div onClick={goToIssuePage} style={customStyle.issueButton}>
+					Get Your Project Issued
+				</div>
 			</div>
 			<div style={customStyle.issuerStepsHeading}>
 				Understand How it Works for an Issuer ?
