@@ -1,4 +1,43 @@
 const Project = require('../models/Project');
+const Party = require('../models/Party');
+
+exports.registerProject = async (req, res, next) => {
+    let {name, description, proposedBy, expectedFinishTime, expectedTokens, biddingDuration} = req.body;
+    try {
+        const project = await Project.create({name, description, proposedBy, expectedFinishTime, expectedTokens, biddingDuration});
+
+        const party = await Party.findByIdAndUpdate(
+            proposedBy,
+            { $push: { projectProposed: project._id } },
+            { new: true }
+          );
+        res.status(200).json({msg: 'Project registered sucessfully.'});
+    } catch {
+        res.status(400).json({msg: 'Failed to register project.'});
+    }
+};
+
+exports.getTop3Projects = async (req, res, next) => {
+    const projects = await Project.find().sort({ finalBidPrice: -1 }).limit(3);
+    res.status(200).json({data: projects});
+};
+
+exports.getAllProjects = async ( req, res, next) => {
+    const projects = await Project.find();
+    res.status(200).json({data: projects});
+};
+
+exports.getProjectsByEmail = async (req, res, next) => {
+    try {
+        const projects = await Project.find({ email: req.params.email});
+        if(!projects) {
+            return res.status(404).json({ msg: 'No projects found for this email'});
+        }
+        res.status(200).json({data: projects});
+    } catch (err) {
+        res.status(400).json({ msg: 'Server error'});
+    }
+};
 
 exports.getProjectById = async (req, res, next) => {
     try{

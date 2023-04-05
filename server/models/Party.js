@@ -30,7 +30,7 @@ const PartySchema = new mongoose.Schema(
 		},
 		tokens: {
 			type: Number,
-			default: 0,
+			default: 50,
 		},
 		rating: {
 			type: Number,
@@ -67,4 +67,4 @@ const PartySchema = new mongoose.Schema(
 );
 
 PartySchema.plugin(passportLocalMongoose, { usernameField: 'email' });
-module.exports = mongoose.model('User', PartySchema);
+module.exports = mongoose.model('Parties', PartySchema);

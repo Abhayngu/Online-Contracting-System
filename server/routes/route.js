@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require('passport');
 const crypto = require('crypto');
 const async = require('async');
-
+const Project = require('../models/Project');
 const Party = require('../models/Party');
 const {
 	createParty,
@@ -11,7 +11,17 @@ const {
 	updateParty,
 	deleteParty,
 	changePassword
-} = require('../Controllers/party');
+} = require('../controllers/party');
+
+const {
+	registerProject,
+	getTop3Projects,
+	getAllProjects,
+	getProjectsByEmail,
+	getProjectById,
+	issueProject,
+	validateProject
+} = require('../controllers/project');
 
 
 router.get('/signup',(req,res)=>{
@@ -33,5 +43,12 @@ router.post('/login',login);
 router.put('/update',updateParty);
 
 
+router.post('/registerProject', registerProject);
+router.get('/top3', getTop3Projects);
+router.get('/getAllProj', getAllProjects);
+router.get('/byEmail', getProjectsByEmail);
+router.get('/byId', getProjectById);
+router.put('/issueProj', issueProject);
+router.put('/validateProj', validateProject);
 
 module.exports = router;

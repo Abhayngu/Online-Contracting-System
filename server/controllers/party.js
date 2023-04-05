@@ -3,7 +3,7 @@ const passport = require('passport');
 
 exports.createParty = async (req, res)=> {
     let {name, email, password,description} = req.body;
-
+    
     let userData = {
         name : name,
         email : email,
