@@ -68,8 +68,10 @@ const errorMessage = () => {
 
 return (
 	
-	<div className="form1">
-
+	<div className='m4'>
+	<div>
+		<h1>User Registration</h1>
+	</div>
 
 	{/* Calling to the methods */}
 	<div className="messages">
@@ -90,10 +92,11 @@ return (
 		<label className="label">Password</label>
 		<input onChange={handlePassword} className="input"
 		value={password} type="password" />
-
+		<div className='m2'>
 		<button onClick={handleSubmit} className="btn" type="submit">
 		Submit
 		</button>
+		</div>
 		<div className='m2'>
                     <button type="button" className="btn">Already have an account</button>
                     </div>

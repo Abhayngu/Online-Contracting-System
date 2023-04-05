@@ -63,6 +63,7 @@
         margin-bottom: 10%;
         margin-top: 10%;
         margin-left: 5%;
+        order: 5;
     
     }
     .form1{
@@ -70,9 +71,15 @@
         justify-content: center;
         align-items: center;
         height: 40%;
-        padding: 60px;
+        padding: 100px;
+        margin-top: 5%;
     }
     .m3{
 margin-top: 10%;
     }
-    
+    .m4{
+        padding: 70px ;
+        display: flex;
+        order: 10;
+        justify-content: center;
+    }

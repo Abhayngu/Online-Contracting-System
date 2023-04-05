@@ -41,7 +41,7 @@ function Login(){
                     <div className='m1'>
                     <button >Create an account</button>
                     </div>
-                    <div className='m2'>
+                    <div className='m1'>
                     <button type="button" class="button">Forgot Password</button>
                     </div>
                 
