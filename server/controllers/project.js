@@ -114,7 +114,7 @@ exports.listOfProjectsBidByUser = async (req, res, next) => {
     console.log(party);
     const project = await Project.find({ bidders: id });
 
-    return res.status(200).json({ project });
+    return res.status(200).json(project);
 };
 
 exports.getProjectProposedByUser = async (req, res, next) => {
