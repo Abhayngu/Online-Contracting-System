@@ -45,6 +45,7 @@ exports.getProjectsByEmail = async (req, res, next) => {
 exports.getProjectById = async (req, res, next) => {
     try{
         const project = await Project.findById(req.params.id);
+        console.log(project);
         res.status(200).json({data: project});
     } catch {
         res.status(400).json({ msg: `Project not found with id of ${req.params.id}`});
@@ -75,3 +76,39 @@ exports.validateProject =async (req, res, next) => {
         res.status(400).json({msg: 'Failed to validate Project'});
     }
 };
+
+exports.getAllValidatedProject = async (req, res, next) => {
+    try {
+        const project = await Project.find({isValidated : true, isIssued : false});
+        res.status(200).json({project});
+    } catch  {
+        res.status(400).json({msg: 'No Projects found!!!'});
+    }
+};
+
+exports.partyBiddingForProjects = async (req, res, next) => {
+    let { partyId, projectId } = req.body;
+
+    const party = await Party.findById(partyId);
+    if (!party) {
+        return res.status(400).json({ msg: "Party not found." });
+    }
+    const project = await Project.findById(projectId);
+    if (!project) {
+        return res.status(400).json({ msg: "Project not found." });
+    }
+
+    await party.updateOne({ $push: { projectBidFor: projectId } });
+
+    return res.status(200).json({ msg: "Project bid added successfully." });
+};
+
+exports.getProjectProposedByUser = async (req, res, next) => {
+    let id = req.params.id;
+    const party = await Party.findById(id);
+    if(!party){
+        return res.status(400).json({msg : `Party not found with id ${req.params.id}.`});
+    }
+    const projects = await Project.find({proposedBy: id});
+    res.status(200).json(projects);
+}
