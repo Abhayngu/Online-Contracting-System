@@ -57,6 +57,6 @@ router.put('/validateProj', validateProject);
 router.get('/listOfValidProj', getAllValidatedProject);
 router.get('/projectProposedBy/:id', getProjectProposedByUser);
 router.put('/projectBidding', partyBiddingForProjects);
-router.get('/bidByuserId/:id', listOfProjectsBidByUser);
+router.get('/projectBidBy/:id', listOfProjectsBidByUser);
 module.exports = router;
 
