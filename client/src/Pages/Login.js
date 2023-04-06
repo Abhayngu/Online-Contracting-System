@@ -11,51 +11,9 @@ function Login() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const saveProposedProjects = (idOfUser) => {
-		const options = {
-			method: 'GET',
-			url: `http://localhost:2000/projectProposedBy/${idOfUser}`,
-			headers: {
-				'content-type': 'application/json',
-			},
-		};
+	const [id, setId] = useState('');
 
-		axios
-			.request(options)
-			.then((response) => {
-				console.log(response.data);
-				sessionStorage.setItem(
-					'projectProposed',
-					JSON.stringify(response.data)
-				);
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
-	};
-	const saveBidProjects = (idOfUser) => {
-		const options = {
-			method: 'GET',
-			url: `http://localhost:2000/projectBidBy/${idOfUser}`,
-			headers: {
-				'content-type': 'application/json',
-			},
-		};
-
-		axios
-			.request(options)
-			.then((response) => {
-				console.log(response.data);
-				sessionStorage.setItem(
-					'projectBid',
-					JSON.stringify(response.data)
-				);
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
-	};
-	function login() {
+	const login = async () => {
 		const options = {
 			method: 'POST',
 			url: 'http://localhost:2000/login',
@@ -68,28 +26,21 @@ function Login() {
 			},
 		};
 
-		axios
-			.request(options)
-			.then((response) => {
-				console.log(response.data);
-				const nameOfUser = response.data.user.name;
-				const idOfUser = response.data.user._id;
-				setUsername('');
-				setPassword('');
-				sessionStorage.setItem('isLoggedIn', true);
-				sessionStorage.setItem(
-					'user',
-					JSON.stringify(response.data.user)
-				);
-				saveProposedProjects(idOfUser);
-				// saveBidProjects(idOfUser);
+		const response = await axios(options);
+		console.log('axios response', response.data);
+		const nameOfUser = response.data.user.name;
+		const idOfUser = response.data.user._id;
+		setUsername('');
+		setPassword('');
+		setId(idOfUser);
+		await sessionStorage.setItem('isLoggedIn', true);
+		await sessionStorage.setItem(
+			'user',
+			JSON.stringify(response.data.user)
+		);
 
-				navigate(`/profile?id=${idOfUser}`);
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
-	}
+		navigate(`/profile?id=${idOfUser}`);
+	};
 
 	const goToRegister = () => {
 		navigate('/register');

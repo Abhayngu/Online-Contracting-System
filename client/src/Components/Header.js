@@ -18,9 +18,9 @@ function Header({ c }) {
 			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
 			setId(JSON.parse(sessionStorage.getItem('user'))._id);
 		} else {
-			console.log('loggedin value', typeof loggedIn);
+			// console.log('loggedin value', typeof loggedIn);
 		}
-		console.log('isLoggedin value', isLoggedIn);
+		// console.log('isLoggedin value', isLoggedIn);
 	}, []);
 
 	const customStyle = {
