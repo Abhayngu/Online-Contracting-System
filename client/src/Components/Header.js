@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 import { RiArrowDropDownFill } from 'react-icons/ri';
@@ -6,6 +6,22 @@ import { RiArrowDropDownFill } from 'react-icons/ri';
 function Header({ c }) {
 	const navigate = useNavigate();
 	const [display, setDisplay] = useState('hide-it');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [username, setUsername] = useState('');
+	const [id, setId] = useState('');
+
+	useEffect(() => {
+		const loggedIn = sessionStorage.getItem('isLoggedIn');
+
+		if (loggedIn == 'true') {
+			setIsLoggedIn(true);
+			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
+			setId(JSON.parse(sessionStorage.getItem('user'))._id);
+		} else {
+			console.log('loggedin value', typeof loggedIn);
+		}
+		console.log('isLoggedin value', isLoggedIn);
+	}, []);
 
 	const customStyle = {
 		headerContainer: {},
@@ -78,12 +94,23 @@ function Header({ c }) {
 		navigate('/login');
 	};
 
+	const goToProfilePage = () => {
+		navigate(`/profile?id=${id}`);
+	};
+
 	const visibleOptions = () => {
 		if (display == 'hide-it') {
 			setDisplay('');
 		} else {
 			setDisplay('hide-it');
 		}
+	};
+
+	const handleLogout = () => {
+		// sessionStorage.setItem('isLoggedIn', false);
+		sessionStorage.clear();
+		setIsLoggedIn(false);
+		navigate('/');
 	};
 
 	return (
@@ -134,24 +161,49 @@ function Header({ c }) {
 								</div>
 							</ul>
 						</div>
-						<div
-							onClick={goToRegisterPage}
-							style={{
-								...customStyle.Register,
-								...customStyle.icons,
-							}}
-						>
-							Register
-						</div>
-						<div
-							onClick={goToLoginPage}
-							style={{
-								...customStyle.SignIn,
-								...customStyle.icons,
-							}}
-						>
-							Sign In
-						</div>
+						{isLoggedIn == false ? (
+							<div
+								onClick={goToRegisterPage}
+								style={{
+									...customStyle.Register,
+									...customStyle.icons,
+								}}
+							>
+								Register
+							</div>
+						) : (
+							<div
+								onClick={handleLogout}
+								style={{
+									...customStyle.Register,
+									...customStyle.icons,
+								}}
+							>
+								Logout
+							</div>
+						)}
+
+						{isLoggedIn == true ? (
+							<div
+								style={{
+									...customStyle.SignIn,
+									...customStyle.icons,
+								}}
+								onClick={goToProfilePage}
+							>
+								{username}
+							</div>
+						) : (
+							<div
+								onClick={goToLoginPage}
+								style={{
+									...customStyle.SignIn,
+									...customStyle.icons,
+								}}
+							>
+								Sign In
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

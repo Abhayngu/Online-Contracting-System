@@ -11,7 +11,12 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const userRoutes = require('./routes/route');
 const User = require('./models/Party');
-
+app.use((req, res, next) => {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+	res.setHeader('Access-Control-Allow-Headers', 'content-type');
+	next();
+});
 app.use(
 	session({
 		secret: 'screte key',
@@ -20,7 +25,7 @@ app.use(
 	})
 );
 
-app.use(express.json())
+app.use(express.json());
 
 app.use(passport.session());
 app.use(passport.initialize());

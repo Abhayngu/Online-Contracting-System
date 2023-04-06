@@ -1,15 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
+import axios from 'axios';
 function Project() {
 	const queryParameters = new URLSearchParams(window.location.search);
 	const projectId = queryParameters.get('id');
-	const [name, setName] = useState('Decoration System');
+	const [name, setName] = useState('');
 	const [id, setId] = useState(projectId);
-	const [proposedBy, setProposedBy] = useState('Party1');
-	const [bidWonBy, setBidWonBy] = useState('Party5');
-	const [winningBidPrice, setWinningBidPrice] = useState('50 ether');
-	const [projectStatus, setProjectStatus] = useState('issued');
-	const [projectMilstones, setProjectMilstones] = useState('develop');
+	const [proposedBy, setProposedBy] = useState('');
+	const [bidWonBy, setBidWonBy] = useState('');
+	const [winningBidPrice, setWinningBidPrice] = useState('');
+	const [projectStatus, setProjectStatus] = useState('');
+	const [projectMilstones, setProjectMilstones] = useState('');
+
+	const getUserNameById = (id) => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/partyById/${id}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				setProposedBy(getUserNameById(response.data.name));
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	};
+	useEffect(() => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/byId/${id}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				// console.log(response.data);
+				const project = response.data.data;
+				console.log(project);
+				setName(project.name);
+				// getUserNameById(project.proposedBy);
+				if (project.wonBy.length == 0) {
+					setBidWonBy('Bidding Not Over Yet');
+					setWinningBidPrice('None');
+				} else {
+					setBidWonBy(project.wonby[0]);
+					setWinningBidPrice('Need to be added in schema');
+				}
+				if (project.isIssued == 'true') {
+					setProjectStatus('Issued');
+				} else if (project.isValidated == 'true') {
+					setProjectStatus('Validated');
+				} else {
+					setProjectStatus('Not Validated');
+				}
+				setProjectMilstones(project.milestonesAchieved);
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	}, []);
 
 	const customStyle = {
 		projectContainer: {

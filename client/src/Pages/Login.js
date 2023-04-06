@@ -4,16 +4,100 @@ import profile from '../image/a.png';
 import email from '../image/b.png';
 import pass from '../image/c.png';
 import Header from '../Components/Header';
+import { useNavigate } from 'react-router-dom';
 import { RiCollageLine } from 'react-icons/ri';
+import axios from 'axios';
 function Login() {
+	const navigate = useNavigate();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const saveProposedProjects = (idOfUser) => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/projectProposedBy/${idOfUser}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
 
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				sessionStorage.setItem(
+					'projectProposed',
+					JSON.stringify(response.data)
+				);
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	};
+	const saveBidProjects = (idOfUser) => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/projectBidBy/${idOfUser}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				sessionStorage.setItem(
+					'projectBid',
+					JSON.stringify(response.data)
+				);
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	};
 	function login() {
-		console.log(username, password);
-		setPassword('');
-		setUsername('');
+		const options = {
+			method: 'POST',
+			url: 'http://localhost:2000/login',
+			headers: {
+				'content-type': 'application/json',
+			},
+			data: {
+				email: username,
+				password: password,
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				const nameOfUser = response.data.user.name;
+				const idOfUser = response.data.user._id;
+				setUsername('');
+				setPassword('');
+				sessionStorage.setItem('isLoggedIn', true);
+				sessionStorage.setItem(
+					'user',
+					JSON.stringify(response.data.user)
+				);
+				saveProposedProjects(idOfUser);
+				// saveBidProjects(idOfUser);
+
+				navigate(`/profile?id=${idOfUser}`);
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
 	}
+
+	const goToRegister = () => {
+		navigate('/register');
+	};
+
+	const handleForgotPassword = () => {
+		console.log('forgot the password');
+	};
 
 	return (
 		<>
@@ -31,7 +115,7 @@ function Login() {
 							</div>
 						</div>
 						<div>
-							<h1 className="margin"> Login Page</h1>
+							<h1 className="margin">Sign In</h1>
 							<div>
 								{/* <img src={email} alt="email" className="email"/> */}
 								<input
@@ -40,7 +124,7 @@ function Login() {
 										setUsername(e.target.value);
 									}}
 									valuetype="text"
-									placeholder="user name"
+									placeholder="email"
 									className="name"
 								/>
 							</div>
@@ -51,20 +135,36 @@ function Login() {
 									onChange={(e) => {
 										setPassword(e.target.value);
 									}}
-									type="text"
+									type="password"
 									placeholder="password"
 									className="name"
 								/>
-								<h1 className="margin"></h1>
 							</div>
-							<button onClick={login}>Login</button>
-						</div>
-						<div className="m1">
-							<button>Create an account</button>
-						</div>
-						<div className="m1">
-							<button type="button" class="button">
-								Forgot Password
+							<div
+								onClick={goToRegister}
+								style={{
+									textAlign: 'center',
+									marginBottom: '5px',
+									marginTop: '20px',
+									color: 'blue',
+									cursor: 'pointer',
+								}}
+							>
+								Don't have an account?
+							</div>
+							<div
+								onClick={handleForgotPassword}
+								style={{
+									textAlign: 'center',
+									marginBottom: '20px',
+									color: 'blue',
+									cursor: 'pointer',
+								}}
+							>
+								Forgot Password?
+							</div>
+							<button className="btn" onClick={login}>
+								Login
 							</button>
 						</div>
 					</div>

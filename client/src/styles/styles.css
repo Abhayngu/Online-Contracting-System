@@ -38,3 +38,17 @@ border-bottom: 2px solid grey;
 .hide-it{
     display: none;
 }
+
+
+.scaleOnHover:hover{
+	animation-name: scaleUp;
+    animation-timing-function: ease;
+	animation-duration: 1s;
+	/* transform: scale(1.08) translateY(-12px);
+	box-shadow: 10px 10px 10px 2000px rgb(12, 13, 34 / 20%); */
+}
+
+@keyframes scaleUp {
+	0%   { }
+  100% { transform: scale(1.08) translateY(-12px);}
+  }
