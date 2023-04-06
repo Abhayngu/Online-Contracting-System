@@ -1,19 +1,155 @@
 import React, { useState } from 'react';
-function Header() {
-	return (
-		<nav class="bg-dark navbar-dark navbar">
-			<div className="row col-12 d-flex justify-content-center text-white">
-				<h1>Registration</h1>
+import style from '../styles/style.css';
+import Header from '../Components/Header';
+import { useNavigate } from 'react-router-dom';
+function Form() {
+	// States for registration
+	const navigate = useNavigate();
+	const [name, setName] = useState('');
+	const [tempName, setTempName] = useState('');
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+
+	// States for checking the errors
+	const [submitted, setSubmitted] = useState(false);
+	const [error, setError] = useState(false);
+
+	// Handling the name change
+	const handleName = (e) => {
+		setName(e.target.value);
+		setSubmitted(false);
+	};
+
+	const goToSignIn = () => {
+		navigate('/login');
+	};
+
+	// Handling the email change
+	const handleEmail = (e) => {
+		setEmail(e.target.value);
+		setSubmitted(false);
+	};
+
+	// Handling the password change
+	const handlePassword = (e) => {
+		setPassword(e.target.value);
+		setSubmitted(false);
+	};
+
+	// Handling the form submission
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		if (name === '' || email === '' || password === '') {
+			setError(true);
+		} else {
+			setSubmitted(true);
+			setError(false);
+			setEmail('');
+			setTempName(name);
+			setName('');
+			setPassword('');
+		}
+	};
+
+	// Showing success message
+	const successMessage = () => {
+		return (
+			<div
+				className="success"
+				style={{
+					display: submitted ? '' : 'none',
+				}}
+			>
+				<h1 style={{ fontWeight: 100, fontSize: '16px' }}>
+					User {tempName} successfully registered!!
+				</h1>
 			</div>
-		</nav>
+		);
+	};
+
+	// Showing error message if error is true
+	const errorMessage = () => {
+		return (
+			<div
+				className="error"
+				style={{
+					display: error ? '' : 'none',
+				}}
+			>
+				<h1 style={{ fontWeight: 100, fontSize: '16px' }}>
+					Please enter all the fields
+				</h1>
+			</div>
+		);
+	};
+
+	return (
+		<>
+			<Header c="#d9d9d9" />
+
+			<div className="form">
+				<div>
+					<div className="mgbtm">
+						<h1 style={{ fontWeight: 600, textAlign: 'center' }}>
+							Get Your Party Registered Here!
+						</h1>
+					</div>
+
+					{/* Calling to the methods */}
+					<div style={{ display: 'flex', justifyContent: 'center' }}>
+						<form>
+							<div className="messages">
+								{errorMessage()}
+								{successMessage()}
+							</div>
+							{/* Labels and inputs for form data */}
+							<label className="label">Name*</label>
+							<input
+								onChange={handleName}
+								className="input"
+								value={name}
+								type="text"
+							/>
+
+							<label className="label">Email*</label>
+							<input
+								onChange={handleEmail}
+								className="input"
+								value={email}
+								type="email"
+							/>
+
+							<label className="label">Password*</label>
+							<input
+								onChange={handlePassword}
+								className="input"
+								value={password}
+								type="password"
+							/>
+							<div
+								onClick={goToSignIn}
+								style={{
+									textAlign: 'center',
+									marginBottom: '20px',
+									color: 'blue',
+									cursor: 'pointer',
+								}}
+							>
+								Already have an account?
+							</div>
+							<button
+								onClick={handleSubmit}
+								className="btn"
+								type="submit"
+							>
+								Submit
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</>
 	);
 }
 
-function Register() {
-	return (
-		<div className="App">
-			<Header />
-		</div>
-	);
-}
-export default Register;
+export default Form;

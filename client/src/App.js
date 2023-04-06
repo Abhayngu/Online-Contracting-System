@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from '../src/Pages/Home';
 import Login from '../src/Pages/Login';
 import Register from './Pages/Register';
-import Form from './Pages/registrationForm';
+// import Register from './Pages/registrationForm';
 import Validation from './Pages/Validation';
 
 import Project from '../src/Pages/Project';
@@ -18,7 +18,7 @@ function App() {
 				<Route path="/project" element={<Project />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/login" element={<Login />} />
-				<Route path="/register" element={<Form />} />
+				<Route path="/register" element={<Register />} />
 				<Route path="/validation" element={<Validation />} />
 			</Routes>
 		</BrowserRouter>

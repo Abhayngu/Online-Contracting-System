@@ -43,6 +43,7 @@ function StepBox({ stepcount, imgsrc, desc, bgColor }) {
 	return (
 		<React.Fragment>
 			<div
+				className="scaleOnHover"
 				style={{
 					...customStyle.stepboxContainer,
 					backgroundColor: bgColor,
