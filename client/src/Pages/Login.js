@@ -11,16 +11,12 @@ function Login() {
 	const navigate = useNavigate();
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
-	const saveProposedProjects = () => {
+	const saveProposedProjects = (idOfUser) => {
 		const options = {
-			method: 'POST',
-			url: 'http://localhost:2000/byId',
+			method: 'GET',
+			url: `http://localhost:2000/projectProposedBy/${idOfUser}`,
 			headers: {
 				'content-type': 'application/json',
-			},
-			data: {
-				email: username,
-				password: password,
 			},
 		};
 
@@ -28,24 +24,37 @@ function Login() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
-				const nameOfUser = response.data.user.name;
-				setUsername('');
-				setPassword('');
-				sessionStorage.setItem('isLoggedIn', true);
 				sessionStorage.setItem(
-					'user',
-					JSON.stringify(response.data.user)
+					'projectProposed',
+					JSON.stringify(response.data)
 				);
-				saveProposedProjects();
-				saveBidProjects();
-
-				navigate('/profile');
 			})
 			.catch(function (error) {
 				console.error(error);
 			});
 	};
-	const saveBidProjects = () => {};
+	const saveBidProjects = (idOfUser) => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/projectBidBy/${idOfUser}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				sessionStorage.setItem(
+					'projectBid',
+					JSON.stringify(response.data)
+				);
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
+	};
 	function login() {
 		const options = {
 			method: 'POST',
@@ -72,8 +81,8 @@ function Login() {
 					'user',
 					JSON.stringify(response.data.user)
 				);
-				saveProposedProjects();
-				saveBidProjects();
+				saveProposedProjects(idOfUser);
+				// saveBidProjects(idOfUser);
 
 				navigate(`/profile?id=${idOfUser}`);
 			})

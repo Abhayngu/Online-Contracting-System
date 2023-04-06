@@ -15,21 +15,18 @@ function Profile() {
 
 	useEffect(() => {
 		const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-		if (isLoggedIn == 'false') {
+		if (!(isLoggedIn == 'true')) {
 			navigate('/');
+		} else {
+			console.log('User is logged in <--- from profile page');
 		}
 		const user = JSON.parse(sessionStorage.getItem('user'));
 		setName(user.name);
 		setTokens(user.tokens);
 		setIsValidator(user.isValidator);
-
-		let t1 = JSON.parse(sessionStorage.getItem('projectProposed'));
-		let t2 = [];
-		t1.map((t) => {
-			t2.append({});
-		});
-		setMyProject(user.projectProposed);
-		setProjectBidFor(user.projectBidFor);
+		const projProp = JSON.parse(sessionStorage.getItem('projectProposed'));
+		setMyProject(projProp);
+		setProjectBidFor(projProp);
 		console.log(user);
 	}, []);
 	const customStyle = {
@@ -86,29 +83,38 @@ function Profile() {
 				</div>
 				<div style={customStyle.projectHeading}>My Projects</div>
 				<div style={customStyle.myProjectsContainer}>
-					{myProject.map((project) => {
-						return (
-							<ProjectBox
-								id={project._id}
-								name={project.name}
-								status={project.status}
-								partyName={project.partyName}
-							/>
-						);
-					})}
+					{myProject.length == 0 ? (
+						<></>
+					) : (
+						myProject.map((project) => {
+							return (
+								<ProjectBox
+									id={project._id}
+									name={project.name}
+									isValidated={project.isValidated}
+									isIssued={project.isIssued}
+									partyName={name}
+								/>
+							);
+						})
+					)}
 				</div>
 				<div style={customStyle.projectHeading}>Projects Bid For</div>
 				<div style={customStyle.projectBidContainer}>
-					{projectBidFor.map((project) => {
-						return (
-							<ProjectBox
-								id={project._id}
-								name={project.name}
-								status={project.status}
-								partyName={project.partyName}
-							/>
-						);
-					})}
+					{projectBidFor.length == 0 ? (
+						<></>
+					) : (
+						projectBidFor.map((project) => {
+							return (
+								<ProjectBox
+									id={project._id}
+									name={project.name}
+									status={project.status}
+									partyName={project.partyName}
+								/>
+							);
+						})
+					)}
 				</div>
 			</div>
 		</React.Fragment>

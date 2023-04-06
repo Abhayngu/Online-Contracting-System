@@ -8,6 +8,7 @@ function Header({ c }) {
 	const [display, setDisplay] = useState('hide-it');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [username, setUsername] = useState('');
+	const [id, setId] = useState('');
 
 	useEffect(() => {
 		const loggedIn = sessionStorage.getItem('isLoggedIn');
@@ -15,6 +16,7 @@ function Header({ c }) {
 		if (loggedIn == 'true') {
 			setIsLoggedIn(true);
 			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
+			setId(JSON.parse(sessionStorage.getItem('user'))._id);
 		} else {
 			console.log('loggedin value', typeof loggedIn);
 		}
@@ -90,6 +92,10 @@ function Header({ c }) {
 
 	const goToLoginPage = () => {
 		navigate('/login');
+	};
+
+	const goToProfilePage = () => {
+		navigate(`/profile?id=${id}`);
 	};
 
 	const visibleOptions = () => {
@@ -176,15 +182,28 @@ function Header({ c }) {
 								Logout
 							</div>
 						)}
-						<div
-							onClick={goToLoginPage}
-							style={{
-								...customStyle.SignIn,
-								...customStyle.icons,
-							}}
-						>
-							{isLoggedIn == true ? username : 'Sign In'}
-						</div>
+
+						{isLoggedIn == true ? (
+							<div
+								style={{
+									...customStyle.SignIn,
+									...customStyle.icons,
+								}}
+								onClick={goToProfilePage}
+							>
+								{username}
+							</div>
+						) : (
+							<div
+								onClick={goToLoginPage}
+								style={{
+									...customStyle.SignIn,
+									...customStyle.icons,
+								}}
+							>
+								Sign In
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
