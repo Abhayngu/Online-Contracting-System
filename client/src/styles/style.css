@@ -5,16 +5,16 @@
     
     .label{
     display: block;
-    font-size: larger;
     color: black;
     padding: 5px;
+    font-size: 16px;
     }
     
     .input{
     font-size: larger;
     padding: 5px;
     margin: 2px;
-    
+    margin-bottom: 20px;
     }
     .btn{
     color: white;
@@ -24,29 +24,34 @@
     display: block;
     padding: 5px;
     margin: 10px auto;
+    cursor : pointer
     }
     
     .messages{
-    display: flex;
-    justify-content: center;
+        width: 100%; 
+        text-align: center;
     }
     
     .error{
     display: block;
-    background-color: red;
-    color: white;
-    width: fit-content;
+    /* background-color: red; */
+    font-size: 14px;
+    font-weight: 100;
+    color: red;
+    /* width: fit-content; */
     height: 50px;
     padding: 5px;
     }
     
     .success{
-    display: block;
-    background-color: lightblue;
-    color: black;
-    width: fit-content;
-    height: 50px;
-    padding: 5px;
+        display: block;
+        /* background-color: red; */
+        font-size: 14px;
+        font-weight: 100;
+        color: green;
+        /* width: fit-content; */
+        height: 50px;
+        padding: 5px;
     }
     .form{
         display:flex;
@@ -55,7 +60,8 @@
         height: 100%;
     }
     .mgbtm{
-        padding: 50px;
+        padding: 30px 50px;
+        padding-bottom: 25px;
     }
     .m2{
         display: flex;
@@ -78,8 +84,9 @@
 margin-top: 10%;
     }
     .m4{
-        padding: 70px ;
+        padding: 30px ;
         display: flex;
         order: 10;
         justify-content: center;
     }
+    
