@@ -44,7 +44,11 @@ exports.login = async (req, res, next) => {
         return next(err);
       }
       req.session.email = user.email;
-      return res.json({ message: 'Successfully logged in with user' + req.session.email  });
+      return res.json({ 
+        message : 'Successfully logged in with user ', 
+        user : user
+
+      });
       // res.render('update');
     });
   })(req, res, next);

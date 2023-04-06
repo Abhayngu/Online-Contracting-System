@@ -21,7 +21,8 @@ const {
 	getProjectById,
 	issueProject,
 	validateProject,
-	getAllValidatedProject
+	getAllValidatedProject,
+	getProjectProposedByUser
 } = require('../controllers/project');
 
 
@@ -48,8 +49,10 @@ router.post('/registerProject', registerProject);
 router.get('/top3', getTop3Projects);
 router.get('/getAllProj', getAllProjects);
 router.get('/byEmail', getProjectsByEmail);
-router.get('/byId', getProjectById);
+router.get('/byId/:id', getProjectById);
 router.put('/issueProj', issueProject);
 router.put('/validateProj', validateProject);
 router.get('/listOfValidProj', getAllValidatedProject);
+router.get('/projectProposedBy/:id', getProjectProposedByUser);
 module.exports = router;
+
