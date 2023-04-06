@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function ProjectBox({ id }) {
+function ProjectBox({ id, name, status, partyName }) {
+	console.log(id);
 	const navigate = useNavigate();
 	const [proId, setProId] = useState(id);
-	const [projectName, setProjectName] = useState('Laptop bidding');
-	const [projectStatus, setProjectStatus] = useState('Bidding going on');
-	const [proposedBy, setProposedBy] = useState('party3');
+	const [projectName, setProjectName] = useState(name);
+	const [projectStatus, setProjectStatus] = useState(status);
+	const [proposedBy, setProposedBy] = useState(partyName);
+	useEffect(() => {}, []);
 	function handleProjectClick() {
 		navigate(`/project?id=${proId}`);
 	}

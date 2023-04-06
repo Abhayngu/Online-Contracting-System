@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import style from '../styles/style.css';
+import axios from 'axios';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
 function Form() {
@@ -42,14 +43,49 @@ function Form() {
 		if (name === '' || email === '' || password === '') {
 			setError(true);
 		} else {
-			setSubmitted(true);
-			setError(false);
-			setEmail('');
-			setTempName(name);
-			setName('');
-			setPassword('');
+			const options = {
+				method: 'POST',
+				url: 'http://localhost:2000/signup',
+				headers: {
+					'content-type': 'application/json',
+				},
+				data: {
+					name: name,
+					email: email,
+					password: password,
+					description: 'some kind of description',
+				},
+			};
+
+			axios
+				.request(options)
+				.then((response) => {
+					console.log(response.data);
+					setSubmitted(true);
+					setError(false);
+					setEmail('');
+					setTempName(name);
+					setName('');
+					setPassword('');
+					sessionStorage.setItem('isLoggedIn', true);
+				})
+				.catch(function (error) {
+					console.error(error);
+					setError(true);
+				});
 		}
 	};
+
+	// axios
+	// 		.get('http://localhost:2401/api/zomato/getCities')
+	// 		.then((result) => {
+	// 			this.setState({
+	// 				cities: result.data.cities,
+	// 			});
+	// 		})
+	// 		.catch((error) => {
+	// 			console.log(error);
+	// 		});
 
 	// Showing success message
 	const successMessage = () => {
@@ -88,7 +124,14 @@ function Form() {
 			<Header c="#d9d9d9" />
 
 			<div className="form">
-				<div>
+				<div
+					style={{
+						borderRadius: '60px',
+						backgroundColor: 'white',
+						padding: '30px 0',
+						marginTop: '40px',
+					}}
+				>
 					<div className="mgbtm">
 						<h1 style={{ fontWeight: 600, textAlign: 'center' }}>
 							Get Your Party Registered Here!

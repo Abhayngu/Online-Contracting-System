@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 import { RiArrowDropDownFill } from 'react-icons/ri';
@@ -6,6 +6,20 @@ import { RiArrowDropDownFill } from 'react-icons/ri';
 function Header({ c }) {
 	const navigate = useNavigate();
 	const [display, setDisplay] = useState('hide-it');
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [username, setUsername] = useState('');
+
+	useEffect(() => {
+		const loggedIn = sessionStorage.getItem('isLoggedIn');
+
+		if (loggedIn == 'true') {
+			setIsLoggedIn(true);
+			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
+		} else {
+			console.log('loggedin value', typeof loggedIn);
+		}
+		console.log('isLoggedin value', isLoggedIn);
+	}, []);
 
 	const customStyle = {
 		headerContainer: {},
@@ -86,6 +100,13 @@ function Header({ c }) {
 		}
 	};
 
+	const handleLogout = () => {
+		// sessionStorage.setItem('isLoggedIn', false);
+		sessionStorage.clear();
+		setIsLoggedIn(false);
+		navigate('/');
+	};
+
 	return (
 		<React.Fragment>
 			<div style={customStyle.headerContainer}>
@@ -134,15 +155,27 @@ function Header({ c }) {
 								</div>
 							</ul>
 						</div>
-						<div
-							onClick={goToRegisterPage}
-							style={{
-								...customStyle.Register,
-								...customStyle.icons,
-							}}
-						>
-							Register
-						</div>
+						{isLoggedIn == false ? (
+							<div
+								onClick={goToRegisterPage}
+								style={{
+									...customStyle.Register,
+									...customStyle.icons,
+								}}
+							>
+								Register
+							</div>
+						) : (
+							<div
+								onClick={handleLogout}
+								style={{
+									...customStyle.Register,
+									...customStyle.icons,
+								}}
+							>
+								Logout
+							</div>
+						)}
 						<div
 							onClick={goToLoginPage}
 							style={{
@@ -150,7 +183,7 @@ function Header({ c }) {
 								...customStyle.icons,
 							}}
 						>
-							Sign In
+							{isLoggedIn == true ? username : 'Sign In'}
 						</div>
 					</div>
 				</div>

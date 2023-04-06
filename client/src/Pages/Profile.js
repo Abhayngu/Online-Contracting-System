@@ -1,23 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import ProjectBox from '../Components/ProjectBox';
+import { useNavigate } from 'react-router-dom';
 
 function Profile() {
+	const navigate = useNavigate();
 	const queryParameters = new URLSearchParams(window.location.search);
 	const partyId = queryParameters.get('id');
-	const [id, setId] = useState(partyId);
-	const [name, setName] = useState('Party 123');
-	const [projectBidFor, setProjectBidFor] = useState([
-		'decoration system',
-		'roadways',
-	]);
-	const [myProject, setMyProject] = useState([
-		{ id: 54, name: 'sdafdsf' },
-		{ id: 5463, name: 'galjesdf' },
-	]);
-	const [tokens, setTokens] = useState(30);
+	const [name, setName] = useState('');
+	const [projectBidFor, setProjectBidFor] = useState([]);
+	const [myProject, setMyProject] = useState([]);
+	const [tokens, setTokens] = useState(0);
 	const [isValidator, setIsValidator] = useState(false);
 
+	useEffect(() => {
+		const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+		if (isLoggedIn == 'false') {
+			navigate('/');
+		}
+		const user = JSON.parse(sessionStorage.getItem('user'));
+		setName(user.name);
+		setTokens(user.tokens);
+		setIsValidator(user.isValidator);
+
+		let t1 = JSON.parse(sessionStorage.getItem('projectProposed'));
+		let t2 = [];
+		t1.map((t) => {
+			t2.append({});
+		});
+		setMyProject(user.projectProposed);
+		setProjectBidFor(user.projectBidFor);
+		console.log(user);
+	}, []);
 	const customStyle = {
 		profileContainer: {
 			// display: 'flex',
@@ -73,13 +87,27 @@ function Profile() {
 				<div style={customStyle.projectHeading}>My Projects</div>
 				<div style={customStyle.myProjectsContainer}>
 					{myProject.map((project) => {
-						return <ProjectBox id={project.id} />;
+						return (
+							<ProjectBox
+								id={project._id}
+								name={project.name}
+								status={project.status}
+								partyName={project.partyName}
+							/>
+						);
 					})}
 				</div>
 				<div style={customStyle.projectHeading}>Projects Bid For</div>
 				<div style={customStyle.projectBidContainer}>
 					{projectBidFor.map((project) => {
-						return <ProjectBox id={project} />;
+						return (
+							<ProjectBox
+								id={project._id}
+								name={project.name}
+								status={project.status}
+								partyName={project.partyName}
+							/>
+						);
 					})}
 				</div>
 			</div>
