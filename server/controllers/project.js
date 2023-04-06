@@ -99,8 +99,22 @@ exports.partyBiddingForProjects = async (req, res, next) => {
     }
 
     await party.updateOne({ $push: { projectBidFor: projectId } });
+    await project.updateOne({ $push: { bidders: partyId } });
 
     return res.status(200).json({ msg: "Project bid added successfully." });
+};
+
+exports.listOfProjectsBidByUser = async (req, res, next) => {
+    let id = req.params.id;
+
+    const party = await Party.findById(id);
+    if (!party) {
+        return res.status(400).json({ msg: "Party not found." });
+    }
+    console.log(party);
+    const project = await Project.find({ bidders: id });
+
+    return res.status(200).json({ project });
 };
 
 exports.getProjectProposedByUser = async (req, res, next) => {
@@ -111,4 +125,4 @@ exports.getProjectProposedByUser = async (req, res, next) => {
     }
     const projects = await Project.find({proposedBy: id});
     res.status(200).json(projects);
-}
+};

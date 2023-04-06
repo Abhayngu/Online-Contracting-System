@@ -22,7 +22,9 @@ const {
 	issueProject,
 	validateProject,
 	getAllValidatedProject,
-	getProjectProposedByUser
+	getProjectProposedByUser,
+	partyBiddingForProjects,
+	listOfProjectsBidByUser
 } = require('../controllers/project');
 
 
@@ -54,5 +56,7 @@ router.put('/issueProj', issueProject);
 router.put('/validateProj', validateProject);
 router.get('/listOfValidProj', getAllValidatedProject);
 router.get('/projectProposedBy/:id', getProjectProposedByUser);
+router.put('/projectBidding', partyBiddingForProjects);
+router.get('/bidByuserId/:id', listOfProjectsBidByUser);
 module.exports = router;
 
