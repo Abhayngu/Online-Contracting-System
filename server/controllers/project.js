@@ -148,13 +148,14 @@ exports.listOfProjectsBidByUser = async (req, res, next) => {
 };
 
 exports.getProjectProposedByUser = async (req, res, next) => {
-	let id = req.params.id;
-	const party = await Party.findById(id);
+	let partyId = req.params.id;
+	const party = await Party.findById(partyId);
 	if (!party) {
 		return res
 			.status(400)
 			.json({ msg: `Party not found with id ${req.params.id}.` });
 	}
-	const projects = await Project.find({ proposedBy: id });
+	const projects = await Project.find({ 'proposedBy.id': partyId });
+	console.log(projects);
 	res.status(200).json(projects);
 };

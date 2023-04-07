@@ -82,7 +82,7 @@ function Profile() {
 		setIsValidator(user.isValidator);
 
 		saveProposedProjects(user._id);
-		saveBidProjects(user._id);
+		// saveBidProjects(user._id);
 		// const projProp = JSON.parse(
 		// 	sessionStorage.getItem('projectProposed')
 		// ).project;
