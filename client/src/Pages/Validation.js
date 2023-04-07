@@ -49,7 +49,7 @@ function Validation() {
 				},
 				expectedFinishTime: completionDate,
 				expectedTokens: tokens,
-				biddingDuration: '2hr',
+				biddingDuration: '1hr',
 			},
 		};
 		console.log(options);
