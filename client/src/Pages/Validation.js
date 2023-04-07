@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import Header from '../Components/Header';
+import axios from 'axios';
+import Spinner from '../Components/Spinner';
 function Validation() {
 	// States for validation
+	const [loading, setLoading] = useState(false);
 	const [projectName, setProjectName] = useState('');
 	const [description, setDescription] = useState('');
 	const [tokens, setTokens] = useState('');
 	const [completionDate, setCompletionDate] = useState('');
+	const [biddingCompletionDate, setBiddingCompletionDate] = useState('');
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
@@ -25,6 +29,43 @@ function Validation() {
 	const handle_Completion_Date = (e) => {
 		setCompletionDate(e.target.value);
 	};
+	const handle_Bidding_Completion_Date = (e) => {
+		setBiddingCompletionDate(e.target.value);
+	};
+	const registerProject = () => {
+		setLoading(true);
+		const options = {
+			method: 'POST',
+			url: `http://localhost:2000/registerProject`,
+			headers: {
+				'content-type': 'application/json',
+			},
+			data: {
+				name: projectName,
+				description,
+				proposedBy: {
+					id: sessionStorage.getItem('id'),
+					name: JSON.parse(sessionStorage.getItem('user')).name,
+				},
+				expectedFinishTime: completionDate,
+				expectedTokens: tokens,
+				biddingDuration: '2hr',
+			},
+		};
+		console.log(options);
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setLoading(false);
+				setSubmitted(true);
+			})
+			.catch(function (error) {
+				console.error(error);
+				setLoading(false);
+				setError(true);
+			});
+	};
 
 	// Handling the form submission
 	const handleSubmit = (e) => {
@@ -33,16 +74,24 @@ function Validation() {
 			projectName === '' ||
 			description === '' ||
 			tokens === '' ||
-			completionDate === ''
+			completionDate === '' ||
+			biddingCompletionDate == ''
 		) {
 			setError(true);
 		} else {
-			setSubmitted(true);
-			setError(false);
+			console.log(
+				projectName,
+				description,
+				tokens,
+				completionDate,
+				biddingCompletionDate
+			);
+			registerProject();
 			setProjectName('');
 			setTokens('');
 			setDescription('');
 			setCompletionDate('');
+			setBiddingCompletionDate('');
 		}
 	};
 
@@ -114,9 +163,17 @@ function Validation() {
 								value={tokens}
 								type="number"
 							/>
-
 							<label className="label">
-								Expected Completion Date*
+								Expected Bidding Completion Date*
+							</label>
+							<input
+								onChange={handle_Bidding_Completion_Date}
+								className="input"
+								value={biddingCompletionDate}
+								type="datetime-local"
+							/>
+							<label className="label">
+								Expected Project Completion Date*
 							</label>
 							<input
 								onChange={handle_Completion_Date}

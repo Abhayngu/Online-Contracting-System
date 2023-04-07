@@ -41,6 +41,7 @@ function Login() {
 			'user',
 			JSON.stringify(response.data.user)
 		);
+		await sessionStorage.setItem('id', idOfUser);
 		setLoading(false);
 		navigate(`/profile?id=${idOfUser}`);
 	};
