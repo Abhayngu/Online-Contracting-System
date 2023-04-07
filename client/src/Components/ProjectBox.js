@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
-	console.log(id);
+	// console.log(id);
 	const navigate = useNavigate();
 	const [proId, setProId] = useState(id);
 	const [projectName, setProjectName] = useState(name);

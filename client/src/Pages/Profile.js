@@ -115,8 +115,8 @@ function Profile() {
 	}, []);
 
 	const handleAnonymity = () => {
-		setIsAnonymous((prevVal) => !prevVal);
 		setLoading(true);
+		setIsAnonymous((prevVal) => !prevVal);
 		const options = {
 			method: 'PUT',
 			url: `http://localhost:2000/updateAnonymity/${sessionStorage.getItem(
@@ -126,7 +126,7 @@ function Profile() {
 				'content-type': 'application/json',
 			},
 			data: {
-				isAnonymous,
+				isAnonymous: !isAnonymous,
 			},
 		};
 
@@ -199,22 +199,24 @@ function Profile() {
 							</div>
 							<div>
 								<label
+									onClick={handleAnonymity}
 									style={{
 										marginRight: '15px',
 										marginBottom: '20px',
 										display: 'inline-block',
+										cursor: 'pointer',
 									}}
 								>
 									{isAnonymous
-										? 'You are anonymous'
-										: 'Want to be anonymous?'}
+										? 'Click to show your profile'
+										: 'Click here to be anonymous?'}
 								</label>
-								<input
+								{/* <input
 									type="checkbox"
 									name="agreement"
 									checked={isAnonymous}
 									onChange={handleAnonymity}
-								/>
+								/> */}
 							</div>
 						</div>
 
