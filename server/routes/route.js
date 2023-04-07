@@ -11,7 +11,6 @@ const {
 	updateParty,
 	deleteParty,
 	changePassword,
-	getPartytById,
 } = require('../controllers/party');
 
 const {
@@ -42,8 +41,10 @@ router.get('/delete', deleteParty);
 router.post('/signup', createParty);
 router.post('/login', login);
 
+router.post('/signup', createParty);
+router.post('/login', login);
+
 router.put('/update', updateParty);
-router.get('/partyById/:id', getPartytById);
 
 router.post('/registerProject', registerProject);
 router.get('/top3', getTop3Projects);
