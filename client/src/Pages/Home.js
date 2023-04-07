@@ -239,10 +239,10 @@ function Home() {
 					);
 				})}
 			</div>
-			<div style={customStyle.boldCenteredHeading}>
+			{/* <div style={customStyle.boldCenteredHeading}>
 				What do you get on Sign up?
-			</div>
-			<div style={customStyle.signUpDesc}>
+			</div> */}
+			{/* <div style={customStyle.signUpDesc}>
 				This Platform helps you to let your project done by some of the
 				top contractors as well as to bid for projects with no hassle
 				and 100% transparency!
@@ -277,7 +277,7 @@ function Home() {
 					</div>
 				</div>
 				<div style={customStyle.signUpRightContainer}></div>
-			</div>
+			</div> */}
 		</React.Fragment>
 	);
 }

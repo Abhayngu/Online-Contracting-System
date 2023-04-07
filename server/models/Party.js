@@ -1,6 +1,23 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
+const Proj = new mongoose.Schema({
+	bidderId: {
+		type: [mongoose.Schema.ObjectId],
+		ref: 'Project',
+	},
+	projectName: {
+		type: String,
+	},
+	tokenBid: {
+		type: Number,
+		default: 0,
+	},
+	proposed: {
+		type: Boolean,
+	},
+});
+
 const PartySchema = new mongoose.Schema(
 	{
 		name: {
@@ -46,19 +63,13 @@ const PartySchema = new mongoose.Schema(
 			default: 0,
 		},
 		projectProposed: {
-			type: [mongoose.Schema.ObjectId],
-			ref: 'Project',
-			default: [],
+			type: [Proj],
 		},
 		projectBidFor: {
-			type: [mongoose.Schema.ObjectId],
-			ref: 'Project',
-			default: [],
+			type: [Proj],
 		},
 		biddingWon: {
-			type: [mongoose.Schema.ObjectId],
-			ref: 'Project',
-			default: [],
+			type: [Proj],
 		},
 	},
 	{
