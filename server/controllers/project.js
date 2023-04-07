@@ -117,7 +117,7 @@ exports.getAllValidatedProject = async (req, res, next) => {
 };
 
 exports.partyBiddingForProjects = async (req, res, next) => {
-	let { partyId, projectId } = req.body;
+	let { partyId, projectId, tokenBid } = req.body;
 
 	const party = await Party.findById(partyId);
 	if (!party) {
@@ -128,8 +128,25 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 		return res.status(400).json({ msg: 'Project not found.' });
 	}
 
-	await party.updateOne({ $push: { projectBidFor: projectId } });
-	await project.updateOne({ $push: { bidders: partyId } });
+	await party.updateOne({
+		$push: {
+			projectBidFor: {
+				projectId,
+				projectName: project.name,
+				tokenBid,
+				proposed: false,
+			},
+		},
+	});
+	await project.updateOne({
+		$push: {
+			bidders: {
+				bidderId: partyId,
+				bidderName: party.name,
+				bidderToken: tokenBid,
+			},
+		},
+	});
 
 	return res.status(200).json({ msg: 'Project bid added successfully.' });
 };
@@ -142,7 +159,7 @@ exports.listOfProjectsBidByUser = async (req, res, next) => {
 		return res.status(400).json({ msg: 'Party not found.' });
 	}
 	console.log(party);
-	const project = await Project.find({ bidders: id });
+	const project = await Project.find({ 'bidders.bidderId': id });
 
     return res.status(200).json(project);
 };
