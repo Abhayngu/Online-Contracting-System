@@ -84,7 +84,7 @@ function Login() {
 											}}
 											valuetype="text"
 											placeholder="email"
-											className="name"
+											className="input name"
 										/>
 									</div>
 									<div className="second-input">
@@ -96,7 +96,7 @@ function Login() {
 											}}
 											type="password"
 											placeholder="password"
-											className="name"
+											className="input name"
 										/>
 									</div>
 									<div

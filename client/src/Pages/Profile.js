@@ -7,8 +7,9 @@ import Spinner from '../Components/Spinner';
 
 function Profile() {
 	const [name, setName] = useState('');
-	const [projectBidFor, setProjectBidFor] = useState([]);
 	const [myProject, setMyProject] = useState([]);
+	const [projectBidFor, setProjectBidFor] = useState([]);
+	const [isAnonymous, setIsAnonymous] = useState(false);
 	const [tokens, setTokens] = useState(0);
 	const [isValidator, setIsValidator] = useState(false);
 	const [loading, setLoading] = useState(true);
@@ -68,29 +69,78 @@ function Profile() {
 				setLoading(false);
 			});
 	};
+	const getUser = () => {
+		setLoading(true);
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/partyById/${sessionStorage.getItem(
+				'id'
+			)}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				const user = response.data.data;
+				setIsAnonymous(user.isAnonymous);
+				setName(user.name);
+				setTokens(user.tokens);
+				setIsValidator(user.isValidator);
+				saveProposedProjects(user._id);
+				// saveBidProjects(user._id);
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error);
+				setLoading(false);
+			});
+	};
 	useEffect(() => {
-		console.log('loading value', loading);
 		const isLoggedIn = sessionStorage.getItem('isLoggedIn');
 		if (!(isLoggedIn == 'true')) {
 			navigate('/');
 		} else {
 			// console.log('User is logged in <--- from profile page');
 		}
-		const user = JSON.parse(sessionStorage.getItem('user'));
-		setName(user.name);
-		setTokens(user.tokens);
-		setIsValidator(user.isValidator);
-
-		saveProposedProjects(user._id);
-		// saveBidProjects(user._id);
-		// const projProp = JSON.parse(
-		// 	sessionStorage.getItem('projectProposed')
-		// ).project;
-		// const projBid = JSON.parse(sessionStorage.getItem('projectBid'));
-		// console.log('bid', projBid);
-		// setMyProject(projProp);
-		// setProjectBidFor(projBid);
+		getUser();
+		// const user = JSON.parse(sessionStorage.getItem('user'));
+		// setName(user.name);
+		// setTokens(user.tokens);
+		// setIsValidator(user.isValidator);
+		// setIsAnonymous(user.isAnonymous);
+		// saveProposedProjects(user._id);
 	}, []);
+
+	const handleAnonymity = () => {
+		setIsAnonymous((prevVal) => !prevVal);
+		setLoading(true);
+		const options = {
+			method: 'PUT',
+			url: `http://localhost:2000/updateAnonymity/${sessionStorage.getItem(
+				'id'
+			)}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+			data: {
+				isAnonymous,
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error);
+				setLoading(false);
+			});
+	};
 
 	const customStyle = {
 		profileContainer: {
@@ -138,7 +188,36 @@ function Profile() {
 				<>
 					<Header c="#d9d9d9" />
 					<div style={customStyle.profileContainer}>
-						<div style={customStyle.partyName}>{name}</div>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'space-between',
+							}}
+						>
+							<div style={customStyle.partyName}>
+								{isAnonymous ? 'Anonymous' : name}
+							</div>
+							<div>
+								<label
+									style={{
+										marginRight: '15px',
+										marginBottom: '20px',
+										display: 'inline-block',
+									}}
+								>
+									{isAnonymous
+										? 'You are anonymous'
+										: 'Want to be anonymous?'}
+								</label>
+								<input
+									type="checkbox"
+									name="agreement"
+									checked={isAnonymous}
+									onChange={handleAnonymity}
+								/>
+							</div>
+						</div>
+
 						<div style={customStyle.tokens}>Tokens : {tokens}</div>
 						<div style={customStyle.isValidator}>
 							Is a Validator? :{' '}
@@ -160,7 +239,7 @@ function Profile() {
 											name={project.name}
 											isValidated={project.isValidated}
 											isIssued={project.isIssued}
-											partyName={name}
+											partyName={project.proposedBy.name}
 										/>
 									);
 								})}
@@ -177,7 +256,7 @@ function Profile() {
 											name={project.name}
 											isValidated={project.isValidated}
 											isIssued={project.isIssued}
-											partyName={project.partyName}
+											partyName={project.proposedBy.name}
 										/>
 									);
 								})}

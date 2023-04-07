@@ -10,7 +10,8 @@ const {
 	login,
 	updateParty,
 	deleteParty,
-	changePassword
+	changePassword,
+	getPartytById,
 } = require('../controllers/party');
 
 const {
@@ -24,28 +25,25 @@ const {
 	getAllValidatedProject,
 	getProjectProposedByUser,
 	partyBiddingForProjects,
-	listOfProjectsBidByUser
+	listOfProjectsBidByUser,
 } = require('../controllers/project');
 
+router.get('/signup', (req, res) => {
+	res.render('signup');
+});
+router.get('/login', (req, res) => {
+	res.render('login');
+});
+router.get('/update', (req, res) => {
+	res.render('update');
+});
+router.get('/delete', deleteParty);
 
-router.get('/signup',(req,res)=>{
-    res.render('signup');
-})
-router.get('/login',(req,res)=>{
-    res.render('login');
-})
-router.get('/update',(req,res)=>{
-    res.render('update');
-})
-router.get('/delete',deleteParty);
+router.post('/signup', createParty);
+router.post('/login', login);
 
-
-
-router.post('/signup',createParty);
-router.post('/login',login);
-
-router.put('/update',updateParty);
-
+router.put('/update', updateParty);
+router.get('/partyById/:id', getPartytById);
 
 router.post('/registerProject', registerProject);
 router.get('/top3', getTop3Projects);
@@ -59,4 +57,3 @@ router.get('/projectProposedBy/:id', getProjectProposedByUser);
 router.put('/projectBidding', partyBiddingForProjects);
 router.get('/projectBidBy/:id', listOfProjectsBidByUser);
 module.exports = router;
-

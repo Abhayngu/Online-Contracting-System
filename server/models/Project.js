@@ -64,6 +64,7 @@ const ProjectSchema = new mongoose.Schema(
 			type: mongoose.Schema.ObjectId,
 			ref: 'Party',
 		},
+		wonByToken: { type: Number },
 		milestonesAchieved: {
 			type: Number,
 			default: 0,
