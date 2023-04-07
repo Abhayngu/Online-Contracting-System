@@ -67,7 +67,7 @@ function Form() {
 					setTempName(name);
 					setName('');
 					setPassword('');
-					sessionStorage.setItem('isLoggedIn', true);
+					// sessionStorage.setItem('isLoggedIn', true);
 				})
 				.catch(function (error) {
 					console.error(error);
