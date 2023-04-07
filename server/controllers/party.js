@@ -158,11 +158,11 @@ exports.getPartytById = async (req, res, next) => {
 
 exports.anonymityOfParty = async (req, res, next) => {
 	let isAnonymous = req.body;
-	
+
 	const party = await Party.findByIdAndUpdate(
 		req.params.id,
-		{ isAnonymous : isAnonymous },
+		{ isAnonymous: isAnonymous },
 		{ new: true }
 	);
-	res.status(200).json({msg: 'Sucessfully set.'});
+	res.status(200).json({ msg: 'Sucessfully set.' });
 };
