@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
 const Proj = new mongoose.Schema({
-	bidderId: {
+	projectId: {
 		type: [mongoose.Schema.ObjectId],
 		ref: 'Project',
 	},

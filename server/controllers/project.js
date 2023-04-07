@@ -5,12 +5,12 @@ exports.registerProject = async (req, res, next) => {
 	let {
 		name,
 		description,
-		proposedBy,
+		proposedBy, // id of user which is login
 		expectedFinishTime,
 		expectedTokens,
 		biddingDuration,
 	} = req.body;
-	const party = await Party.findById(proposedBy.toString());
+	const party = await Party.findById(proposedBy.id);
 	if (!party) {
 		return res.status(400).json({ msg: 'No party exist with the id.' });
 	}
@@ -24,13 +24,21 @@ exports.registerProject = async (req, res, next) => {
 			biddingDuration,
 		});
 		const party = await Party.findByIdAndUpdate(
-			proposedBy,
-			{ $push: { projectProposed: project._id } },
+			proposedBy.id,
+			{
+				$push: {
+					projectProposed: {
+						projectId: project._id,
+						projectName: name,
+						proposed: true,
+					},
+				},
+			},
 			{ new: true }
 		);
 		res.status(200).json({ msg: 'Project registered sucessfully.' });
-	} catch {
-		res.status(400).json({ msg: 'Failed to register project.' });
+	} catch (err) {
+		res.status(400).json({ msg: err.message });
 	}
 };
 
