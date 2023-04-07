@@ -157,8 +157,8 @@ exports.getPartytById = async (req, res, next) => {
 };
 
 exports.anonymityOfParty = async (req, res, next) => {
-	let isAnonymous = req.body;
-
+	let { isAnonymous } = req.body;
+	console.log(isAnonymous, typeof isAnonymous);
 	const party = await Party.findByIdAndUpdate(
 		req.params.id,
 		{ isAnonymous: isAnonymous },
