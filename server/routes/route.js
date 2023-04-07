@@ -12,6 +12,7 @@ const {
 	deleteParty,
 	anonymityOfParty,
 	changePassword,
+	getPartytById,
 } = require('../controllers/party');
 
 const {
@@ -44,6 +45,7 @@ router.post('/login', login);
 
 router.post('/signup', createParty);
 router.post('/login', login);
+router.get('/partyById/:id', getPartytById);
 
 router.put('/update', updateParty);
 router.put('/updateAnonymity/:id', anonymityOfParty);
