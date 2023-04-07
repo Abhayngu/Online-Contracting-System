@@ -5,7 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
 import { greenColor, blueColor } from '../globalVars';
+import Spinner from '../Components/Spinner';
 function Home() {
+	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate();
 	const customStyle = {
 		titleImageContainer: {
