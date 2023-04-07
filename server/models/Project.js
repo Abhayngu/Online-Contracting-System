@@ -1,5 +1,18 @@
 const mongoose = require('mongoose');
 
+const Bidder = new mongoose.Schema({
+	bidderId: {
+		type: [mongoose.Schema.ObjectId],
+		ref: 'Party',
+	},
+	bidderName: {
+		type: String,
+	},
+	bidderToken: {
+		type: Number,
+	},
+});
+
 const ProjectSchema = new mongoose.Schema(
 	{
 		name: {
@@ -12,9 +25,14 @@ const ProjectSchema = new mongoose.Schema(
 			maxLength: 200,
 		},
 		proposedBy: {
-			type: mongoose.Schema.ObjectId,
-			ref: 'Party',
-			require: true,
+			id: {
+				type: mongoose.Schema.ObjectId,
+				ref: 'Party',
+				require: true,
+			},
+			name: {
+				type: String,
+			},
 		},
 		proposedAt: {
 			type: Date,
@@ -28,8 +46,7 @@ const ProjectSchema = new mongoose.Schema(
 			type: Number,
 		},
 		bidders: {
-			type: [mongoose.Schema.ObjectId],
-			ref: 'Party',
+			type: [Bidder],
 		},
 		biddingDuration: {
 			type: String,
@@ -44,13 +61,14 @@ const ProjectSchema = new mongoose.Schema(
 			default: false,
 		},
 		wonBy: {
-			type: [mongoose.Schema.ObjectId],
+			type: mongoose.Schema.ObjectId,
 			ref: 'Party',
 		},
 		milestonesAchieved: {
-			type: String,
-			default: 'Nothing',
-			enum: ['Nothing', 'Design', 'Code', 'Test', 'Deploy'],
+			type: Number,
+			default: 0,
+			// nothing, design, code, test, deploy
+			// 0, 1, 2, 3, 4
 		},
 	},
 	{

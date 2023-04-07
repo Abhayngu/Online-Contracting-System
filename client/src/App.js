@@ -9,12 +9,13 @@ import Validation from './Pages/Validation';
 import Project from '../src/Pages/Project';
 import Profile from '../src/Pages/Profile';
 import ProjectBox from './Components/ProjectBox';
+import Spinner from './Components/Spinner';
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/test" element={<ProjectBox />} />
+				<Route path="/test" element={<Spinner />} />
 				<Route path="/project" element={<Project />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/login" element={<Login />} />
