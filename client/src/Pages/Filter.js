@@ -4,19 +4,32 @@ import axios from 'axios';
 import Spinner from '../Components/Spinner';
 
 export default function Filter() {
-    // Spinner
+	// Spinner
 	const [loading, setLoading] = useState(false);
 
-    // Projects
+	// Projects
 	const [projects, setProjects] = useState([]);
 	const [filteredProjects, setFilteredProjects] = useState([]);
 
-    // filters
-	const [mileStones, setMileStones] = useState([]);
-	const [nameOfParty, setNameOfParty] = useState('');
-	const [status, setStatus] = useState('Not Validated');
+	// filters
 
-    
+	// nothing, design, code, test, deploy
+	// 0, 1, 2, 3, 4
+	const [mileStones, setMileStones] = useState(0);
+	const [mileDict, setMileDict] = useState({
+		nothing: 0,
+		design: 1,
+		code: 2,
+		test: 3,
+		deploy: 4,
+	});
+
+	// Name of the party
+	const [nameOfParty, setNameOfParty] = useState('');
+
+	// Not Validated, Validated, Bidding Going On, Issued
+	const [status, setStatus] = useState('');
+
 	const customStyle = {
 		filterPageContainer: {
 			width: '100%',
@@ -33,17 +46,48 @@ export default function Filter() {
 	useEffect(() => {
 		getFilteredProjects();
 	}, [mileStones, nameOfParty, status]);
+
 	const getFilteredProjects = () => {
 		setLoading(true);
 		setNameOfParty(nameOfParty.trim);
+		setFilteredProjects(filteredProjects);
 		if (nameOfParty != '') {
-			let newFilteredProjects = projects.filter((project) => {
-				return project.proposedByName
+			newFilteredProjects = filteredProjects.filter((project) => {
+				return project.proposedBy.name
 					.toLowerCase()
 					.includes(nameOfParty);
 			});
 		}
-        if()
+		setFilteredProjects(newFilteredProjects);
+		setStatus(status.trim);
+		if (status != '') {
+			if (status == 'Not Validated') {
+				newFilteredProjects = filteredProjects.filter((project) => {
+					return project.isValidated == false;
+				});
+			} else if (status == 'Validated') {
+				newFilteredProjects = filteredProjects.filter((project) => {
+					return project.isValidated == true;
+				});
+			} else if (status == 'Issued') {
+				newFilteredProjects = filteredProjects.filter((project) => {
+					return project.isIssued == true;
+				});
+			} else {
+				newFilteredProjects = filteredProjects.filter((project) => {
+					return (
+						project.isIssued == false && project.isValidated == true
+					);
+				});
+			}
+		}
+		setFilteredProjects(newFilteredProjects);
+		if (mileStones > 0) {
+			newFilteredProjects = filteredProjects.filter((project) => {
+				return project.milestonesAchieved >= mileStones;
+			});
+		}
+		setFilteredProjects(newFilteredProjects);
 		setLoading(false);
 	};
 	useEffect(() => {
@@ -64,6 +108,7 @@ export default function Filter() {
 			.then((response) => {
 				console.log(response.data);
 				setProjects(response.data.data);
+				setFilteredProjects(projects);
 				setLoading(false);
 			})
 			.catch(function (error) {

@@ -65,8 +65,10 @@ const ProjectSchema = new mongoose.Schema(
 			ref: 'Party',
 		},
 		milestonesAchieved: {
-			type: [String],
-			default: [],
+			type: Number,
+			default: 0,
+			// nothing, design, code, test, deploy
+			// 0, 1, 2, 3, 4
 		},
 	},
 	{
