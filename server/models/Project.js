@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+const Validation = new mongoose.Schema({
+	partyId: { type: mongoose.Schema.ObjectId, ref: 'Party', require: true },
+	projectId: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Project',
+		require: true,
+	},
+	decision: {
+		type: Boolean,
+	},
+});
+
 const Bidder = new mongoose.Schema({
 	bidderId: {
 		type: [mongoose.Schema.ObjectId],
@@ -10,6 +22,9 @@ const Bidder = new mongoose.Schema({
 	},
 	bidderToken: {
 		type: Number,
+	},
+	timelineAgreed: {
+		type: Date,
 	},
 });
 
@@ -48,13 +63,43 @@ const ProjectSchema = new mongoose.Schema(
 		bidders: {
 			type: [Bidder],
 		},
+		rating: {
+			type: Number,
+			min: 0,
+			max: 5,
+		},
+		numOfBid: {
+			type: Number,
+			default: 0,
+		},
 		biddingDuration: {
 			type: String,
 			require: true,
 		},
+		isValid: {
+			type: Boolean,
+			default: false,
+		},
+		reasonIfNotValid: {
+			type: String,
+			default: 'Not Validated by enough validators',
+		},
 		isValidated: {
 			type: Boolean,
 			default: false,
+		},
+		validationCount: {
+			type: Number,
+			default: 0,
+		},
+		validationDecision: {
+			type: [Validation],
+		},
+		validationTime: {
+			type: Date,
+		},
+		biddingTime: {
+			type: Date,
 		},
 		isIssued: {
 			type: Boolean,
@@ -65,6 +110,14 @@ const ProjectSchema = new mongoose.Schema(
 			ref: 'Party',
 		},
 		wonByToken: { type: Number },
+		tokenGivenToWinningParty: {
+			type: Number,
+			default: 0,
+		},
+		implementationDone: {
+			type: Boolean,
+			default: false,
+		},
 		milestonesAchieved: {
 			type: Number,
 			default: 0,

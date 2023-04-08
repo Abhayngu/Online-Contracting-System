@@ -1,6 +1,18 @@
 const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 
+const Validation = new mongoose.Schema({
+	partyId: { type: mongoose.Schema.ObjectId, ref: 'Party', require: true },
+	projectId: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Project',
+		require: true,
+	},
+	decision: {
+		type: Boolean,
+	},
+});
+
 const Proj = new mongoose.Schema({
 	projectId: {
 		type: [mongoose.Schema.ObjectId],
@@ -9,12 +21,24 @@ const Proj = new mongoose.Schema({
 	projectName: {
 		type: String,
 	},
+	proposed: {
+		type: Boolean,
+	},
 	tokenBid: {
 		type: Number,
 		default: 0,
 	},
-	proposed: {
-		type: Boolean,
+	timelineProposed: {
+		type: Date,
+	},
+	rating: {
+		type: Number,
+		min: 0,
+		max: 5,
+	},
+	wonBy: {
+		type: mongoose.Schema.ObjectId,
+		ref: 'Party',
 	},
 });
 
@@ -25,6 +49,10 @@ const PartySchema = new mongoose.Schema(
 			required: true,
 			trim: true,
 			unique: true,
+		},
+		walletAddres: {
+			type: String,
+			default: '',
 		},
 		email: {
 			type: String,
@@ -45,14 +73,25 @@ const PartySchema = new mongoose.Schema(
 			type: Boolean,
 			default: false,
 		},
+		isPermissioned: {
+			type: Boolean,
+			default: true,
+		},
+		isBan: {
+			type: Boolean,
+			default: false,
+		},
 		tokens: {
 			type: Number,
-			default: 50,
+			default: 1000,
 		},
 		rating: {
 			type: Number,
 			min: 0,
 			max: 5,
+		},
+		validationDecision: {
+			type: [Validation],
 		},
 		projectsDone: {
 			type: Number,

@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-function ProjectIssueBox({ name,tokens,desc }) {
+function ProjectIssueBox({ name, tokens, desc }) {
 	// const [stepcount, setstepcount] = useState(0);
 	const customStyle = {
 		stepboxContainer: {
 			width: '18%',
-			borderRadius: '15%',
-			'&:hover': {
-				// transform: 'scale(1.08) translateY(-12px)',
-				// boxShadow: '10px 10px 10px 2000px rgb(12, 13, 34 / 20%)',
-				display: 'none',
-			},
+			backgroundColor: 'lightgreen',
+			borderRadius: '10px',
+			padding: '15px',
 		},
 		stepHeading: {
 			marginTop: '10px',
@@ -38,30 +35,34 @@ function ProjectIssueBox({ name,tokens,desc }) {
 			// marginBottom: '16px',
 			fontSize: '14px',
 		},
-        button :{
-            // width: '380px',
-            height: '50px',
-            borderRadius: '60px',
-            backgroundColor: '#774d8a',
-            color: 'white',
-            fontSize: '25px',
-            border: 'none',
-        }
+		button: {
+			width: '50%',
+			height: '50px',
+			// display: 'inline-block',
+
+			// borderRadius: '60px',
+			backgroundColor: '#774d8a',
+			borderRadius: '10px',
+			color: 'white',
+			fontSize: '14px',
+			border: 'none',
+		},
 	};
 	console.log(tokens, desc, name);
 	return (
 		<React.Fragment>
-			<div>
+			<div style={customStyle.stepboxContainer}>
 				<div style={customStyle.stepHeading}>
-					 <span>{tokens}</span>
+					<span>{name}</span>
+				</div>
+				<div style={customStyle.stepHeading}>
+					Expected tokens : <span>{tokens}</span>
 				</div>
 				<div style={customStyle.stepboxDesc}>{desc}</div>
+				<div className="flex-vc">
+					<div className="flex-vc" style={customStyle.button}></div>
+				</div>
 			</div>
-            <div style={customStyle.stepHeading}>
-				<span>{name}</span>
-			</div>
-			<button style={customStyle.button}>Bid Here</button>
-
 		</React.Fragment>
 	);
 }

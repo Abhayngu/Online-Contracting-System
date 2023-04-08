@@ -178,7 +178,7 @@ function Home() {
 		navigate('/validation');
 	};
 	const goToIssuePage = () => {
-		navigate('/issue');
+		navigate('/issuer');
 	};
 	return (
 		<React.Fragment>
