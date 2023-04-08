@@ -90,6 +90,10 @@ const PartySchema = new mongoose.Schema(
 			min: 0,
 			max: 5,
 		},
+		isAdmin: {
+			type: Boolean,
+			default: false,
+		},
 		validationDecision: {
 			type: [Validation],
 		},

@@ -116,8 +116,10 @@ exports.getAllValidatedProject = async (req, res, next) => {
 	}
 };
 
+// Party bidding on a project (Updated API)
+
 exports.partyBiddingForProjects = async (req, res, next) => {
-	let { partyId, projectId, tokenBid } = req.body;
+	let { partyId, projectId, tokenBid, timeline } = req.body;
 
 	const party = await Party.findById(partyId);
 	if (!party) {
@@ -135,6 +137,7 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 				projectName: project.name,
 				tokenBid,
 				proposed: false,
+				timelineProposed: timeline,
 			},
 		},
 	});
@@ -144,12 +147,15 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 				bidderId: partyId,
 				bidderName: party.name,
 				bidderToken: tokenBid,
+				timelineAgreed: timeline,
 			},
 		},
 	});
 
 	return res.status(200).json({ msg: 'Project bid added successfully.' });
 };
+
+// getting the list of all projects bid by a particular party using id.
 
 exports.listOfProjectsBidByUser = async (req, res, next) => {
 	let id = req.params.id;
@@ -176,3 +182,5 @@ exports.getProjectProposedByUser = async (req, res, next) => {
 	console.log(projects);
 	res.status(200).json(projects);
 };
+
+
