@@ -13,7 +13,11 @@ const SystemSchema = new mongoose.Schema({
 		type: Number,
 		default: 100,
 	},
-	minReward: {
+	maxNumberOfBiddingPerProject: {
+		type: Number,
+		default: 15,
+	},
+	minRewardRequiredForParty: {
 		type: Number,
 		default: 50,
 	},
@@ -22,6 +26,11 @@ const SystemSchema = new mongoose.Schema({
 		deafult: [25, 25, 25, 25],
 	},
 	maxBiddingTime: {
+		hours: { type: Number, default: 24 },
+		minutes: { type: Number, default: 0 },
+		seconds: { type: Number, default: 0 },
+	},
+	timeToReleaseBiddingResult: {
 		hours: { type: Number, default: 24 },
 		minutes: { type: Number, default: 0 },
 		seconds: { type: Number, default: 0 },

@@ -48,6 +48,10 @@ const ProjectSchema = new mongoose.Schema(
 			name: {
 				type: String,
 			},
+			isAnonymous: {
+				type: Boolean,
+				default: false,
+			},
 		},
 		proposedAt: {
 			type: Date,
