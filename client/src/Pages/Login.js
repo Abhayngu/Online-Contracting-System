@@ -14,6 +14,7 @@ function Login() {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [id, setId] = useState('');
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	const login = async () => {
 		setLoading(true);
@@ -42,6 +43,7 @@ function Login() {
 			JSON.stringify(response.data.user)
 		);
 		await sessionStorage.setItem('id', idOfUser);
+		await sessionStorage.setItem('isAdmin', response.data.user.isAdmin);
 		setLoading(false);
 		navigate(`/profile?id=${idOfUser}`);
 	};

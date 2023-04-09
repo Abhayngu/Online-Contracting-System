@@ -13,6 +13,8 @@ const {
 	anonymityOfParty,
 	changePassword,
 	getPartytById,
+	changeValidators,
+	createSystem
 } = require('../controllers/party');
 
 const {
@@ -40,8 +42,7 @@ router.get('/update', (req, res) => {
 });
 router.get('/delete', deleteParty);
 
-router.post('/signup', createParty);
-router.post('/login', login);
+// Party routes
 
 router.post('/signup', createParty);
 router.post('/login', login);
@@ -49,7 +50,10 @@ router.get('/partyById/:id', getPartytById);
 
 router.put('/update', updateParty);
 router.put('/updateAnonymity/:id', anonymityOfParty);
+router.get('/changeValidators', changeValidators)
 
+
+// Project routes
 router.post('/registerProject', registerProject);
 router.get('/top3', getTop3Projects);
 router.get('/getAllProj', getAllProjects);
@@ -61,4 +65,9 @@ router.get('/listOfValidProj', getAllValidatedProject);
 router.get('/projectProposedBy/:id', getProjectProposedByUser);
 router.put('/projectBidding', partyBiddingForProjects);
 router.get('/projectBidBy/:id', listOfProjectsBidByUser);
+
+
+
+// Create system route
+router.post('/createSystem', createSystem)
 module.exports = router;

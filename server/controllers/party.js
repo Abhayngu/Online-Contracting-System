@@ -1,5 +1,6 @@
 const Party = require('../models/Party');
 const passport = require('passport');
+const System = require('../models/System')
 
 exports.createParty = async (req, res) => {
 	let { name, email, password, description } = req.body;
@@ -166,3 +167,51 @@ exports.anonymityOfParty = async (req, res, next) => {
 	);
 	res.status(200).json({ msg: 'Sucessfully set.' });
 };
+
+// Assigning validators
+
+exports.changeValidators = async (req, res, next) => {
+	let system = await System.find()
+	const systemId = system[0]._id;
+	const parties = await Party.find();
+	const alreadyValidators = system[0].validators;
+	console.log(alreadyValidators)
+	if(alreadyValidators.length > 0){
+		
+		alreadyValidators.map(async (party) => {
+			await Party.findByIdAndUpdate(
+				party,
+				{ isValidator: false },
+				{ new: true }
+				);
+			})
+		}
+	const idToken = []
+	parties.map(party => {
+		if(!party.isAdmin){
+			idToken.push({id : party._id, token : party.tokens, name : party.name})
+		}
+	})
+	idToken.sort((a, b) => {
+		if(a.token < b.token) return 1;
+		else return -1;
+	})
+	const numOfparties = Math.min(6, idToken.length);
+	const topSixParties = idToken.slice(0,numOfparties)
+	const ids = []
+	topSixParties.map(async (party) => {
+		ids.push(party.id.toString())
+		await Party.findByIdAndUpdate(
+			party.id.toString(),
+			{ isValidator: true },
+			{ new: true }
+		);
+	})
+	await System.findByIdAndUpdate(systemId, {validators : ids} )
+	res.status(200).json({success : true, data : topSixParties, length : topSixParties.length})
+};
+
+exports.createSystem = async (req, res, next) => {
+	const system = await System.create({})
+	res.json({success : true, msg : 'System created successfully'})
+}

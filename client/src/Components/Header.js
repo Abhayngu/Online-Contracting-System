@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/styles.css';
 import { RiArrowDropDownFill } from 'react-icons/ri';
+import axios from 'axios';
 
 function Header({ c }) {
 	const navigate = useNavigate();
 	const [display, setDisplay] = useState('hide-it');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [username, setUsername] = useState('');
+	const [isAdmin, setIsAdmin] = useState(false);
 	const [id, setId] = useState('');
 
 	useEffect(() => {
@@ -17,6 +19,7 @@ function Header({ c }) {
 			setIsLoggedIn(true);
 			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
 			setId(JSON.parse(sessionStorage.getItem('user'))._id);
+			setIsAdmin(sessionStorage.getItem('isAdmin'));
 		} else {
 			// console.log('loggedin value', typeof loggedIn);
 		}
@@ -113,6 +116,27 @@ function Header({ c }) {
 		navigate('/');
 	};
 
+	const changeValidators = () => {
+		// setLoading(true);
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/changeValidators`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+			})
+			.catch(function (error) {
+				console.error(error);
+				// setLoading(false);
+			});
+	};
+
 	return (
 		<React.Fragment>
 			<div style={customStyle.headerContainer}>
@@ -121,6 +145,19 @@ function Header({ c }) {
 						Contracting System
 					</div>
 					<div style={customStyle.headerIconContainer}>
+						{isAdmin == 'true' ? (
+							<div
+								onClick={changeValidators}
+								style={{
+									...customStyle.Register,
+									...customStyle.icons,
+								}}
+							>
+								Change Validators
+							</div>
+						) : (
+							<></>
+						)}
 						<div
 							style={{
 								...customStyle.dropdownContainer,

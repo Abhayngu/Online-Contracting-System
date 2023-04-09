@@ -92,17 +92,31 @@ exports.issueProject = async (req, res, next) => {
 };
 
 exports.validateProject = async (req, res, next) => {
+	let { partyId, projectId, decision, isValidator } = req.body;
+	const party = await Party.findById(partyId);
+	if (!party.isValidator) {
+		return res.status(400).json({ sucess: false, msg: 'Party is not a validator.' });
+	}
+	const project = await Project.findById(projectId);
+	if (!project) {
+		return res.status(400).json({ msg: 'Project not found.' });
+	}
+	if(decision === true) {
+		project.validationCount++;
+	}
 	try {
 		const project = await Project.findByIdAndUpdate(
 			req.params.id,
 			{ isValidated: true },
 			{ new: true }
 		);
-		res.status(200).json({ msg: 'Project validated successfully.' });
+		res.status(200).json({sucess: true, msg: 'Project validated successfully.' });
 	} catch {
-		res.status(400).json({ msg: 'Failed to validate Project' });
+		res.status(400).json({sucess: false, msg: 'Failed to validate Project' });
 	}
 };
+
+// getting list of all the validated projects .(Updated API)
 
 exports.getAllValidatedProject = async (req, res, next) => {
 	try {
@@ -116,8 +130,10 @@ exports.getAllValidatedProject = async (req, res, next) => {
 	}
 };
 
+// Party bidding on a project (Updated API)
+
 exports.partyBiddingForProjects = async (req, res, next) => {
-	let { partyId, projectId, tokenBid } = req.body;
+	let { partyId, projectId, tokenBid, timeline } = req.body;
 
 	const party = await Party.findById(partyId);
 	if (!party) {
@@ -135,6 +151,7 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 				projectName: project.name,
 				tokenBid,
 				proposed: false,
+				timelineProposed: timeline,
 			},
 		},
 	});
@@ -144,12 +161,16 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 				bidderId: partyId,
 				bidderName: party.name,
 				bidderToken: tokenBid,
+				timelineAgreed: timeline,
 			},
 		},
 	});
 
 	return res.status(200).json({ msg: 'Project bid added successfully.' });
 };
+
+// getting the list of all the projects bid by 
+// a particular party using id. (Updated API)
 
 exports.listOfProjectsBidByUser = async (req, res, next) => {
 	let id = req.params.id;
@@ -164,6 +185,9 @@ exports.listOfProjectsBidByUser = async (req, res, next) => {
     return res.status(200).json(project);
 };
 
+// getting the list of all the projects proposed by 
+// a particular party using id. (Updated API)
+
 exports.getProjectProposedByUser = async (req, res, next) => {
 	let partyId = req.params.id;
 	const party = await Party.findById(partyId);
@@ -176,3 +200,5 @@ exports.getProjectProposedByUser = async (req, res, next) => {
 	console.log(projects);
 	res.status(200).json(projects);
 };
+
+

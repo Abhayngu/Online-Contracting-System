@@ -10,7 +10,7 @@ import Project from '../src/Pages/Project';
 import Profile from '../src/Pages/Profile';
 import ProjectBox from './Components/ProjectBox';
 import Spinner from './Components/Spinner';
-import Issue from './Pages/Issue' ;
+import Issue from './Pages/Issue';
 
 function App() {
 	return (
@@ -24,7 +24,6 @@ function App() {
 				<Route path="/register" element={<Register />} />
 				<Route path="/validation" element={<Validation />} />
 				<Route path="/issuer" element={<Issue />} />
-				
 			</Routes>
 		</BrowserRouter>
 	);
