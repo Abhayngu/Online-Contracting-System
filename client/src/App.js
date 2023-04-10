@@ -11,13 +11,14 @@ import Profile from '../src/Pages/Profile';
 import ProjectBox from './Components/ProjectBox';
 import Spinner from './Components/Spinner';
 import Issue from './Pages/Issue';
+import BidProject from './Pages/BidProject';
 
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/test" element={<Spinner />} />
+				<Route path="/test" element={<BidProject />} />
 				<Route path="/project" element={<Project />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/login" element={<Login />} />
