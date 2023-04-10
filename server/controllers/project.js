@@ -101,18 +101,62 @@ exports.validateProject = async (req, res, next) => {
 	if (!project) {
 		return res.status(400).json({ msg: 'Project not found.' });
 	}
+	const count = project.validationCount;
 	if(decision === true) {
-		project.validationCount++;
+		await Project.findByIdAndUpdate(project._id, { validationCount: count + 1 });
+		await project.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: true
+				},
+			},
+		});
+		await party.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: true
+				},
+			},
+		});
+	} else {
+		await project.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: false
+				},
+			},
+		});
+		await party.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: false
+				},
+			},
+		});
+		return res.status(200).json({sucess: true, msg: "Your decision noted."});
 	}
-	try {
-		const project = await Project.findByIdAndUpdate(
-			req.params.id,
-			{ isValidated: true },
-			{ new: true }
-		);
-		res.status(200).json({sucess: true, msg: 'Project validated successfully.' });
-	} catch {
-		res.status(400).json({sucess: false, msg: 'Failed to validate Project' });
+	if(project.validationCount == 4){
+		try {
+			const project = await Project.findByIdAndUpdate(
+				project._id,
+				{ isValidated: true },
+				{reasonIfNotValid: "User does not have enough token."},
+				{ new: true }
+			);
+			return res.status(200).json({sucess: true, msg: 'Project validated successfully.' });
+		} catch {
+			return res.status(400).json({sucess: false, msg: 'Failed to validate Project' });
+		}
+	} else {
+		return res.status(200).json({sucess: true, msg: "Waiting for other validators to validate."});
 	}
 };
 
@@ -201,4 +245,20 @@ exports.getProjectProposedByUser = async (req, res, next) => {
 	res.status(200).json(projects);
 };
 
-
+// 
+exports.getProjectsForBidding = async (req, res, next) => {
+	let {partyId} = req.body;
+	try {
+		const project = await Project.find({
+			$and: [
+				{isValidated: true},
+				{isIssued: false},
+				{ proposedBy: { $ne: partyId } },
+				{ "validationDecision.partyId": {$nin : [partyId]}  },
+			  ]
+		});
+		res.status(200).json( project );
+	} catch {
+		res.status(400).json({ msg: 'No Projects found!!!' });
+	}
+};
