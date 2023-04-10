@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
-function ProjectIssueBox({ name,issuer_name,time, tokens, desc }) {
+
+function ValidationBox({ name,issuers_name,time, tokens }) {
 	// const [stepcount, setstepcount] = useState(0);
 	const customStyle = {
 		stepboxContainer: {
@@ -35,20 +36,19 @@ function ProjectIssueBox({ name,issuer_name,time, tokens, desc }) {
 			// marginBottom: '16px',
 			fontSize: '14px',
 		},
-		button: {
-			width: '50%',
+		style1: {
+			width: '80%',
 			height: '50px',
-			// display: 'inline-block',
-
-			// borderRadius: '60px',
+			marginBottom : '10px',
 			backgroundColor: '#774d8a',
 			borderRadius: '10px',
 			color: 'white',
 			fontSize: '14px',
 			border: 'none',
+			cursor : 'pointer'
 		},
 	};
-	console.log(tokens, desc, name);
+	console.log(name,issuers_name,time, tokens);
 	return (
 		<React.Fragment>
 			<div style={customStyle.stepboxContainer}>
@@ -56,18 +56,18 @@ function ProjectIssueBox({ name,issuer_name,time, tokens, desc }) {
 				Project Name:	<span>{name}</span>
 				</div>
                 <div style={customStyle.stepHeading}>
-				Issuer Name:	<span>{issuer_name}</span>
+				Issuer Name:	<span>{issuers_name}</span>
 				</div>
 				<div style={customStyle.stepHeading}>
 					Expected finish time : <span>{time}</span>
 				</div>
 				<div style={customStyle.stepHeading}>Expected Tokens:{tokens}</div>
-				<div className="flex-vc">
-					<div className="flex-vc" style={customStyle.button}><button>Validate</button></div>
-                    <div className="flex-vc"><button>Discard</button></div>
+				<div style={{textAlign : 'center'}}>
+					<div ><button style={customStyle.style1}>Validate</button></div>
+                    <div ><button style={customStyle.style1}>Discard</button></div>
 				</div>
 			</div>
 		</React.Fragment>
 	);
 }
-export default ProjectIssueBox;
+export default ValidationBox;
