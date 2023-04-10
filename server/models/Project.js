@@ -110,10 +110,24 @@ const ProjectSchema = new mongoose.Schema(
 			default: false,
 		},
 		wonBy: {
-			type: mongoose.Schema.ObjectId,
-			ref: 'Party',
+			id: {
+				type: mongoose.Schema.ObjectId,
+				ref: 'Party',
+			},
+			name: {
+				type: String,
+			},
+			isAnonymous: {
+				type: Boolean,
+				default: false,
+			},
+			token: {
+				type: Number,
+			},
+			timelineProposed: {
+				type: Date,
+			},
 		},
-		wonByToken: { type: Number },
 		tokenGivenToWinningParty: {
 			type: Number,
 			default: 0,

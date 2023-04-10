@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import MakeProjectBox from '../Components/MakeProjectBox';
+import axios from 'axios';
 // projectName, tokens, proposedByName, proposedByIsAnonymous, expectedFinishTime
 export default function MakeProject() {
 	const [projects, setProjects] = useState([
@@ -40,6 +41,34 @@ export default function MakeProject() {
 			expectedFinishTime: new Date(),
 		},
 	]);
+
+	const options = {
+		method: 'GET',
+		url: `http://localhost:2000/projectsWon`,
+		headers: {
+			'content-type': 'application/json',
+		},
+		data: {
+			partyId: sessionStorage.getItem('id'),
+		},
+	};
+
+	axios
+		.request(options)
+		.then((response) => {
+			console.log(response.data);
+			setMyProject(response.data);
+			sessionStorage.setItem(
+				'projectProposed',
+				JSON.stringify(response.data)
+			);
+			setLoading(false);
+		})
+		.catch(function (error) {
+			console.error(error);
+			setLoading(false);
+		});
+
 	const customStyle = {
 		projectsContainer: {
 			display: 'flex',
