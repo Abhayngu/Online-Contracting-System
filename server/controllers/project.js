@@ -236,7 +236,7 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 exports.projectBidWonByParty =async (req, res, next) => {
 	let { partyId } = req.body;
 	try {
-		const project = await Project.find({wonBy :partyId});
+		const project = await Project.find({"wonBy.id" :partyId});
 		return res.status(200).json(project);
 	} catch  {
 		return res.status(400).json({ sucess: false , msg : "No projects won."});
@@ -292,3 +292,5 @@ exports.getProjectsForBidding = async (req, res, next) => {
 		res.status(400).json({ msg: 'No Projects found!!!' });
 	}
 };
+
+exports.party
