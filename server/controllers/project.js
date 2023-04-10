@@ -91,6 +91,24 @@ exports.issueProject = async (req, res, next) => {
 	}
 };
 
+// list of not validated project by given user
+
+exports.notValidatedProject = async (req, res, next) => {
+	let { partyId } = req.body;
+	try{
+		const project = await Project.find({
+			$and: [
+				{isValidated: false},
+				{isIssued: false},
+				{ proposedBy: { $ne: partyId } }
+			  ]
+		});
+		return res.status(200).json(project);
+	} catch {
+		return res.status(400).json({sucess: false, msg: "Project not found"});
+	}
+};
+
 exports.validateProject = async (req, res, next) => {
 	let { partyId, projectId, decision, isValidator } = req.body;
 	const party = await Party.findById(partyId);
@@ -211,6 +229,18 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 	});
 
 	return res.status(200).json({ msg: 'Project bid added successfully.' });
+};
+
+// Project won by a party
+
+exports.projectBidWonByParty =async (req, res, next) => {
+	let { partyId } = req.body;
+	try {
+		const project = await Project.find({wonBy :partyId});
+		return res.status(200).json(project);
+	} catch  {
+		return res.status(400).json({ sucess: false , msg : "No projects won."});
+	}
 };
 
 // getting the list of all the projects bid by 
