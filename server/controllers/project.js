@@ -293,4 +293,40 @@ exports.getProjectsForBidding = async (req, res, next) => {
 	}
 };
 
-exports.party
+// partId projectId, partName, projectName, isAnonymous, 
+// token,timelineProposed
+
+
+exports.bidWonByParty = async (req, res, next) => {
+	let {partyId, projectId, partyName, projectName, isAnonymous, token, timeline } = req.body;
+	const project = await Project.find(projectId);
+	if(!project) {
+		return res.status(400).json({sucess: false, msg: "Project not found."});
+	}
+	const party = await Party.find(partyId);
+	if(!party) {
+		return res.status(400).json({sucess: false, msg: "Party not found."});
+	}
+	await Project.findByIdAndUpdate(
+		project._id,
+		{ "wonBy.id": partyId },
+		{"wonBy.name": partyName},
+		{"wonBy.isAnonymous": isAnonymous},
+		{"wonBy.token": token},
+		{"wonBy.timelineProposed": timeline},
+		{ new: true }
+	);
+	
+	await party.updateOne({
+		$push: {
+			biddingWon: {
+				projectId,
+				projectName,
+				proposed : false,
+				tokenBid: token,
+				timelineProposed: timeline,
+			},
+		},
+	});
+	res.status(200).json({sucess: true, msg: "You have won the Bid"});
+};

@@ -36,10 +36,6 @@ const Proj = new mongoose.Schema({
 		min: 0,
 		max: 5,
 	},
-	wonBy: {
-		type: mongoose.Schema.ObjectId,
-		ref: 'Party',
-	},
 });
 
 const PartySchema = new mongoose.Schema(
