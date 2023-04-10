@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import Validation from '../Components/ValidationBox' ;
+import Validation from '../Components/ValidationBox';
 import ValidationBox from '../Components/ValidationBox';
 import Header from '../Components/Header';
+import axios from 'axios';
 
 export default function Validate() {
 	const [validation, setProjects] = useState([
-		{ name: 'Project 1', tokens: 12, issuers_name: 'Abhay',time: '12' },
-		{ name: 'Project 2', tokens: 42, issuers_name: 'Subhajit',time:'14' },
-		{ name: 'Project 3', tokens: 2, issuers_name : 'Hrithik', time:'12' },
+		{ name: 'Project 1', tokens: 12, issuers_name: 'Abhay', time: '12' },
+		{ name: 'Project 2', tokens: 42, issuers_name: 'Subhajit', time: '14' },
+		{ name: 'Project 3', tokens: 2, issuers_name: 'Hrithik', time: '12' },
 	]);
-    const customStyle = {
+	const customStyle = {
 		projectsContainer: {
 			display: 'flex',
 			justifyContent: 'space-evenly',
@@ -24,7 +25,7 @@ export default function Validate() {
 			fontSize: '24px',
 		},
 	};
-    return (
+	return (
 		<React.Fragment>
 			<Header c="#d9d9d9" />
 			<h1 style={customStyle.issuedHeadingStyle}>
@@ -35,7 +36,7 @@ export default function Validate() {
 					return (
 						<ValidationBox
 							name={ob.name}
-                            issuers_name={ob.issuers_name}
+							issuers_name={ob.issuers_name}
 							tokens={ob.tokens}
 							time={ob.time}
 						/>
@@ -44,4 +45,4 @@ export default function Validate() {
 			</div>
 		</React.Fragment>
 	);
-            }
+}
