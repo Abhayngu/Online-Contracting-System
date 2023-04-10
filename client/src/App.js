@@ -13,6 +13,7 @@ import Spinner from './Components/Spinner';
 import Issue from './Pages/Issue';
 import ValidateProject from './Pages/ValidateProject';
 import BidProject from './Pages/BidProject';
+import MakeProject from './Pages/MakeProject';
 
 function App() {
 	return (
@@ -28,6 +29,7 @@ function App() {
 
 				<Route path="/bidproject" element={<BidProject />} />
 				<Route path="/validateProject" element={<ValidateProject />} />
+				<Route path="/makeProject" element={<MakeProject />} />
 			</Routes>
 		</BrowserRouter>
 	);
