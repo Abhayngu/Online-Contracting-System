@@ -104,20 +104,60 @@ exports.validateProject = async (req, res, next) => {
 	const count = project.validationCount;
 	if(decision === true) {
 		await Project.findByIdAndUpdate(project._id, { validationCount: count + 1 });
+		await project.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: true
+				},
+			},
+		});
+		await party.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: true
+				},
+			},
+		});
+	} else {
+		await project.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: false
+				},
+			},
+		});
+		await party.updateOne({
+			$push: {
+				validationDecision: {
+					partyId: partyId,
+					projectId: projectId,
+					decision: false
+				},
+			},
+		});
+		return res.status(200).json({sucess: true, msg: "Your decision noted."});
 	}
-	if(project.validationCount > 3){
+	if(project.validationCount == 4){
 		try {
 			const project = await Project.findByIdAndUpdate(
 				project._id,
 				{ isValidated: true },
+				{reasonIfNotValid: "User does not have enough token."},
 				{ new: true }
 			);
 			return res.status(200).json({sucess: true, msg: 'Project validated successfully.' });
 		} catch {
 			return res.status(400).json({sucess: false, msg: 'Failed to validate Project' });
 		}
+	} else {
+		return res.status(200).json({sucess: true, msg: "Waiting for other validators to validate."});
 	}
-	
 };
 
 // getting list of all the validated projects .(Updated API)
