@@ -11,6 +11,7 @@ import Profile from '../src/Pages/Profile';
 import ProjectBox from './Components/ProjectBox';
 import Spinner from './Components/Spinner';
 import Issue from './Pages/Issue';
+import ValidationProject from './Pages/ValidateProject';
 import BidProject from './Pages/BidProject';
 
 function App() {
@@ -18,7 +19,7 @@ function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/test" element={<BidProject />} />
+				<Route path="/test" element={<Spinner />} />
 				<Route path="/project" element={<Project />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/login" element={<Login />} />
