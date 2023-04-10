@@ -11,8 +11,9 @@ import Profile from '../src/Pages/Profile';
 import ProjectBox from './Components/ProjectBox';
 import Spinner from './Components/Spinner';
 import Issue from './Pages/Issue';
-import ValidationProject from './Pages/ValidateProject';
+import ValidateProject from './Pages/ValidateProject';
 import BidProject from './Pages/BidProject';
+import MakeProject from './Pages/MakeProject';
 
 function App() {
 	return (
@@ -25,7 +26,10 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/validation" element={<Validation />} />
-				<Route path="/issuer" element={<Issue />} />
+
+				<Route path="/bidproject" element={<BidProject />} />
+				<Route path="/validateProject" element={<ValidateProject />} />
+				<Route path="/makeProject" element={<MakeProject />} />
 			</Routes>
 		</BrowserRouter>
 	);
