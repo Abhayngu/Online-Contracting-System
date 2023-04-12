@@ -31,7 +31,8 @@ const {
 	listOfProjectsBidByUser,
 	getProjectsForBidding,
 	projectBidWonByParty,
-	notValidatedProject
+	notValidatedProject,
+	bidWonByParty
 } = require('../controllers/project');
 
 router.get('/signup', (req, res) => {
@@ -71,6 +72,9 @@ router.get('/projectBidBy/:id', listOfProjectsBidByUser);
 router.get('/projectForBid', getProjectsForBidding);
 router.get('/projectsWon',projectBidWonByParty);
 router.get('/projectsNotValidated', notValidatedProject);
+router.put('/bidWonByParty', bidWonByParty);
+
+
 
 // Create system route
 router.post('/createSystem', createSystem)
