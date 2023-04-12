@@ -1,6 +1,8 @@
 const Project = require('../models/Project');
 const Party = require('../models/Party');
 
+// project registration
+
 exports.registerProject = async (req, res, next) => {
 	let {
 		name,
@@ -42,15 +44,19 @@ exports.registerProject = async (req, res, next) => {
 	}
 };
 
+// get list of top three projects
 exports.getTop3Projects = async (req, res, next) => {
 	const projects = await Project.find().sort({ finalBidPrice: -1 }).limit(3);
 	res.status(200).json({ data: projects });
 };
 
+// list of all the projects in the system
 exports.getAllProjects = async (req, res, next) => {
 	const projects = await Project.find();
 	res.status(200).json({ data: projects });
 };
+
+// getting list of projects by party email
 
 exports.getProjectsByEmail = async (req, res, next) => {
 	try {
@@ -66,6 +72,7 @@ exports.getProjectsByEmail = async (req, res, next) => {
 	}
 };
 
+// getting the list of
 exports.getProjectById = async (req, res, next) => {
 	try {
 		const project = await Project.findById(req.params.id);
@@ -78,6 +85,7 @@ exports.getProjectById = async (req, res, next) => {
 	}
 };
 
+// issue a project
 exports.issueProject = async (req, res, next) => {
 	try {
 		const project = await Project.findByIdAndUpdate(
@@ -108,20 +116,31 @@ exports.notValidatedProject = async (req, res, next) => {
 		return res.status(400).json({sucess: false, msg: "Project not found"});
 	}
 };
-
+// Validating projects by validator
 exports.validateProject = async (req, res, next) => {
 	let { partyId, projectId, decision, isValidator } = req.body;
+	console.log(partyId, projectId, decision, isValidator)
 	const party = await Party.findById(partyId);
-	if (!party.isValidator) {
+	if (!isValidator) {
 		return res.status(400).json({ sucess: false, msg: 'Party is not a validator.' });
 	}
-	const project = await Project.findById(projectId);
+	let project = await Project.findById(projectId);
 	if (!project) {
 		return res.status(400).json({ msg: 'Project not found.' });
 	}
+	let alreadyValidated = await Project.findOne({_id : projectId
+		, "validationDecision.projectId": {$in : [projectId]}});
+	if(alreadyValidated){
+		return res.status(200).json({sucess: false, msg: "Already validated by you"});
+	}
+	// const party = await Party.find({
+	// 		 "validationDecision.projectId": {$in : projectId}
+	// });
 	const count = project.validationCount;
-	if(decision === true) {
-		await Project.findByIdAndUpdate(project._id, { validationCount: count + 1 });
+	console.log('before updation ', project.validationCount)
+	if(decision == true) {
+		// await Project.findByIdAndUpdate(project._id, { validationCount: count + 1 });
+		await project.updateOne({ validationCount: count + 1 });
 		await project.updateOne({
 			$push: {
 				validationDecision: {
@@ -140,6 +159,7 @@ exports.validateProject = async (req, res, next) => {
 				},
 			},
 		});
+		console.log('After updation ', project.validationCount)
 	} else {
 		await project.updateOne({
 			$push: {
@@ -161,13 +181,12 @@ exports.validateProject = async (req, res, next) => {
 		});
 		return res.status(200).json({sucess: true, msg: "Your decision noted."});
 	}
-	if(project.validationCount == 4){
+	if(count >= 3 && decision == true){
 		try {
-			const project = await Project.findByIdAndUpdate(
-				project._id,
-				{ isValidated: true },
-				{reasonIfNotValid: "User does not have enough token."},
-				{ new: true }
+			await Project.findOneAndUpdate({_id : projectId}, 
+				{ isValidated: true,
+				reasonIfNotValid: "User does not have enough token"},
+				{new : true}
 			);
 			return res.status(200).json({sucess: true, msg: 'Project validated successfully.' });
 		} catch {
