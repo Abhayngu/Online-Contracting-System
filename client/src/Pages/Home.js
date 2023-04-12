@@ -180,6 +180,7 @@ function Home() {
 	const goToIssuePage = () => {
 		navigate('/issuer');
 	};
+
 	return (
 		<React.Fragment>
 			<Header />

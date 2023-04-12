@@ -50,7 +50,7 @@ function Header({ c }) {
 			alignItems: 'center',
 		},
 		icons: {
-			width: '140px',
+			width: '150px',
 			display: 'flex',
 			backgroundColor: '#d9d9d9',
 			height: '100%',
@@ -58,7 +58,7 @@ function Header({ c }) {
 			alignItems: 'center',
 			cursor: 'pointer',
 		},
-		icons1:{
+		icons1: {
 			width: '100px',
 			display: 'flex',
 			backgroundColor: '#d9d9d9',
@@ -66,21 +66,18 @@ function Header({ c }) {
 			justifyContent: 'center',
 			alignItems: 'center',
 			cursor: 'pointer',
-			
 		},
-		
+
 		dropdownContainer: {
 			position: 'relative',
 		},
 		Register: {},
 		SignIn: {},
-		MyProject: {
-			
+		MyProject: {},
+		BidHere: {},
+		ValiadteHere: {
+			// paddingLeft: '5px',
 		},
-		BidHere :{
-		
-		},
-		ValiadteHere :{},
 		projectListContainer: {
 			position: 'absolute',
 			top: '0px',
@@ -117,6 +114,16 @@ function Header({ c }) {
 
 	const goToProfilePage = () => {
 		navigate(`/profile?id=${id}`);
+	};
+
+	const goToBiddingPage = () => {
+		navigate('/bidproject');
+	};
+	const goToValidatingProjectPage = () => {
+		navigate('/validateProject');
+	};
+	const goToYourProject = () => {
+		navigate('/makeProject');
 	};
 
 	const visibleOptions = () => {
@@ -176,50 +183,24 @@ function Header({ c }) {
 						) : (
 							<></>
 						)}
-						<div
-							style={{
-								...customStyle.dropdownContainer,
-								...customStyle.icons,
-							}}
-						>
-							<ul
-								className="no-scrollbar"
-								style={customStyle.projectListContainer}
-							>
-								
-								<div className={display}>
-									<div
-										className="shadow"
-										style={customStyle.listContainer}
-									>
-										<li data-value="value 1">Option 1</li>
-									</div>
-									<div
-										className="shadow"
-										style={customStyle.listContainer}
-									>
-										<li data-value="value 2">Option 2</li>
-									</div>
-									<div
-										className="shadow"
-										style={customStyle.listContainer}
-									>
-										<li data-value="value 3">Option 3</li>
-									</div>
-								</div>
-							</ul>
-						</div>
-						<div
-								
+						{isLoggedIn == false ? (
+							<></>
+						) : (
+							<div
+								onClick={goToValidatingProjectPage}
 								style={{
 									...customStyle.ValiadteHere,
-									...customStyle.icons1,
+									...customStyle.icons,
 								}}
 							>
-							Validate Here
+								Validate Here
 							</div>
-						<div
-								
+						)}
+						{isLoggedIn == false ? (
+							<></>
+						) : (
+							<div
+								onClick={goToBiddingPage}
 								style={{
 									...customStyle.BidHere,
 									...customStyle.icons,
@@ -227,8 +208,12 @@ function Header({ c }) {
 							>
 								Bid Here
 							</div>
-						<div
-								
+						)}
+						{isLoggedIn == false ? (
+							<></>
+						) : (
+							<div
+								onClick={goToYourProject}
 								style={{
 									...customStyle.MyProject,
 									...customStyle.icons,
@@ -236,6 +221,7 @@ function Header({ c }) {
 							>
 								My projects
 							</div>
+						)}
 						{isLoggedIn == false ? (
 							<div
 								onClick={goToRegisterPage}
