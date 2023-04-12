@@ -225,6 +225,12 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 		return res.status(400).json({ msg: 'Project not found.' });
 	}
 
+	let alreadyBid = await Project.findOne({_id : projectId
+		, "bidders.bidderId": {$in : [partyId]}});
+	if(alreadyBid){
+		return res.status(200).json({sucess: false, msg: "Already bid by you"});
+	}
+
 	await party.updateOne({
 		$push: {
 			projectBidFor: {
@@ -294,7 +300,7 @@ exports.getProjectProposedByUser = async (req, res, next) => {
 	res.status(200).json(projects);
 };
 
-// 
+// list of projects to show on user screen for bidding 
 exports.getProjectsForBidding = async (req, res, next) => {
 	let {partyId} = req.body;
 	try {
@@ -314,7 +320,7 @@ exports.getProjectsForBidding = async (req, res, next) => {
 
 // partId projectId, partName, projectName, isAnonymous, 
 // token,timelineProposed
-
+// Projects won by a party
 
 exports.bidWonByParty = async (req, res, next) => {
 	let {partyId, projectId, partyName, projectName, isAnonymous, token, timeline } = req.body;
@@ -326,13 +332,13 @@ exports.bidWonByParty = async (req, res, next) => {
 	if(!party) {
 		return res.status(400).json({sucess: false, msg: "Party not found."});
 	}
-	await Project.findByIdAndUpdate(
-		project._id,
-		{ "wonBy.id": partyId },
-		{"wonBy.name": partyName},
-		{"wonBy.isAnonymous": isAnonymous},
-		{"wonBy.token": token},
-		{"wonBy.timelineProposed": timeline},
+	await Project.findOneAndUpdate(
+		{_id : projectId},
+		{ "wonBy.id": partyId ,
+		"wonBy.name": partyName,
+		"wonBy.isAnonymous": isAnonymous,
+		"wonBy.token": token,
+		"wonBy.timelineProposed": timeline},
 		{ new: true }
 	);
 	
