@@ -50,7 +50,7 @@ function Header({ c }) {
 			alignItems: 'center',
 		},
 		icons: {
-			width: '150px',
+			width: '140px',
 			display: 'flex',
 			backgroundColor: '#d9d9d9',
 			height: '100%',
@@ -58,11 +58,29 @@ function Header({ c }) {
 			alignItems: 'center',
 			cursor: 'pointer',
 		},
+		icons1:{
+			width: '100px',
+			display: 'flex',
+			backgroundColor: '#d9d9d9',
+			height: '100%',
+			justifyContent: 'center',
+			alignItems: 'center',
+			cursor: 'pointer',
+			
+		},
+		
 		dropdownContainer: {
 			position: 'relative',
 		},
 		Register: {},
 		SignIn: {},
+		MyProject: {
+			
+		},
+		BidHere :{
+		
+		},
+		ValiadteHere :{},
 		projectListContainer: {
 			position: 'absolute',
 			top: '0px',
@@ -168,14 +186,7 @@ function Header({ c }) {
 								className="no-scrollbar"
 								style={customStyle.projectListContainer}
 							>
-								<div style={customStyle.listContainer}>
-									<div className="flex-vc">
-										<span>Projects</span>
-										<span onClick={visibleOptions}>
-											<RiArrowDropDownFill />
-										</span>
-									</div>
-								</div>
+								
 								<div className={display}>
 									<div
 										className="shadow"
@@ -198,6 +209,33 @@ function Header({ c }) {
 								</div>
 							</ul>
 						</div>
+						<div
+								
+								style={{
+									...customStyle.ValiadteHere,
+									...customStyle.icons1,
+								}}
+							>
+							Validate Here
+							</div>
+						<div
+								
+								style={{
+									...customStyle.BidHere,
+									...customStyle.icons,
+								}}
+							>
+								Bid Here
+							</div>
+						<div
+								
+								style={{
+									...customStyle.MyProject,
+									...customStyle.icons,
+								}}
+							>
+								My projects
+							</div>
 						{isLoggedIn == false ? (
 							<div
 								onClick={goToRegisterPage}
