@@ -7,19 +7,18 @@ function MakeProjectBox({
 	proposedBy,
 	isAnonymous,
 	finishTime,
+	mileStonesDone,
 }) {
 	const [token, setToken] = useState(0);
 	const [dateTime, setDateTime] = useState('');
 	const [milestones, setMilestones] = useState([
+		{ id: 0, milestone: 'nothing', done: true },
 		{ id: 1, milestone: 'design', done: false },
 		{ id: 2, milestone: 'code', done: false },
 		{ id: 3, milestone: 'test', done: false },
 		{ id: 4, milestone: 'deploy', done: false },
 	]);
-	const [currentMilestone, setCurrentMilestone] = useState({
-		id: 0,
-		milestones: 'nothing',
-	});
+	const [currentMilestone, setCurrentMilestone] = useState(mileStonesDone);
 	const handleTokenChange = (e) => {
 		console.log(e.target.value);
 		setToken(e.target.value);
@@ -27,6 +26,68 @@ function MakeProjectBox({
 	const handleDateTimeChange = (e) => {
 		console.log(e.target.value);
 		setDateTime(e.target.value);
+	};
+
+	const handleMilestoneClick = () => {
+		console.log(currentMilestone);
+		if (currentMilestone != 4) {
+			setCurrentMilestone(currentMilestone + 1);
+		}
+	};
+	const handleAllMilestonesCompleted = () => {};
+	const getMilestone = () => {
+		switch (currentMilestone) {
+			case 0:
+				return (
+					<div
+						onClick={handleMilestoneClick}
+						style={customStyle.milestones}
+					>
+						Click to complete first milestone
+					</div>
+				);
+				break;
+			case 1:
+				return (
+					<div
+						onClick={handleMilestoneClick}
+						style={customStyle.milestones}
+					>
+						Click to complete second milestone
+					</div>
+				);
+				break;
+			case 2:
+				return (
+					<div
+						onClick={handleMilestoneClick}
+						style={customStyle.milestones}
+					>
+						Click to complete third milestone
+					</div>
+				);
+				break;
+			case 3:
+				return (
+					<div
+						onClick={handleMilestoneClick}
+						style={customStyle.milestones}
+					>
+						Click to complete fourth (last) milestone
+					</div>
+				);
+				break;
+			case 4:
+				return (
+					<div
+						onClick={handleMilestoneClick}
+						style={customStyle.milestones}
+					>
+						Congrats You have completed this project
+					</div>
+				);
+				break;
+		}
 	};
 	const customStyle = {
 		stepboxContainer: {
@@ -85,6 +146,11 @@ function MakeProjectBox({
 			outline: 'none',
 			textAlign: 'center',
 		},
+		milestones: {
+			cursor: 'pointer',
+			fontSize: '14px',
+			textAlign: 'center',
+		},
 	};
 
 	return (
@@ -99,7 +165,7 @@ function MakeProjectBox({
 				{isAnonymous ? (
 					<div style={customStyle.stepboxDesc}>{'Anonymous'}</div>
 				) : (
-					<div style={customStyle.stepboxDesc}>{proposedBy}</div>
+					<div style={customStyle.stepboxDesc}>{name}</div>
 				)}
 				<div style={customStyle.stepboxDesc}>
 					Expected finish time : {finishTime.toISOString()}
@@ -116,7 +182,7 @@ function MakeProjectBox({
 						Set Milestones Below
 					</div>
 				</div>
-				<div>{}</div>
+				<div>{getMilestone()}</div>
 			</div>
 		</React.Fragment>
 	);

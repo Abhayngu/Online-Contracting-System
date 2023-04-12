@@ -44,6 +44,7 @@ function Login() {
 		);
 		await sessionStorage.setItem('id', idOfUser);
 		await sessionStorage.setItem('isAdmin', response.data.user.isAdmin);
+		sessionStorage.setItem('isValidator', response.data.user.isValidator);
 		setLoading(false);
 		navigate(`/profile?id=${idOfUser}`);
 	};
