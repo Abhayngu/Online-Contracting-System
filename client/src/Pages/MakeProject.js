@@ -57,16 +57,14 @@ export default function MakeProject() {
 		.request(options)
 		.then((response) => {
 			console.log(response.data);
-			setMyProject(response.data);
+			setProjects(response.data);
 			sessionStorage.setItem(
 				'projectProposed',
 				JSON.stringify(response.data)
 			);
-			setLoading(false);
 		})
 		.catch(function (error) {
 			console.error(error);
-			setLoading(false);
 		});
 
 	const customStyle = {
