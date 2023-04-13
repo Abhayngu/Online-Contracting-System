@@ -1,18 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
-function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
-	// console.log(id);
+import axios from 'axios';
+function ProjectBox({
+	id,
+	name,
+	isValidated,
+	isIssued,
+	partyName,
+	partyId,
+	partyWonBid,
+	canRate,
+	rating,
+	implementationDone,
+}) {
+	// console.log(id);\
+	console.log(id, name, isValidated, isIssued, partyName, canRate, rating);
 	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
 	const [proId, setProId] = useState(id);
+	const [projectRating, setProjectRating] = useState(rating);
 	const [projectName, setProjectName] = useState(name);
 	const [projectStatus, setProjectStatus] = useState('');
 
 	const [proposedBy, setProposedBy] = useState(partyName);
 	useEffect(() => {
-		if (isIssued == 'true') {
+		if (implementationDone == true) {
+			setProjectStatus('Implemented');
+		} else if (isIssued == true) {
 			setProjectStatus('Issued');
-		} else if (isValidated == 'true') {
+		} else if (isValidated == true) {
 			setProjectStatus('Validated');
 		} else {
 			setProjectStatus('Not Validated Yet');
@@ -21,6 +37,36 @@ function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
 	function handleProjectClick() {
 		navigate(`/project?id=${proId}`);
 	}
+	const handleRating = (e) => {
+		setProjectRating(e.target.value);
+	};
+	const rateProject = () => {
+		setLoading(true);
+		const options = {
+			method: 'PUT',
+			url: `http://localhost:2000/project/updateRating`,
+			headers: {
+				'content-type': 'application/json',
+			},
+			data: {
+				projectId: proId,
+				projectProposingParty: partyId,
+				projectImplementingParty: partyWonBid,
+				rating,
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error);
+				setLoading(false);
+			});
+	};
 	const customStyle = {
 		projectBox: {
 			backgroundColor: '#A9EDC4',
@@ -29,7 +75,6 @@ function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
 			overflow: 'hidden',
 			padding: '10px',
 			textAlign: 'center',
-			cursor: 'pointer',
 			borderRadius: '20px',
 			paddingTop: '30px',
 			marginRight: '20px',
@@ -44,16 +89,31 @@ function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
 		projectId: {},
 		projectName: {
 			selfAlign: 'flex-start',
+			cursor: 'pointer',
 			fontSize: '16px',
 			fontWeight: '600',
 		},
-		projectStatus: {},
-		projectProposedBy: {},
+		projectStatus: {
+			marginBottom: '10px',
+		},
+		projectProposedBy: {
+			marginBottom: '10px',
+		},
+		rating: {
+			width: '40px',
+			height: '30px',
+			padding: '2px',
+		},
 	};
 	return (
 		<React.Fragment>
-			<div onClick={handleProjectClick} style={customStyle.projectBox}>
-				<div style={customStyle.projectName}>{projectName}</div>
+			<div style={customStyle.projectBox}>
+				<div
+					onClick={handleProjectClick}
+					style={customStyle.projectName}
+				>
+					{projectName}
+				</div>
 				<div style={customStyle.projectFlex}>
 					<div style={customStyle.projectStatus}>
 						<span style={{ color: 'red' }}>Status</span> :{' '}
@@ -62,6 +122,31 @@ function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
 					<div style={customStyle.projectProposedBy}>
 						<span style={{ color: 'blue' }}>Proposed By</span> :{' '}
 						{proposedBy}
+					</div>
+					<div>
+						{canRate && rating == 0 ? (
+							<>
+								<span>Rating</span> :{' '}
+								<input
+									value={projectRating}
+									onChange={handleRating}
+									style={customStyle.rating}
+									type="number"
+								/>
+								<div
+									style={{
+										display: 'block',
+										marginTop: '2px',
+										cursor: 'pointer',
+									}}
+									onClick={rateProject}
+								>
+									Rate
+								</div>
+							</>
+						) : (
+							<></>
+						)}
 					</div>
 				</div>
 			</div>

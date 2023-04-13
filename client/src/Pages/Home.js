@@ -210,7 +210,7 @@ function Home() {
 		navigate('/validation');
 	};
 	const goToIssuePage = () => {
-		navigate('/issuer');
+		navigate('/rateProject');
 	};
 
 	return (
@@ -241,7 +241,7 @@ function Home() {
 								onClick={goToIssuePage}
 								style={customStyle.issueButton}
 							>
-								Get Your Project Issued
+								Rate your done projects
 							</div>
 						) : (
 							<></>

@@ -31,11 +31,11 @@ function Profile() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
-				setMyProject(response.data);
-				sessionStorage.setItem(
-					'projectProposed',
-					JSON.stringify(response.data)
-				);
+				setMyProject(response.data.data);
+				// sessionStorage.setItem(
+				// 	'projectProposed',
+				// 	JSON.stringify(response.data.data)
+				// );
 				setLoading(false);
 			})
 			.catch(function (error) {
@@ -57,11 +57,11 @@ function Profile() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
-				setProjectBidFor(response.data);
-				sessionStorage.setItem(
-					'projectBid',
-					JSON.stringify(response.data)
-				);
+				setProjectBidFor(response.data.data);
+				// sessionStorage.setItem(
+				// 	'projectBid',
+				// 	JSON.stringify(response.data.data)
+				// );
 				setLoading(false);
 			})
 			.catch(function (error) {
@@ -106,12 +106,6 @@ function Profile() {
 			// console.log('User is logged in <--- from profile page');
 		}
 		getUser();
-		// const user = JSON.parse(sessionStorage.getItem('user'));
-		// setName(user.name);
-		// setTokens(user.tokens);
-		// setIsValidator(user.isValidator);
-		// setIsAnonymous(user.isAnonymous);
-		// saveProposedProjects(user._id);
 	}, []);
 
 	const handleAnonymity = () => {
@@ -173,11 +167,12 @@ function Profile() {
 		myProjectsContainer: {
 			display: 'flex',
 			justifyContent: 'flex-start',
-			marginBottom: '30px',
+			marginBottom: '60px',
 		},
 		projectBidContainer: {
 			display: 'flex',
 			justifyContent: 'flex-start',
+			// marginBottom: '40px',
 		},
 	};
 	return (
@@ -233,7 +228,7 @@ function Profile() {
 							My Projects
 						</div>
 						<div style={customStyle.myProjectsContainer}>
-							{myProject &&
+							{myProject.length > 0 &&
 								myProject.map((project) => {
 									return (
 										<ProjectBox
@@ -245,12 +240,26 @@ function Profile() {
 										/>
 									);
 								})}
+							{!loading && myProject.length == 0 ? (
+								<h3
+									style={{
+										textAlign: 'center',
+										color: 'red',
+										fontWeight: '600',
+									}}
+								>
+									You haven't Proposed any project yet
+								</h3>
+							) : (
+								<></>
+							)}
 						</div>
+
 						<div style={customStyle.projectHeading}>
 							Projects Bid For
 						</div>
 						<div style={customStyle.projectBidContainer}>
-							{projectBidFor &&
+							{projectBidFor.length > 0 &&
 								projectBidFor.map((project) => {
 									return (
 										<ProjectBox
@@ -262,6 +271,19 @@ function Profile() {
 										/>
 									);
 								})}
+							{!loading && projectBidFor.length == 0 ? (
+								<h3
+									style={{
+										textAlign: 'center',
+										color: 'red',
+										fontWeight: '600',
+									}}
+								>
+									You haven't Bid for any project yet
+								</h3>
+							) : (
+								<></>
+							)}
 						</div>
 					</div>
 				</>

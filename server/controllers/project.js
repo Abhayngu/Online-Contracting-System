@@ -102,6 +102,41 @@ exports.issueProject = async (req, res, next) => {
 	}
 };
 
+exports.updateRating = async (req, res, next) => {
+	const {
+		projectId,
+		projectProposingParty,
+		projectImplementingParty,
+		rating,
+	} = req.body;
+	let proposingParty = await Party.findById(projectProposingParty);
+	if (!proposingParty) {
+		return res
+			.status(400)
+			.json({ sucess: false, msg: 'Proposing party Not Found' });
+	}
+	let implementingParty = await Party.findById(projectImplementingParty);
+	if (!implementingParty) {
+		return res.status(400).json({
+			sucess: false,
+			msg: 'Party Implementing project Not Found',
+		});
+	}
+	let project = await Project.findById(projectId);
+	if (!project) {
+		return res
+			.status(400)
+			.json({ success: true, msg: 'Project not found.' });
+	}
+	await project.updateOne({ rating: rating });
+	await implementingParty.updateOne({
+		rating: rating / implementingParty.biddingWon.length,
+	});
+	return res
+		.status(200)
+		.json({ success: true, msg: 'Project rated successfully' });
+};
+
 // getting the list of all the projects bid by
 // a particular party using id. (Updated API)
 
@@ -110,12 +145,14 @@ exports.listOfProjectsBidByUser = async (req, res, next) => {
 
 	const party = await Party.findById(id);
 	if (!party) {
-		return res.status(400).json({ msg: 'Party not found.' });
+		return res
+			.status(400)
+			.json({ success: false, msg: 'Party not found.' });
 	}
 	console.log(party);
-	const project = await Project.find({ 'bidders.bidderId': id });
+	const projects = await Project.find({ 'bidders.bidderId': id });
 
-	return res.status(200).json(project);
+	return res.status(200).json({ success: true, data: projects });
 };
 
 // getting the list of all the projects proposed by
@@ -125,13 +162,31 @@ exports.getProjectProposedByUser = async (req, res, next) => {
 	let partyId = req.params.id;
 	const party = await Party.findById(partyId);
 	if (!party) {
-		return res
-			.status(400)
-			.json({ msg: `Party not found with id ${req.params.id}.` });
+		return res.status(400).json({
+			success: false,
+			msg: `Party not found with id ${req.params.id}.`,
+		});
 	}
 	const projects = await Project.find({ 'proposedBy.id': partyId });
 	console.log(projects);
-	res.status(200).json(projects);
+	res.status(200).json({ success: true, data: projects });
+};
+
+exports.getImplementedProjects = async (req, res, next) => {
+	let partyId = req.params.id;
+	const party = await Party.findById(partyId);
+	if (!party) {
+		return res.status(400).json({
+			success: false,
+			msg: `Party not found with id ${req.params.id}.`,
+		});
+	}
+	const projects = await Project.find({
+		'proposedBy.id': partyId,
+		implementationDone: true,
+	});
+	console.log(projects);
+	res.status(200).json({ success: true, data: projects });
 };
 
 // Private Route

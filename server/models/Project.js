@@ -69,7 +69,8 @@ const ProjectSchema = new mongoose.Schema(
 		},
 		rating: {
 			type: Number,
-			min: 0,
+			min: 1,
+			default: 0,
 			max: 5,
 		},
 		isValid: {

@@ -14,9 +14,11 @@ const {
 const {
 	registerProject,
 	getTop3Projects,
+	updateRating,
 	getAllProjects,
 	getProjectsByEmail,
 	getProjectById,
+	getImplementedProjects,
 	issueProject,
 	listOfProjectsBidByUser,
 	getProjectProposedByUser,
@@ -53,27 +55,32 @@ router.put('/updateAnonymity/:id', anonymityOfParty);
 router.get('/changeValidators', changeValidators);
 
 // Project routes
-router.post('/registerProject', registerProject);
+
+// Project Get routes
 router.get('/project/getTopThreeProjects', getTop3Projects);
+router.get('/projectProposedBy/:id', getProjectProposedByUser);
+router.get('/project/projectImplemented/:id', getImplementedProjects);
 router.get('/getAllProj', getAllProjects);
 router.get('/byEmail', getProjectsByEmail);
 router.get('/byId/:id', getProjectById);
-router.put('/issueProj', issueProject);
 
-// Update the result of a validator for a particular project
+// Project post routes
+router.post('/registerProject', registerProject);
+
+// Project put routes
+router.put('/project/updateRating', updateRating);
+
+// Validator Related routes
 router.put('/validateProj', validateProject);
-
 router.get('/listOfValidProj/:id', getAllValidatedProject);
-router.get('/projectProposedBy/:id', getProjectProposedByUser);
-router.put('/projectBidding', bidOnProject);
-router.get('/projectBidBy/:id', listOfProjectsBidByUser);
-
-// To get all the projects yet not validated
 router.get('/projectsNotValidated/:id', notValidatedProject);
 
-// Get All the projects for bidding for a particular user
+// Bidding Related routes
+router.put('/projectBidding', bidOnProject);
+router.get('/projectBidBy/:id', listOfProjectsBidByUser);
 router.get('/projectForBid/:id', getProjectsForBidding);
 
+// Working on project related routes
 router.get('/projectsWon/:id', projectBidWonByParty);
 router.get('/projectsToDo/:id', projectsToDo);
 router.put('/project/addMilestone', addMileStone);
@@ -81,6 +88,8 @@ router.put('/project/addMilestone', addMileStone);
 // Create system route
 router.post('/createSystem', createSystem);
 
+// Extra APIs
+router.put('/issueProj', issueProject);
 router.get('/test', testFunction);
 
 module.exports = router;
