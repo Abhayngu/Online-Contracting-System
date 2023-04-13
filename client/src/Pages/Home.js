@@ -6,9 +6,12 @@ import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
 import { greenColor, blueColor } from '../globalVars';
 import Spinner from '../Components/Spinner';
+import axios from 'axios';
 function Home() {
 	const [loading, setLoading] = useState(true);
+	const [loggedIn, setLoggedIn] = useState(false);
 	const navigate = useNavigate();
+	const [topThreeProjects, setTopThreeProjects] = useState([]);
 	const customStyle = {
 		titleImageContainer: {
 			width: '100%',
@@ -166,18 +169,41 @@ function Home() {
 		},
 	];
 
-	// API call to fetch these projects
-	// Hardcoded as of now
-	const topBiddingProjects = [
-		{ id: 1, name: 'abc', desc: 'sadfsdf' },
-		{ id: 2, name: 'def', desc: 'sagasdgdf' },
-		{ id: 3, name: 'ghi', desc: 'dsgjds' },
-	];
+	const getTopBiddingProjects = () => {
+		setLoading(true);
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/project/getTopThreeProjects`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				// console.log(response.data);
+				setTopThreeProjects(response.data.data);
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error.message);
+				setLoading(false);
+			});
+	};
 
 	useEffect(() => {
-		if (sessionStorage.getItem('isLoggedIn') == null) {
+		if (
+			sessionStorage.getItem('isLoggedIn') == null ||
+			sessionStorage.getItem('isLoggedIn') == 'false'
+		) {
+			console.log('exec', sessionStorage.getItem('isLoggedIn'));
 			sessionStorage.setItem('isLoggedIn', false);
+		} else {
+			console.log('executed', sessionStorage.getItem('isLoggedIn'));
+			setLoggedIn(true);
 		}
+		getTopBiddingProjects();
 	}, []);
 
 	const goToValidationPage = () => {
@@ -189,102 +215,88 @@ function Home() {
 
 	return (
 		<React.Fragment>
-			<Header />
-			<div style={customStyle.titleImageContainer}>
-				<img style={customStyle.titleImage} src={homepageimg}></img>
-				<div
-					onClick={goToValidationPage}
-					style={customStyle.validationButton}
-				>
-					Get Your Project Validated
-				</div>
-				<div onClick={goToIssuePage} style={customStyle.issueButton}>
-					Get Your Project Issued
-				</div>
-			</div>
-			<div style={customStyle.issuerStepsHeading}>
-				Understand How it Works for an Issuer ?
-			</div>
-			<div style={customStyle.issuerStepsContainer}>
-				{issuerWorkingSteps.map((step) => {
-					return (
-						<StepBox
-							stepcount={step.stepcount}
-							imgsrc={step.imgsrc}
-							desc={step.desc}
-							bgColor={step.bgColor}
-						/>
-					);
-				})}
-			</div>
-			<div style={customStyle.issuerStepsHeading}>
-				Understand How it Works for a Bidder ?
-			</div>
-			<div style={customStyle.bidderStepsContainer}>
-				{bidderWorkingSteps.map((step) => {
-					return (
-						<StepBox
-							stepcount={step.stepcount}
-							imgsrc={step.imgsrc}
-							desc={step.desc}
-							bgColor={step.bgColor}
-						/>
-					);
-				})}
-			</div>
-			<div style={customStyle.boldCenteredHeading}>
-				Some of the top bidding projects
-			</div>
-			<div style={customStyle.topProjectsContainer}>
-				{topBiddingProjects.map((project) => {
-					return (
-						<TopProject
-							id={project.id}
-							name={project.name}
-							desc={project.desc}
-						/>
-					);
-				})}
-			</div>
-			{/* <div style={customStyle.boldCenteredHeading}>
-				What do you get on Sign up?
-			</div> */}
-			{/* <div style={customStyle.signUpDesc}>
-				This Platform helps you to let your project done by some of the
-				top contractors as well as to bid for projects with no hassle
-				and 100% transparency!
-			</div>
-			<div style={customStyle.signUpContainer}>
-				<div style={customStyle.signUpLeftContainer}>
-					<div style={customStyle.signUpLeft}>
-						<div style={customStyle.signUpLeftHeading}>
-							Web Dashboard
-						</div>
-						<div style={customStyle.signUpLeftDesc}>
-							Manage all your projects and bidding at one place
-						</div>
+			{loading ? (
+				<Spinner />
+			) : (
+				<>
+					<Header />
+					<div style={customStyle.titleImageContainer}>
+						<img
+							style={customStyle.titleImage}
+							src={homepageimg}
+						></img>
+
+						{loggedIn ? (
+							<div
+								onClick={goToValidationPage}
+								style={customStyle.validationButton}
+							>
+								Get Your Project Validated
+							</div>
+						) : (
+							<></>
+						)}
+						{loggedIn ? (
+							<div
+								onClick={goToIssuePage}
+								style={customStyle.issueButton}
+							>
+								Get Your Project Issued
+							</div>
+						) : (
+							<></>
+						)}
 					</div>
-					<div style={customStyle.signUpLeft}>
-						<div style={customStyle.signUpLeftHeading}>
-							API integration
-						</div>
-						<div style={customStyle.signUpLeftDesc}>
-							Integration with third party APIs to manage all your
-							projects
-						</div>
+					<div style={customStyle.issuerStepsHeading}>
+						Understand How it Works for an Issuer ?
 					</div>
-					<div style={customStyle.signUpLeft}>
-						<div style={customStyle.signUpLeftHeading}>
-							Blockchain integration
-						</div>
-						<div style={customStyle.signUpLeftDesc}>
-							Integration with Blockchain to give full
-							transparency and consistency in the bidding process
-						</div>
+					<div style={customStyle.issuerStepsContainer}>
+						{issuerWorkingSteps.map((step) => {
+							return (
+								<StepBox
+									key={step.stepcount}
+									stepcount={step.stepcount}
+									imgsrc={step.imgsrc}
+									desc={step.desc}
+									bgColor={step.bgColor}
+								/>
+							);
+						})}
 					</div>
-				</div>
-				<div style={customStyle.signUpRightContainer}></div>
-			</div> */}
+					<div style={customStyle.issuerStepsHeading}>
+						Understand How it Works for a Bidder ?
+					</div>
+					<div style={customStyle.bidderStepsContainer}>
+						{bidderWorkingSteps.map((step) => {
+							return (
+								<StepBox
+									key={step.stepcount}
+									stepcount={step.stepcount}
+									imgsrc={step.imgsrc}
+									desc={step.desc}
+									bgColor={step.bgColor}
+								/>
+							);
+						})}
+					</div>
+					<div style={customStyle.boldCenteredHeading}>
+						Some of the top Implemented projects
+					</div>
+					<div style={customStyle.topProjectsContainer}>
+						{topThreeProjects.map((project) => {
+							return (
+								<TopProject
+									key={project._id}
+									id={project._id}
+									name={project.name}
+									desc={project.description}
+									tokens={project.wonBy.token}
+								/>
+							);
+						})}
+					</div>
+				</>
+			)}
 		</React.Fragment>
 	);
 }

@@ -222,7 +222,7 @@ function Header({ c }) {
 									...customStyle.icons,
 								}}
 							>
-								My projects
+								Projects Won
 							</div>
 						)}
 						{isLoggedIn == false ? (

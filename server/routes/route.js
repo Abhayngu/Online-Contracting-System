@@ -1,17 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const crypto = require('crypto');
-const async = require('async');
-const Project = require('../models/Project');
-const Party = require('../models/Party');
 const {
 	createParty,
 	login,
 	updateParty,
 	deleteParty,
 	anonymityOfParty,
-	changePassword,
 	getPartytById,
 	changeValidators,
 	createSystem,
@@ -24,15 +18,17 @@ const {
 	getProjectsByEmail,
 	getProjectById,
 	issueProject,
+	listOfProjectsBidByUser,
+	getProjectProposedByUser,
+	notValidatedProject,
 	validateProject,
 	getAllValidatedProject,
-	getProjectProposedByUser,
-	partyBiddingForProjects,
-	listOfProjectsBidByUser,
 	getProjectsForBidding,
+	bidOnProject,
 	projectBidWonByParty,
-	notValidatedProject,
-	bidWonByParty,
+	addMileStone,
+	projectsToDo,
+	testFunction,
 } = require('../controllers/project');
 
 router.get('/signup', (req, res) => {
@@ -58,7 +54,7 @@ router.get('/changeValidators', changeValidators);
 
 // Project routes
 router.post('/registerProject', registerProject);
-router.get('/top3', getTop3Projects);
+router.get('/project/getTopThreeProjects', getTop3Projects);
 router.get('/getAllProj', getAllProjects);
 router.get('/byEmail', getProjectsByEmail);
 router.get('/byId/:id', getProjectById);
@@ -69,17 +65,22 @@ router.put('/validateProj', validateProject);
 
 router.get('/listOfValidProj/:id', getAllValidatedProject);
 router.get('/projectProposedBy/:id', getProjectProposedByUser);
-router.put('/projectBidding', partyBiddingForProjects);
+router.put('/projectBidding', bidOnProject);
 router.get('/projectBidBy/:id', listOfProjectsBidByUser);
-router.get('/projectForBid', getProjectsForBidding);
-router.get('/projectsWon', projectBidWonByParty);
 
 // To get all the projects yet not validated
 router.get('/projectsNotValidated/:id', notValidatedProject);
 
-// Update the bidding result
-router.put('/bidWonByParty', bidWonByParty);
+// Get All the projects for bidding for a particular user
+router.get('/projectForBid/:id', getProjectsForBidding);
+
+router.get('/projectsWon/:id', projectBidWonByParty);
+router.get('/projectsToDo/:id', projectsToDo);
+router.put('/project/addMilestone', addMileStone);
 
 // Create system route
 router.post('/createSystem', createSystem);
+
+router.get('/test', testFunction);
+
 module.exports = router;

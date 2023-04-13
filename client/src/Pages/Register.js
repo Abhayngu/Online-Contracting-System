@@ -3,7 +3,7 @@ import style from '../styles/style.css';
 import axios from 'axios';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
-function Form() {
+function Register() {
 	// States for registration
 	const navigate = useNavigate();
 	const [name, setName] = useState('');
@@ -42,6 +42,7 @@ function Form() {
 		e.preventDefault();
 		if (name === '' || email === '' || password === '') {
 			setError(true);
+			setSubmitted(false);
 		} else {
 			const options = {
 				method: 'POST',
@@ -72,6 +73,7 @@ function Form() {
 				.catch(function (error) {
 					console.error(error);
 					setError(true);
+					setSubmitted(false);
 				});
 		}
 	};
@@ -195,4 +197,4 @@ function Form() {
 	);
 }
 
-export default Form;
+export default Register;

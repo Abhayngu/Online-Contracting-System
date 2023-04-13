@@ -13,10 +13,17 @@ function Login() {
 	const [loading, setLoading] = useState(false);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [error, setError] = useState(false);
+	const [message, setMessage] = useState('');
 	const [id, setId] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
 
-	const login = async () => {
+	const login = () => {
+		if (username == '' || password == '') {
+			setError(true);
+			setMessage('Enter all the fields');
+			return;
+		}
 		setLoading(true);
 		const options = {
 			method: 'POST',
@@ -30,31 +37,37 @@ function Login() {
 			},
 		};
 
-		const response = await axios(options);
-		console.log('axios response', response.data);
-		const nameOfUser = response.data.user.name;
-		const idOfUser = response.data.user._id;
-		setUsername('');
-		setPassword('');
-		setId(idOfUser);
-		await sessionStorage.setItem('isLoggedIn', true);
-		await sessionStorage.setItem(
-			'user',
-			JSON.stringify(response.data.user)
-		);
-		await sessionStorage.setItem('id', idOfUser);
-		await sessionStorage.setItem('isAdmin', response.data.user.isAdmin);
-		sessionStorage.setItem('isValidator', response.data.user.isValidator);
-		setLoading(false);
-		navigate(`/profile?id=${idOfUser}`);
+		axios
+			.request(options)
+			.then((response) => {
+				const idOfUser = response.data.user._id;
+				setUsername('');
+				setPassword('');
+				setId(idOfUser);
+				sessionStorage.setItem('isLoggedIn', true);
+				sessionStorage.setItem(
+					'user',
+					JSON.stringify(response.data.user)
+				);
+				sessionStorage.setItem('id', idOfUser);
+				sessionStorage.setItem('isAdmin', response.data.user.isAdmin);
+				sessionStorage.setItem(
+					'isValidator',
+					response.data.user.isValidator
+				);
+				setLoading(false);
+				navigate(`/profile?id=${idOfUser}`);
+			})
+			.catch((error) => {
+				console.log(error.message);
+				setError(true);
+				setMessage(error.response.data.message);
+				setLoading(false);
+			});
 	};
 
 	const goToRegister = () => {
 		navigate('/register');
-	};
-
-	const handleForgotPassword = () => {
-		console.log('forgot the password');
 	};
 
 	return (
@@ -78,8 +91,17 @@ function Login() {
 								</div>
 								<div>
 									<h1 className="margin">Sign In</h1>
-									<div>
-										{/* <img src={email} alt="email" className="email"/> */}
+									<div
+										style={{
+											color: 'red',
+											textAlign: 'center',
+											fontSize: '14px',
+											marginBottom: '10px',
+										}}
+									>
+										{error ? message : <></>}
+									</div>
+									<form>
 										<input
 											value={username}
 											onChange={(e) => {
@@ -89,19 +111,19 @@ function Login() {
 											placeholder="email"
 											className="input name"
 										/>
-									</div>
-									<div className="second-input">
-										{/* <img src={pass} alt="pass" className="pass"/> */}
-										<input
-											value={password}
-											onChange={(e) => {
-												setPassword(e.target.value);
-											}}
-											type="password"
-											placeholder="password"
-											className="input name"
-										/>
-									</div>
+										<div className="second-input">
+											{/* <img src={pass} alt="pass" className="pass"/> */}
+											<input
+												value={password}
+												onChange={(e) => {
+													setPassword(e.target.value);
+												}}
+												type="password"
+												placeholder="password"
+												className="input name"
+											/>
+										</div>
+									</form>
 									<div
 										onClick={goToRegister}
 										style={{
@@ -114,17 +136,7 @@ function Login() {
 									>
 										Don't have an account?
 									</div>
-									<div
-										onClick={handleForgotPassword}
-										style={{
-											textAlign: 'center',
-											marginBottom: '20px',
-											color: 'blue',
-											cursor: 'pointer',
-										}}
-									>
-										Forgot Password?
-									</div>
+
 									<button className="btn" onClick={login}>
 										Login
 									</button>

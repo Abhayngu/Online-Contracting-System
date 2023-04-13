@@ -24,12 +24,12 @@ export default function Validate() {
 			.then((response) => {
 				console.log(response.data);
 				setProjects(response.data.data);
+				setLoading(false);
 			})
 			.catch(function (error) {
 				console.error(error.msg);
-				// setLoading(false);
+				setLoading(false);
 			});
-		setLoading(false);
 	};
 	useEffect(() => {
 		getAllTheProjectsToValidate();
@@ -38,7 +38,7 @@ export default function Validate() {
 		projectsContainer: {
 			display: 'flex',
 			justifyContent: 'flex-start',
-			alignItems: 'center',
+			// alignItems: 'center',
 			flexWrap: 'wrap',
 			padding: '0 40px',
 			margin: '50px 0',

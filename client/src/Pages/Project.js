@@ -32,14 +32,16 @@ function Project() {
 				console.log(project);
 				setName(project.name);
 				// getUserNameById(project.proposedBy);
-				if (!(project.isIssued == 'true')) {
+				if (!(project.isIssued == true)) {
 					setBidWonBy('Bidding Not Over Yet');
 					setWinningBidPrice('None');
 				} else {
-					setBidWonBy(project.wonby);
-					setWinningBidPrice(project.wonByToken);
+					setBidWonBy(project.wonBy.name);
+					setWinningBidPrice(project.wonBy.token);
 				}
-				if (project.isIssued == 'true') {
+				if (project.implementationDone == true) {
+					setProjectStatus('Implemented');
+				} else if (project.isIssued == true) {
 					setProjectStatus('Issued');
 				} else if (project.isValidated == 'true') {
 					setProjectStatus('Validated');

@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function MakeProjectBox({
 	id,
@@ -9,8 +10,6 @@ function MakeProjectBox({
 	finishTime,
 	mileStonesDone,
 }) {
-	const [token, setToken] = useState(0);
-	const [dateTime, setDateTime] = useState('');
 	const [milestones, setMilestones] = useState([
 		{ id: 0, milestone: 'nothing', done: true },
 		{ id: 1, milestone: 'design', done: false },
@@ -19,20 +18,33 @@ function MakeProjectBox({
 		{ id: 4, milestone: 'deploy', done: false },
 	]);
 	const [currentMilestone, setCurrentMilestone] = useState(mileStonesDone);
-	const handleTokenChange = (e) => {
-		console.log(e.target.value);
-		setToken(e.target.value);
-	};
-	const handleDateTimeChange = (e) => {
-		console.log(e.target.value);
-		setDateTime(e.target.value);
-	};
 
 	const handleMilestoneClick = () => {
 		console.log(currentMilestone);
-		if (currentMilestone != 4) {
-			setCurrentMilestone(currentMilestone + 1);
-		}
+		const options = {
+			method: 'PUT',
+			url: `http://localhost:2000/project/addMilestone`,
+			headers: {
+				'content-type': 'application/json',
+			},
+			data: {
+				partyId: sessionStorage.getItem('id'),
+				projectId: id,
+				milestoneDone: currentMilestone + 1,
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				if (currentMilestone != 4) {
+					setCurrentMilestone(currentMilestone + 1);
+				}
+			})
+			.catch(function (error) {
+				console.log(error.message);
+			});
 	};
 	const handleAllMilestonesCompleted = () => {};
 	const getMilestone = () => {
@@ -79,10 +91,7 @@ function MakeProjectBox({
 				break;
 			case 4:
 				return (
-					<div
-						onClick={handleMilestoneClick}
-						style={customStyle.milestones}
-					>
+					<div style={{ ...customStyle.milestones, cursor: 'auto' }}>
 						Congrats You have completed this project
 					</div>
 				);
@@ -165,10 +174,12 @@ function MakeProjectBox({
 				{isAnonymous ? (
 					<div style={customStyle.stepboxDesc}>{'Anonymous'}</div>
 				) : (
-					<div style={customStyle.stepboxDesc}>{name}</div>
+					<div style={customStyle.stepboxDesc}>
+						Proposed by : {proposedBy}
+					</div>
 				)}
 				<div style={customStyle.stepboxDesc}>
-					Expected finish time : {finishTime.toISOString()}
+					Expected finish time : {finishTime}
 				</div>
 				<div
 					style={{

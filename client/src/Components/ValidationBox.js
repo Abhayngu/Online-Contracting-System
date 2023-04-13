@@ -48,12 +48,13 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 			});
 	};
 	const customStyle = {
-		stepboxWithMsgContainer: {
+		// stepboxWithMsgContainer: {
+
+		// 	marginBottom: '50px',
+		// },
+		stepboxContainer: {
 			width: '18%',
 			margin: '0 10px',
-			marginBottom: '50px',
-		},
-		stepboxContainer: {
 			backgroundColor: 'lightgreen',
 			borderRadius: '10px',
 			padding: '15px',
@@ -104,48 +105,46 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 				<Spinner />
 			) : (
 				<>
-					<div style={customStyle.stepboxWithMsgContainer}>
-						<div style={customStyle.stepboxContainer}>
-							<div style={customStyle.stepHeading}>
-								Project Name: <span>{name}</span>
+					<div style={customStyle.stepboxContainer}>
+						<div style={customStyle.stepHeading}>
+							Project Name: <span>{name}</span>
+						</div>
+						<div style={customStyle.stepHeading}>
+							Issuer Name: <span>{issuers_name}</span>
+						</div>
+						<div style={customStyle.stepHeading}>
+							Expected finish time : <span>{time}</span>
+						</div>
+						<div style={customStyle.stepHeading}>
+							Expected Tokens:{tokens}
+						</div>
+						<div style={{ textAlign: 'center' }}>
+							<div>
+								<button
+									onClick={() => handleValidate(1)}
+									style={customStyle.style1}
+								>
+									Validate
+								</button>
 							</div>
-							<div style={customStyle.stepHeading}>
-								Issuer Name: <span>{issuers_name}</span>
-							</div>
-							<div style={customStyle.stepHeading}>
-								Expected finish time : <span>{time}</span>
-							</div>
-							<div style={customStyle.stepHeading}>
-								Expected Tokens:{tokens}
-							</div>
-							<div style={{ textAlign: 'center' }}>
-								<div>
-									<button
-										onClick={() => handleValidate(1)}
-										style={customStyle.style1}
-									>
-										Validate
-									</button>
-								</div>
-								<div>
-									<button
-										onClick={() => handleValidate(0)}
-										style={customStyle.style1}
-									>
-										Discard
-									</button>
-								</div>
+							<div>
+								<button
+									onClick={() => handleValidate(0)}
+									style={customStyle.style1}
+								>
+									Discard
+								</button>
 							</div>
 						</div>
-						<div
-							style={{
-								color: error ? 'red' : 'green',
-								fontSize: '14px',
-								textAlign: 'center',
-							}}
-						>
-							{msg}
-						</div>
+					</div>
+					<div
+						style={{
+							color: error ? 'red' : 'green',
+							fontSize: '14px',
+							textAlign: 'center',
+						}}
+					>
+						{msg}
 					</div>
 				</>
 			)}

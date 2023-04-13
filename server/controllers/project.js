@@ -47,8 +47,10 @@ exports.registerProject = async (req, res, next) => {
 
 // get list of top three projects
 exports.getTop3Projects = async (req, res, next) => {
-	const projects = await Project.find().sort({ finalBidPrice: -1 }).limit(3);
-	res.status(200).json({ data: projects });
+	const projects = await Project.find({ implementationDone: true })
+		.sort({ finalBidPrice: -1 })
+		.limit(3);
+	res.status(200).json({ success: true, data: projects });
 };
 
 // list of all the projects in the system
@@ -98,6 +100,38 @@ exports.issueProject = async (req, res, next) => {
 	} catch {
 		res.status(400).json({ msg: 'Failed to issue Project' });
 	}
+};
+
+// getting the list of all the projects bid by
+// a particular party using id. (Updated API)
+
+exports.listOfProjectsBidByUser = async (req, res, next) => {
+	let id = req.params.id;
+
+	const party = await Party.findById(id);
+	if (!party) {
+		return res.status(400).json({ msg: 'Party not found.' });
+	}
+	console.log(party);
+	const project = await Project.find({ 'bidders.bidderId': id });
+
+	return res.status(200).json(project);
+};
+
+// getting the list of all the projects proposed by
+// a particular party using id. (Updated API)
+
+exports.getProjectProposedByUser = async (req, res, next) => {
+	let partyId = req.params.id;
+	const party = await Party.findById(partyId);
+	if (!party) {
+		return res
+			.status(400)
+			.json({ msg: `Party not found with id ${req.params.id}.` });
+	}
+	const projects = await Project.find({ 'proposedBy.id': partyId });
+	console.log(projects);
+	res.status(200).json(projects);
 };
 
 // Private Route
@@ -238,17 +272,106 @@ exports.validateProject = async (req, res, next) => {
 	}
 };
 
-function getBiddingResult(projectId) {
-	const project = Project.findById(projectId);
+const getBiddingResult = async (projectId) => {
+	const project = await Project.findById(projectId);
 	if (!project) {
 		return;
 	}
-	console.log(`Bidding for ${project.Name} is completed`);
-}
+	const bidders = project.bidders;
+	const numOfBidders = bidders.length;
+	if (numOfBidders == 0) {
+		await Project.findByIdAndUpdate(projectId, {
+			isIssued: true,
+		});
+		res.status(200).json({
+			success: true,
+			msg: 'No bidders',
+		});
+	}
+	console.log(bidders);
+	bidders.sort((a, b) => {
+		return a.bidderToken - b.bidderToken;
+	});
+	const winnerObj = bidders[0];
+	const winner = await Party.findById(winnerObj.bidderId);
+	await project.updateOne({
+		'wonBy.id': winnerObj.bidderId,
+		'wonBy.name': winnerObj.bidderName,
+		'wonBy.isAnonymous': winner.isAnonymous,
+		'wonBy.token': winnerObj.bidderToken,
+		'wonBy.timelineProposed': winnerObj.timelineAgreed,
+		isIssued: true,
+	});
+	await winner.updateOne({
+		$push: {
+			biddingWon: {
+				projectId: project._id,
+				projectName: project.name,
+				proposed: false,
+				tokenBid: winnerObj.bidderToken,
+				timelineProposed: winnerObj.timelineAgreed,
+			},
+		},
+	});
+	res.status(200).json({
+		success: true,
+		data: bidders,
+		winner,
+	});
+};
 
-// getting list of all the validated projects to make them available for bidding
+exports.testFunction = async (req, res, next) => {
+	const projectId = '642fc1d08250b3f2cd343c09';
+	const project = await Project.findById(projectId);
+	if (!project) {
+		return;
+	}
+	const bidders = project.bidders;
+	const numOfBidders = bidders.length;
+	if (numOfBidders == 0) {
+		await Project.findByIdAndUpdate(projectId, {
+			isIssued: true,
+		});
+		res.status(200).json({
+			success: true,
+			msg: 'No bidders',
+		});
+	}
+	console.log(bidders);
+	bidders.sort((a, b) => {
+		return a.bidderToken - b.bidderToken;
+	});
+	const winnerObj = bidders[0];
+	const winner = await Party.findById(winnerObj.bidderId);
+	await project.updateOne({
+		'wonBy.id': winnerObj.bidderId,
+		'wonBy.name': winnerObj.bidderName,
+		'wonBy.isAnonymous': winner.isAnonymous,
+		'wonBy.token': winnerObj.bidderToken,
+		'wonBy.timelineProposed': winnerObj.timelineAgreed,
+		isIssued: true,
+	});
+	await winner.updateOne({
+		$push: {
+			biddingWon: {
+				projectId: project._id,
+				projectName: project.name,
+				proposed: false,
+				tokenBid: winnerObj.bidderToken,
+				timelineProposed: winnerObj.timelineAgreed,
+			},
+		},
+	});
+	res.status(200).json({
+		success: true,
+		data: bidders,
+		winner,
+	});
+};
+
+// getting list of all the validated projects
+
 exports.getAllValidatedProject = async (req, res, next) => {
-	const id = req.params.id;
 	try {
 		const project = await Project.find({
 			isValidated: true,
@@ -260,27 +383,75 @@ exports.getAllValidatedProject = async (req, res, next) => {
 	}
 };
 
+exports.getProjectsForBidding = async (req, res, next) => {
+	let id = req.params.id;
+	try {
+		const projects = await Project.find({
+			$and: [
+				{ isValidated: true },
+				{ isIssued: false },
+				{ proposedBy: { $ne: id } },
+				{
+					bidders: {
+						$not: {
+							$elemMatch: { bidderId: id },
+						},
+					},
+				},
+			],
+		});
+		res.status(200).json({
+			success: true,
+			data: projects,
+			length: projects.length,
+		});
+	} catch {
+		res.status(400).json({ msg: 'Unable to fetch projects for bidding' });
+	}
+};
+
 // Party bidding on a project (Updated API)
 
-exports.partyBiddingForProjects = async (req, res, next) => {
+exports.bidOnProject = async (req, res, next) => {
 	let { partyId, projectId, tokenBid, timeline } = req.body;
 
 	const party = await Party.findById(partyId);
 	if (!party) {
-		return res.status(400).json({ msg: 'Party not found.' });
+		return res.status(400).json({ success: false, msg: 'Party not found' });
 	}
 	const project = await Project.findById(projectId);
 	if (!project) {
-		return res.status(400).json({ msg: 'Project not found.' });
+		return res
+			.status(400)
+			.json({ success: false, msg: 'Project not found' });
+	}
+	if (project.isValidated == false) {
+		return res
+			.status(400)
+			.json({ success: false, msg: 'Project not validated yet' });
 	}
 
+	const hasBidAlready = await Project.findOne({
+		_id: projectId,
+		bidders: {
+			$elemMatch: {
+				partyId: partyId,
+			},
+		},
+	});
+	if (hasBidAlready) {
+		return res.status(400).json({
+			success: false,
+			msg: 'You have already placed a bid on it',
+		});
+	}
 	await party.updateOne({
 		$push: {
 			projectBidFor: {
 				projectId,
 				projectName: project.name,
-				tokenBid,
 				proposed: false,
+				tokenBid,
 				timelineProposed: timeline,
 			},
 		},
@@ -295,6 +466,9 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 			},
 		},
 	});
+	await project.updateOne({
+		numOfBid: project.numOfBid + 1,
+	});
 
 	return res.status(200).json({ msg: 'Project bid added successfully.' });
 };
@@ -302,108 +476,68 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 // Project won by a party
 
 exports.projectBidWonByParty = async (req, res, next) => {
-	let { partyId } = req.body;
+	let partyId = req.params.id;
 	try {
-		const project = await Project.find({ 'wonBy.id': partyId });
-		return res.status(200).json(project);
+		const projects = await Project.find({ 'wonBy.id': partyId });
+		return res.status(200).json({ success: true, data: projects });
+	} catch {
+		return res.status(400).json({ sucess: false, msg: 'No projects won.' });
+	}
+};
+exports.projectsToDo = async (req, res, next) => {
+	let partyId = req.params.id;
+	try {
+		const projects = await Project.find({
+			'wonBy.id': partyId,
+			isImplemented: false,
+		});
+		return res.status(200).json({ success: true, data: projects });
 	} catch {
 		return res.status(400).json({ sucess: false, msg: 'No projects won.' });
 	}
 };
 
-// getting the list of all the projects bid by
-// a particular party using id. (Updated API)
-
-exports.listOfProjectsBidByUser = async (req, res, next) => {
-	let id = req.params.id;
-
-	const party = await Party.findById(id);
-	if (!party) {
-		return res.status(400).json({ msg: 'Party not found.' });
-	}
-	console.log(party);
-	const project = await Project.find({ 'bidders.bidderId': id });
-
-	return res.status(200).json(project);
-};
-
-// getting the list of all the projects proposed by
-// a particular party using id. (Updated API)
-
-exports.getProjectProposedByUser = async (req, res, next) => {
-	let partyId = req.params.id;
+exports.addMileStone = async (req, res, next) => {
+	const { partyId, projectId, milestoneDone } = req.body;
+	console.log(req.body);
 	const party = await Party.findById(partyId);
 	if (!party) {
-		return res
-			.status(400)
-			.json({ msg: `Party not found with id ${req.params.id}.` });
+		return res.status(400).json({ success: false, msg: 'Party Not Found' });
 	}
-	const projects = await Project.find({ 'proposedBy.id': partyId });
-	console.log(projects);
-	res.status(200).json(projects);
-};
 
-//
-exports.getProjectsForBidding = async (req, res, next) => {
-	let { partyId } = req.body;
-	try {
-		const project = await Project.find({
-			$and: [
-				{ isValidated: true },
-				{ isIssued: false },
-				{ proposedBy: { $ne: partyId } },
-				{ 'validationDecision.partyId': { $nin: [partyId] } },
-			],
-		});
-		res.status(200).json(project);
-	} catch {
-		res.status(400).json({ msg: 'No Projects found!!!' });
-	}
-};
-
-// partId projectId, partName, projectName, isAnonymous,
-// token,timelineProposed
-
-exports.bidWonByParty = async (req, res, next) => {
-	let {
-		partyId,
-		projectId,
-		partyName,
-		projectName,
-		isAnonymous,
-		token,
-		timeline,
-	} = req.body;
-	const project = await Project.find(projectId);
+	let project = await Project.findById(projectId);
 	if (!project) {
 		return res
 			.status(400)
-			.json({ sucess: false, msg: 'Project not found.' });
+			.json({ success: false, msg: 'Project not found.' });
 	}
-	const party = await Party.find(partyId);
-	if (!party) {
-		return res.status(400).json({ sucess: false, msg: 'Party not found.' });
+	// console.log(project);
+	if (project.isIssued == false) {
+		return res
+			.status(400)
+			.json({ success: false, msg: 'Project not issued yet' });
 	}
-	await Project.findByIdAndUpdate(
-		project._id,
-		{ 'wonBy.id': partyId },
-		{ 'wonBy.name': partyName },
-		{ 'wonBy.isAnonymous': isAnonymous },
-		{ 'wonBy.token': token },
-		{ 'wonBy.timelineProposed': timeline },
-		{ new: true }
-	);
-
-	await party.updateOne({
-		$push: {
-			biddingWon: {
-				projectId,
-				projectName,
-				proposed: false,
-				tokenBid: token,
-				timelineProposed: timeline,
-			},
-		},
+	if (milestoneDone < 4) {
+		await project.updateOne({
+			tokenGivenToWinningParty: (milestoneDone * project.wonBy.token) / 4,
+			milestonesAchieved: milestoneDone,
+		});
+		return res.status(200).json({
+			success: true,
+			msg: `${milestoneDone} milestones are achieved out of ${4}`,
+		});
+	}
+	await project.updateOne({
+		tokenGivenToWinningParty: (milestoneDone * project.wonBy.token) / 4,
+		milestonesAchieved: milestoneDone,
+		implementationDone: true,
+		actualFinishTime: Date.now(),
 	});
-	res.status(200).json({ sucess: true, msg: 'You have won the Bid' });
+	await party.updateOne({
+		projectsDone: party.projectsDone + 1,
+	});
+	return res.status(200).json({
+		success: true,
+		msg: `All the milestones are completed successfully`,
+	});
 };
