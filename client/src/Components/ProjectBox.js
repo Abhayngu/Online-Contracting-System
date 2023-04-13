@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function ProjectBox({ id }) {
+function ProjectBox({ id, name, isValidated, isIssued, partyName }) {
+	// console.log(id);
 	const navigate = useNavigate();
 	const [proId, setProId] = useState(id);
-	const [projectName, setProjectName] = useState('Laptop bidding');
-	const [projectStatus, setProjectStatus] = useState('Bidding going on');
-	const [proposedBy, setProposedBy] = useState('party3');
+	const [projectName, setProjectName] = useState(name);
+	const [projectStatus, setProjectStatus] = useState('');
+
+	const [proposedBy, setProposedBy] = useState(partyName);
+	useEffect(() => {
+		if (isIssued == 'true') {
+			setProjectStatus('Issued');
+		} else if (isValidated == 'true') {
+			setProjectStatus('Validated');
+		} else {
+			setProjectStatus('Not Validated Yet');
+		}
+	}, []);
 	function handleProjectClick() {
 		navigate(`/project?id=${proId}`);
 	}

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap'); */
 
 :root {
 	--dark-slate-blue: #192f60;
@@ -38,3 +38,42 @@ border-bottom: 2px solid grey;
 .hide-it{
     display: none;
 }
+
+
+.scaleOnHover:hover{
+	animation-name: scaleUp;
+    animation-timing-function: ease;
+	animation-duration: 1s;
+	/* transform: scale(1.08) translateY(-12px);
+	box-shadow: 10px 10px 10px 2000px rgb(12, 13, 34 / 20%); */
+}
+
+@keyframes scaleUp {
+	0%   { }
+  100% { transform: scale(1.08) translateY(-12px);}
+  }
+
+  @keyframes spinner {
+	0% {
+	  transform: rotate(0deg);
+	}
+	100% {
+	  transform: rotate(360deg);
+	}
+  }
+  .spinner-container{
+	width : 100%;
+	height : 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+  }
+  .loading-spinner {
+	width: 80px;
+	height: 80px;
+	border: 10px solid #f3f3f3;
+	border-top: 10px solid #383636; 
+	border-radius: 50%;
+	animation: spinner 1.5s linear infinite;
+  }

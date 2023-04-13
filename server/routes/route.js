@@ -10,7 +10,11 @@ const {
 	login,
 	updateParty,
 	deleteParty,
-	changePassword
+	anonymityOfParty,
+	changePassword,
+	getPartytById,
+	changeValidators,
+	createSystem
 } = require('../controllers/party');
 
 const {
@@ -20,35 +24,58 @@ const {
 	getProjectsByEmail,
 	getProjectById,
 	issueProject,
-	validateProject
+	validateProject,
+	getAllValidatedProject,
+	getProjectProposedByUser,
+	partyBiddingForProjects,
+	listOfProjectsBidByUser,
+	getProjectsForBidding,
+	projectBidWonByParty,
+	notValidatedProject,
+	bidWonByParty
 } = require('../controllers/project');
 
+router.get('/signup', (req, res) => {
+	res.render('signup');
+});
+router.get('/login', (req, res) => {
+	res.render('login');
+});
+router.get('/update', (req, res) => {
+	res.render('update');
+});
+router.get('/delete', deleteParty);
 
-router.get('/signup',(req,res)=>{
-    res.render('signup');
-})
-router.get('/login',(req,res)=>{
-    res.render('login');
-})
-router.get('/update',(req,res)=>{
-    res.render('update');
-})
-router.get('/delete',deleteParty);
+// Party routes
+
+router.post('/signup', createParty);
+router.post('/login', login);
+router.get('/partyById/:id', getPartytById);
+
+router.put('/update', updateParty);
+router.put('/updateAnonymity/:id', anonymityOfParty);
+router.get('/changeValidators', changeValidators)
 
 
-
-router.post('/signup',createParty);
-router.post('/login',login);
-
-router.put('/update',updateParty);
-
-
+// Project routes
 router.post('/registerProject', registerProject);
 router.get('/top3', getTop3Projects);
 router.get('/getAllProj', getAllProjects);
 router.get('/byEmail', getProjectsByEmail);
-router.get('/byId', getProjectById);
+router.get('/byId/:id', getProjectById);
 router.put('/issueProj', issueProject);
 router.put('/validateProj', validateProject);
+router.get('/listOfValidProj', getAllValidatedProject);
+router.get('/projectProposedBy/:id', getProjectProposedByUser);
+router.put('/projectBidding', partyBiddingForProjects);
+router.get('/projectBidBy/:id', listOfProjectsBidByUser);
+router.get('/projectForBid', getProjectsForBidding);
+router.get('/projectsWon',projectBidWonByParty);
+router.get('/projectsNotValidated', notValidatedProject);
+router.put('/bidWonByParty', bidWonByParty);
 
+
+
+// Create system route
+router.post('/createSystem', createSystem)
 module.exports = router;
