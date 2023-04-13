@@ -174,6 +174,10 @@ function Home() {
 		{ id: 3, name: 'ghi', desc: 'dsgjds' },
 	];
 
+	useEffect(() => {
+		sessionStorage.setItem('isLoggedIn', false);
+	}, []);
+
 	const goToValidationPage = () => {
 		navigate('/validation');
 	};

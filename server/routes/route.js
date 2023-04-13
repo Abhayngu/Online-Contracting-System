@@ -14,7 +14,7 @@ const {
 	changePassword,
 	getPartytById,
 	changeValidators,
-	createSystem
+	createSystem,
 } = require('../controllers/party');
 
 const {
@@ -32,7 +32,7 @@ const {
 	getProjectsForBidding,
 	projectBidWonByParty,
 	notValidatedProject,
-	bidWonByParty
+	bidWonByParty,
 } = require('../controllers/project');
 
 router.get('/signup', (req, res) => {
@@ -54,8 +54,7 @@ router.get('/partyById/:id', getPartytById);
 
 router.put('/update', updateParty);
 router.put('/updateAnonymity/:id', anonymityOfParty);
-router.get('/changeValidators', changeValidators)
-
+router.get('/changeValidators', changeValidators);
 
 // Project routes
 router.post('/registerProject', registerProject);
@@ -64,18 +63,23 @@ router.get('/getAllProj', getAllProjects);
 router.get('/byEmail', getProjectsByEmail);
 router.get('/byId/:id', getProjectById);
 router.put('/issueProj', issueProject);
+
+// Update the result of a validator for a particular project
 router.put('/validateProj', validateProject);
+
 router.get('/listOfValidProj', getAllValidatedProject);
 router.get('/projectProposedBy/:id', getProjectProposedByUser);
 router.put('/projectBidding', partyBiddingForProjects);
 router.get('/projectBidBy/:id', listOfProjectsBidByUser);
 router.get('/projectForBid', getProjectsForBidding);
-router.get('/projectsWon',projectBidWonByParty);
-router.get('/projectsNotValidated', notValidatedProject);
+router.get('/projectsWon', projectBidWonByParty);
+
+// To get all the projects yet not validated
+router.get('/projectsNotValidated/:id', notValidatedProject);
+
+// Update the bidding result
 router.put('/bidWonByParty', bidWonByParty);
 
-
-
 // Create system route
-router.post('/createSystem', createSystem)
+router.post('/createSystem', createSystem);
 module.exports = router;

@@ -5,33 +5,37 @@ import Header from '../Components/Header';
 import axios from 'axios';
 
 export default function Validate() {
-	const [validation, setProjects] = useState([
-		{
-			id: '12',
-			name: 'Project 1',
-			tokens: 12,
-			issuers_name: 'Abhay',
-			time: '12',
-		},
-		{
-			id: '176',
-			name: 'Project 2',
-			tokens: 42,
-			issuers_name: 'Subhajit',
-			time: '14',
-		},
-		{
-			id: '100',
-			name: 'Project 3',
-			tokens: 2,
-			issuers_name: 'Hrithik',
-			time: '12',
-		},
-	]);
+	const [projects, setProjects] = useState([]);
+	const getAllTheProjectsToValidate = () => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/projectsNotValidated/${sessionStorage.getItem(
+				'id'
+			)}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setProjects(response.data.data);
+			})
+			.catch(function (error) {
+				console.error(error.msg);
+				// setLoading(false);
+			});
+	};
+	useEffect(() => {
+		getAllTheProjectsToValidate();
+	}, []);
 	const customStyle = {
 		projectsContainer: {
 			display: 'flex',
-			justifyContent: 'space-evenly',
+			justifyContent: 'flex-start',
+			alignItems: 'center',
 			flexWrap: 'wrap',
 			padding: '0 40px',
 			margin: '50px 0',
@@ -50,14 +54,15 @@ export default function Validate() {
 				Validate these projects{' '}
 			</h1>
 			<div style={customStyle.projectsContainer}>
-				{validation.map((ob) => {
+				{projects.map((project) => {
 					return (
 						<ValidationBox
-							id={ob.id}
-							name={ob.name}
-							issuers_name={ob.issuers_name}
-							tokens={ob.tokens}
-							time={ob.time}
+							id={project._id}
+							name={project.name}
+							issuers_name={project.proposedBy.name}
+							tokens={project.expectedTokens}
+							time={project.expectedFinishTime}
+							isAnonymous={project.proposedBy.isAnonymous}
 						/>
 					);
 				})}

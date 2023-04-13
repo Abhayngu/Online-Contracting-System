@@ -99,54 +99,79 @@ exports.issueProject = async (req, res, next) => {
 	}
 };
 
-// list of not validated project by given user
+// Private Route
+// Returns all the project which a validator can validate
+// with the condition that he/she has not proposed the project
+// and never validated in past
 
 exports.notValidatedProject = async (req, res, next) => {
-	let { partyId } = req.body;
-	try{
+	const partyId = req.params.id;
+	// console.log(req);
+	try {
 		const project = await Project.find({
 			$and: [
-				{isValidated: false},
-				{isIssued: false},
-				{ proposedBy: { $ne: partyId } }
-			  ]
+				{ isValidated: false },
+				{ isIssued: false },
+				{ proposedBy: { $ne: partyId } },
+				{
+					validationDecision: {
+						$not: { $elemMatch: { partyId } },
+					},
+				},
+			],
 		});
-		return res.status(200).json(project);
+		return res.status(200).json({ success: true, data: project });
 	} catch {
-		return res.status(400).json({sucess: false, msg: "Project not found"});
+		return res
+			.status(400)
+			.json({ sucess: false, msg: 'Project not found' });
 	}
 };
-// Validating projects by validator
+
+// Private route
+// Validate decision of a validator for some project
+
 exports.validateProject = async (req, res, next) => {
 	let { partyId, projectId, decision, isValidator } = req.body;
-	console.log(partyId, projectId, decision, isValidator)
+	// console.log(partyId, projectId, decision, isValidator);
 	const party = await Party.findById(partyId);
+	if (!party) {
+		return res.status(400).json({ sucess: false, msg: 'Party Not Found' });
+	}
 	if (!isValidator) {
-		return res.status(400).json({ sucess: false, msg: 'Party is not a validator.' });
+		return res
+			.status(400)
+			.json({ sucess: false, msg: 'Party is not a validator.' });
 	}
 	let project = await Project.findById(projectId);
 	if (!project) {
 		return res.status(400).json({ msg: 'Project not found.' });
 	}
-	let alreadyValidated = await Project.findOne({_id : projectId
-		, "validationDecision.projectId": {$in : [projectId]}});
-	if(alreadyValidated){
-		return res.status(200).json({sucess: false, msg: "Already validated by you"});
+	let alreadyValidated = await Project.findOne({
+		_id: projectId,
+		validationDecision: {
+			$elemMatch: { partyId: partyId },
+		},
+	});
+	console.log('checking validating Condition', alreadyValidated);
+	if (alreadyValidated) {
+		return res.status(200).json({
+			success: false,
+			msg: 'This project is already validated by you',
+		});
 	}
-	// const party = await Party.find({
-	// 		 "validationDecision.projectId": {$in : projectId}
-	// });
+
+	// Getting the number of validation count of the project
 	const count = project.validationCount;
-	console.log('before updation ', project.validationCount)
-	if(decision == true) {
-		// await Project.findByIdAndUpdate(project._id, { validationCount: count + 1 });
-		await project.updateOne({ validationCount: count + 1 });
+
+	if (decision == true) {
 		await project.updateOne({
+			validationCount: count + 1,
 			$push: {
 				validationDecision: {
 					partyId: partyId,
 					projectId: projectId,
-					decision: true
+					decision: true,
 				},
 			},
 		});
@@ -155,18 +180,17 @@ exports.validateProject = async (req, res, next) => {
 				validationDecision: {
 					partyId: partyId,
 					projectId: projectId,
-					decision: true
+					decision: true,
 				},
 			},
 		});
-		console.log('After updation ', project.validationCount)
 	} else {
 		await project.updateOne({
 			$push: {
 				validationDecision: {
 					partyId: partyId,
 					projectId: projectId,
-					decision: false
+					decision: false,
 				},
 			},
 		});
@@ -175,25 +199,37 @@ exports.validateProject = async (req, res, next) => {
 				validationDecision: {
 					partyId: partyId,
 					projectId: projectId,
-					decision: false
+					decision: false,
 				},
 			},
 		});
-		return res.status(200).json({sucess: true, msg: "Your decision noted."});
+		return res
+			.status(200)
+			.json({ sucess: true, msg: 'Your have validated the project' });
 	}
-	if(count >= 3 && decision == true){
+	if (count == 3 && decision == true) {
 		try {
-			await Project.findOneAndUpdate({_id : projectId}, 
-				{ isValidated: true,
-				reasonIfNotValid: "User does not have enough token"},
-				{new : true}
+			await Project.findOneAndUpdate(
+				{ _id: projectId },
+				{
+					isValidated: true,
+					reasonIfNotValid: 'User does not have enough token',
+				},
+				{ new: true }
 			);
-			return res.status(200).json({sucess: true, msg: 'Project validated successfully.' });
+			return res
+				.status(200)
+				.json({ sucess: true, msg: 'Project validated successfully.' });
 		} catch {
-			return res.status(400).json({sucess: false, msg: 'Failed to validate Project' });
+			return res
+				.status(400)
+				.json({ sucess: false, msg: 'Failed to validate Project' });
 		}
 	} else {
-		return res.status(200).json({sucess: true, msg: "Waiting for other validators to validate."});
+		return res.status(200).json({
+			sucess: true,
+			msg: 'Waiting for other validators to validate.',
+		});
 	}
 };
 
@@ -252,17 +288,17 @@ exports.partyBiddingForProjects = async (req, res, next) => {
 
 // Project won by a party
 
-exports.projectBidWonByParty =async (req, res, next) => {
+exports.projectBidWonByParty = async (req, res, next) => {
 	let { partyId } = req.body;
 	try {
-		const project = await Project.find({"wonBy.id" :partyId});
+		const project = await Project.find({ 'wonBy.id': partyId });
 		return res.status(200).json(project);
-	} catch  {
-		return res.status(400).json({ sucess: false , msg : "No projects won."});
+	} catch {
+		return res.status(400).json({ sucess: false, msg: 'No projects won.' });
 	}
 };
 
-// getting the list of all the projects bid by 
+// getting the list of all the projects bid by
 // a particular party using id. (Updated API)
 
 exports.listOfProjectsBidByUser = async (req, res, next) => {
@@ -275,10 +311,10 @@ exports.listOfProjectsBidByUser = async (req, res, next) => {
 	console.log(party);
 	const project = await Project.find({ 'bidders.bidderId': id });
 
-    return res.status(200).json(project);
+	return res.status(200).json(project);
 };
 
-// getting the list of all the projects proposed by 
+// getting the list of all the projects proposed by
 // a particular party using id. (Updated API)
 
 exports.getProjectProposedByUser = async (req, res, next) => {
@@ -294,58 +330,67 @@ exports.getProjectProposedByUser = async (req, res, next) => {
 	res.status(200).json(projects);
 };
 
-// 
+//
 exports.getProjectsForBidding = async (req, res, next) => {
-	let {partyId} = req.body;
+	let { partyId } = req.body;
 	try {
 		const project = await Project.find({
 			$and: [
-				{isValidated: true},
-				{isIssued: false},
+				{ isValidated: true },
+				{ isIssued: false },
 				{ proposedBy: { $ne: partyId } },
-				{ "validationDecision.partyId": {$nin : [partyId]}  },
-			  ]
+				{ 'validationDecision.partyId': { $nin: [partyId] } },
+			],
 		});
-		res.status(200).json( project );
+		res.status(200).json(project);
 	} catch {
 		res.status(400).json({ msg: 'No Projects found!!!' });
 	}
 };
 
-// partId projectId, partName, projectName, isAnonymous, 
+// partId projectId, partName, projectName, isAnonymous,
 // token,timelineProposed
 
-
 exports.bidWonByParty = async (req, res, next) => {
-	let {partyId, projectId, partyName, projectName, isAnonymous, token, timeline } = req.body;
+	let {
+		partyId,
+		projectId,
+		partyName,
+		projectName,
+		isAnonymous,
+		token,
+		timeline,
+	} = req.body;
 	const project = await Project.find(projectId);
-	if(!project) {
-		return res.status(400).json({sucess: false, msg: "Project not found."});
+	if (!project) {
+		return res
+			.status(400)
+			.json({ sucess: false, msg: 'Project not found.' });
 	}
 	const party = await Party.find(partyId);
-	if(!party) {
-		return res.status(400).json({sucess: false, msg: "Party not found."});
+	if (!party) {
+		return res.status(400).json({ sucess: false, msg: 'Party not found.' });
 	}
 	await Project.findByIdAndUpdate(
 		project._id,
-		{ "wonBy.id": partyId },
-		{"wonBy.name": partyName},
-		{"wonBy.isAnonymous": isAnonymous},
-		{"wonBy.token": token},
-		{"wonBy.timelineProposed": timeline},
+		{ 'wonBy.id': partyId },
+		{ 'wonBy.name': partyName },
+		{ 'wonBy.isAnonymous': isAnonymous },
+		{ 'wonBy.token': token },
+		{ 'wonBy.timelineProposed': timeline },
 		{ new: true }
 	);
-	
+
 	await party.updateOne({
 		$push: {
 			biddingWon: {
 				projectId,
 				projectName,
-				proposed : false,
+				proposed: false,
 				tokenBid: token,
 				timelineProposed: timeline,
 			},
 		},
 	});
-	res.status(200).json({sucess: true, msg: "You have won the Bid"});
+	res.status(200).json({ sucess: true, msg: 'You have won the Bid' });
 };

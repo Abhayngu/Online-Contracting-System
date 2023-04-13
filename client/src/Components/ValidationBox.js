@@ -10,7 +10,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 			setValidationDecision(true);
 		}
 		const decisionBool = decision == 1 ? true : false;
-		console.log('main thing', decision);
+		// console.log('main thing', decision);
 		const options = {
 			method: 'PUT',
 			url: `http://localhost:2000/validateProj`,
@@ -19,7 +19,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 			},
 			data: {
 				partyId: sessionStorage.getItem('id'),
-				projectId: '642fca82a323ff261ab00f68',
+				projectId: id,
 				decision: decisionBool,
 				isValidator: sessionStorage.getItem('isValidator'),
 			},
@@ -45,6 +45,8 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 	const customStyle = {
 		stepboxWithMsgContainer: {
 			width: '18%',
+			margin: '0 10px',
+			marginBottom: '50px',
 		},
 		stepboxContainer: {
 			backgroundColor: 'lightgreen',
@@ -90,7 +92,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 			cursor: 'pointer',
 		},
 	};
-	console.log(name, issuers_name, time, tokens);
+	// console.log(name, issuers_name, time, tokens);
 	return (
 		<div style={customStyle.stepboxWithMsgContainer}>
 			<div style={customStyle.stepboxContainer}>
