@@ -3,43 +3,11 @@ import Header from '../Components/Header';
 import BidBox from '../Components/BidBox';
 // projectName, tokens, proposedByName, proposedByIsAnonymous, expectedFinishTime
 export default function BidProject() {
-	const [projects, setProjects] = useState([
-		{
-			name: 'Project 1',
-			tokens: 123,
-			proposedBy: 'sdafdsf',
-			proposedByIsAnonymous: true,
-			expectedFinishTime: new Date(),
-		},
-		{
-			name: 'Project 2',
-			tokens: 420,
-			proposedBy: 'sdgsdagasdgsdg',
-			proposedByIsAnonymous: false,
-			expectedFinishTime: new Date(),
-		},
-		{
-			name: 'Project 3',
-			tokens: 265,
-			proposedBy: 'gagd',
-			proposedByIsAnonymous: false,
-			expectedFinishTime: new Date(),
-		},
-		{
-			name: 'Project 4',
-			tokens: 290,
-			proposedBy: 'dsfa',
-			proposedByIsAnonymous: false,
-			expectedFinishTime: new Date(),
-		},
-		{
-			name: 'Project 5',
-			tokens: 232,
-			proposedBy: 'fdhahf',
-			proposedByIsAnonymous: false,
-			expectedFinishTime: new Date(),
-		},
-	]);
+	const [projects, setProjects] = useState([]);
+	const getProjectsForBidding = () => {};
+	useEffect(() => {
+		getProjectsForBidding();
+	}, []);
 	const customStyle = {
 		projectsContainer: {
 			display: 'flex',

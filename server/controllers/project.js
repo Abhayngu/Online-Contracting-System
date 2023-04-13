@@ -1,5 +1,6 @@
 const Project = require('../models/Project');
 const Party = require('../models/Party');
+const schedule = require('node-schedule');
 
 // project registration
 
@@ -163,7 +164,6 @@ exports.validateProject = async (req, res, next) => {
 
 	// Getting the number of validation count of the project
 	const count = project.validationCount;
-
 	if (decision == true) {
 		await project.updateOne({
 			validationCount: count + 1,
@@ -205,7 +205,7 @@ exports.validateProject = async (req, res, next) => {
 		});
 		return res
 			.status(200)
-			.json({ sucess: true, msg: 'Your have validated the project' });
+			.json({ sucess: true, msg: 'Discarded project successfully' });
 	}
 	if (count == 3 && decision == true) {
 		try {
@@ -217,6 +217,11 @@ exports.validateProject = async (req, res, next) => {
 				},
 				{ new: true }
 			);
+			const date = new Date(Date.now() + 2 * 60 * 1000);
+			schedule.scheduleJob(date, function () {
+				getBiddingResult(projectId);
+			});
+
 			return res
 				.status(200)
 				.json({ sucess: true, msg: 'Project validated successfully.' });
@@ -233,9 +238,17 @@ exports.validateProject = async (req, res, next) => {
 	}
 };
 
-// getting list of all the validated projects .(Updated API)
+function getBiddingResult(projectId) {
+	const project = Project.findById(projectId);
+	if (!project) {
+		return;
+	}
+	console.log(`Bidding for ${project.Name} is completed`);
+}
 
+// getting list of all the validated projects to make them available for bidding
 exports.getAllValidatedProject = async (req, res, next) => {
+	const id = req.params.id;
 	try {
 		const project = await Project.find({
 			isValidated: true,

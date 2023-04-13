@@ -67,7 +67,7 @@ router.put('/issueProj', issueProject);
 // Update the result of a validator for a particular project
 router.put('/validateProj', validateProject);
 
-router.get('/listOfValidProj', getAllValidatedProject);
+router.get('/listOfValidProj/:id', getAllValidatedProject);
 router.get('/projectProposedBy/:id', getProjectProposedByUser);
 router.put('/projectBidding', partyBiddingForProjects);
 router.get('/projectBidBy/:id', listOfProjectsBidByUser);

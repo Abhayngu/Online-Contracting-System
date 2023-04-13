@@ -175,7 +175,9 @@ function Home() {
 	];
 
 	useEffect(() => {
-		sessionStorage.setItem('isLoggedIn', false);
+		if (sessionStorage.getItem('isLoggedIn') == null) {
+			sessionStorage.setItem('isLoggedIn', false);
+		}
 	}, []);
 
 	const goToValidationPage = () => {
