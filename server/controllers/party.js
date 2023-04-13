@@ -2,20 +2,10 @@ const Party = require('../models/Party');
 const passport = require('passport');
 const System = require('../models/System')
 
-<<<<<<< HEAD
 exports.createParty = async (req, res)=> {
     console.log(req.body);
     let {name, email, password,description} = req.body;
     
-    let userData = {
-        name : name,
-        email : email,
-        description : description
-    };
-=======
-exports.createParty = async (req, res) => {
-	let { name, email, password, description } = req.body;
->>>>>>> 6f255ae9e1cdc336a4803026170ca1648aaa1fac
 
 	let userData = {
 		name: name,
@@ -23,7 +13,6 @@ exports.createParty = async (req, res) => {
 		description: description,
 	};
 
-<<<<<<< HEAD
     Party.register(userData, password, (err, user)=> {
         if(err) {
            
@@ -39,14 +28,6 @@ exports.createParty = async (req, res) => {
     });
 
 }
-=======
-	const existingUser = await Party.findOne({ email });
-	if (existingUser) {
-		return res
-			.status(422)
-			.json({ message: 'Party already exists with this email' });
-	}
->>>>>>> 6f255ae9e1cdc336a4803026170ca1648aaa1fac
 
 	Party.register(userData, password, (err, user) => {
 		if (err) {
@@ -59,7 +40,7 @@ exports.createParty = async (req, res) => {
 			// res.send('success');
 		});
 	});
-};
+
 
 exports.login = async (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {

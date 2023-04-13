@@ -14,13 +14,14 @@ import Issue from './Pages/Issue';
 import ValidateProject from './Pages/ValidateProject';
 import BidProject from './Pages/BidProject';
 import MakeProject from './Pages/MakeProject';
+import MyComponent from './Pages/Demo';
 
 function App() {
 	return (
 		<BrowserRouter>
-			<Routes>
+			<Routes> 
 				<Route path="/" element={<Home />} />
-				<Route path="/test" element={<Spinner />} />
+				<Route path="/test" element={<MyComponent />} />
 				<Route path="/project" element={<Project />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/login" element={<Login />} />
