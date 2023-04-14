@@ -78,17 +78,6 @@ function Register() {
 		}
 	};
 
-	// axios
-	// 		.get('http://localhost:2401/api/zomato/getCities')
-	// 		.then((result) => {
-	// 			this.setState({
-	// 				cities: result.data.cities,
-	// 			});
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
-
 	// Showing success message
 	const successMessage = () => {
 		return (

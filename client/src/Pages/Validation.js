@@ -13,6 +13,7 @@ function Validation() {
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
+	const [msg, setMsg] = useState('');
 
 	// Handling the email change
 	const handle_Project_Name = (e) => {
@@ -78,20 +79,21 @@ function Validation() {
 			biddingCompletionDate == ''
 		) {
 			setError(true);
+		} else if (tokens <= 1000) {
+			// setError(true);
+			setMsg('Token should be more than 1000');
 		} else {
-			console.log(
-				projectName,
-				description,
-				tokens,
-				completionDate,
-				biddingCompletionDate
-			);
-			registerProject();
-			setProjectName('');
-			setTokens('');
-			setDescription('');
-			setCompletionDate('');
-			setBiddingCompletionDate('');
+			const date = new Date();
+			const x = new Date(completionDate);
+			console.log(completionDate);
+			console.log(date.toISOString());
+			console.log(x);
+			// registerProject();
+			// setProjectName('');
+			// setTokens('');
+			// setDescription('');
+			// setCompletionDate('');
+			// setBiddingCompletionDate('');
 		}
 	};
 
@@ -145,6 +147,7 @@ function Validation() {
 							<div className="messages">
 								{errorMessage()}
 								{successMessage()}
+								<div style={{ color: 'red' }}>{msg}</div>
 							</div>
 							<label className="label">
 								Name Of The Project*

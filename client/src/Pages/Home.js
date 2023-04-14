@@ -1,12 +1,13 @@
 import React from 'react';
 import Header from '../Components/Header';
+import { Link } from 'react-router-dom';
 import homepageimg from './homepage.jpg';
 import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
 import { greenColor, blueColor } from '../globalVars';
 import Spinner from '../Components/Spinner';
 import axios from 'axios';
-export default class Home extends React.Component {
+class Home extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -33,17 +34,12 @@ export default class Home extends React.Component {
 		console.log('handling logged in home page', result);
 		this.setState({ loggedIn: result });
 	};
-	goToValidationPage = () => {
-		this.props.history.push('/validation');
-	};
-	goToIssuePage = () => {
-		this.props.history.push('/rateProject');
-	};
 
 	customStyle = {
 		titleImageContainer: {
 			width: '100%',
 			height: '100vh',
+			minHeight: '600px',
 			marginBottom: '100px',
 			position: 'relative',
 		},
@@ -243,22 +239,28 @@ export default class Home extends React.Component {
 							></img>
 
 							{this.state.loggedIn ? (
-								<div
-									onClick={this.goToValidationPage}
-									style={this.customStyle.validationButton}
-								>
-									Get Your Project Validated
-								</div>
+								<Link to="/validation">
+									<div
+										onClick={this.goToValidationPage}
+										style={
+											this.customStyle.validationButton
+										}
+									>
+										Get Your Project Validated
+									</div>
+								</Link>
 							) : (
 								<></>
 							)}
 							{this.state.loggedIn ? (
-								<div
-									onClick={this.goToIssuePage}
-									style={this.customStyle.issueButton}
-								>
-									Rate your done projects
-								</div>
+								<Link to="/rateProject">
+									<div
+										onClick={this.goToIssuePage}
+										style={this.customStyle.issueButton}
+									>
+										Rate your done projects
+									</div>
+								</Link>
 							) : (
 								<></>
 							)}
@@ -317,3 +319,5 @@ export default class Home extends React.Component {
 		);
 	}
 }
+
+export default Home;
