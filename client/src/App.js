@@ -16,6 +16,7 @@ import BidProject from './Pages/BidProject';
 import MakeProject from './Pages/MakeProject';
 import MyComponent from './Pages/Demo';
 
+import RateProject from './Pages/RateProject';
 function App() {
 	return (
 		<BrowserRouter>
@@ -27,6 +28,7 @@ function App() {
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
 				<Route path="/validation" element={<Validation />} />
+				<Route path="/rateProject" element={<RateProject />} />
 
 				<Route path="/bidproject" element={<BidProject />} />
 				<Route path="/validateProject" element={<ValidateProject />} />

@@ -1,16 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import Spinner from './Spinner';
 
 function ValidationBox({ id, name, issuers_name, time, tokens }) {
 	const [validationDecision, setValidationDecision] = useState(false);
 	const [msg, setMessage] = useState('');
 	const [error, setError] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const handleValidate = (decision) => {
+		setLoading(true);
 		if (decision) {
 			setValidationDecision(true);
 		}
 		const decisionBool = decision == 1 ? true : false;
-		console.log('main thing', decision);
+		// console.log('main thing', decision);
 		const options = {
 			method: 'PUT',
 			url: `http://localhost:2000/validateProj`,
@@ -19,7 +22,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 			},
 			data: {
 				partyId: sessionStorage.getItem('id'),
-				projectId: '642fca82a323ff261ab00f68',
+				projectId: id,
 				decision: decisionBool,
 				isValidator: sessionStorage.getItem('isValidator'),
 			},
@@ -37,16 +40,21 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 					setError(false);
 					setMessage(response.data.msg);
 				}
+				setLoading(false);
 			})
 			.catch(function (error) {
 				console.error(error);
+				setLoading(false);
 			});
 	};
 	const customStyle = {
-		stepboxWithMsgContainer: {
-			width: '18%',
-		},
+		// stepboxWithMsgContainer: {
+
+		// 	marginBottom: '50px',
+		// },
 		stepboxContainer: {
+			width: '18%',
+			margin: '0 10px',
 			backgroundColor: 'lightgreen',
 			borderRadius: '10px',
 			padding: '15px',
@@ -90,51 +98,57 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 			cursor: 'pointer',
 		},
 	};
-	console.log(name, issuers_name, time, tokens);
+	// console.log(name, issuers_name, time, tokens);
 	return (
-		<div style={customStyle.stepboxWithMsgContainer}>
-			<div style={customStyle.stepboxContainer}>
-				<div style={customStyle.stepHeading}>
-					Project Name: <span>{name}</span>
-				</div>
-				<div style={customStyle.stepHeading}>
-					Issuer Name: <span>{issuers_name}</span>
-				</div>
-				<div style={customStyle.stepHeading}>
-					Expected finish time : <span>{time}</span>
-				</div>
-				<div style={customStyle.stepHeading}>
-					Expected Tokens:{tokens}
-				</div>
-				<div style={{ textAlign: 'center' }}>
-					<div>
-						<button
-							onClick={() => handleValidate(1)}
-							style={customStyle.style1}
-						>
-							Validate
-						</button>
+		<>
+			{loading ? (
+				<Spinner />
+			) : (
+				<>
+					<div style={customStyle.stepboxContainer}>
+						<div style={customStyle.stepHeading}>
+							Project Name: <span>{name}</span>
+						</div>
+						<div style={customStyle.stepHeading}>
+							Issuer Name: <span>{issuers_name}</span>
+						</div>
+						<div style={customStyle.stepHeading}>
+							Expected finish time : <span>{time}</span>
+						</div>
+						<div style={customStyle.stepHeading}>
+							Expected Tokens:{tokens}
+						</div>
+						<div style={{ textAlign: 'center' }}>
+							<div>
+								<button
+									onClick={() => handleValidate(1)}
+									style={customStyle.style1}
+								>
+									Validate
+								</button>
+							</div>
+							<div>
+								<button
+									onClick={() => handleValidate(0)}
+									style={customStyle.style1}
+								>
+									Discard
+								</button>
+							</div>
+						</div>
 					</div>
-					<div>
-						<button
-							onClick={() => handleValidate(0)}
-							style={customStyle.style1}
-						>
-							Discard
-						</button>
+					<div
+						style={{
+							color: error ? 'red' : 'green',
+							fontSize: '14px',
+							textAlign: 'center',
+						}}
+					>
+						{msg}
 					</div>
-				</div>
-			</div>
-			<div
-				style={{
-					color: error ? 'red' : 'green',
-					fontSize: '14px',
-					textAlign: 'center',
-				}}
-			>
-				{msg}
-			</div>
-		</div>
+				</>
+			)}
+		</>
 	);
 }
 export default ValidationBox;

@@ -14,7 +14,7 @@ const Validation = new mongoose.Schema({
 
 const Bidder = new mongoose.Schema({
 	bidderId: {
-		type: [mongoose.Schema.ObjectId],
+		type: mongoose.Schema.ObjectId,
 		ref: 'Party',
 	},
 	bidderName: {
@@ -71,15 +71,12 @@ const ProjectSchema = new mongoose.Schema(
 		rating: {
 			type: Number,
 			min: 0,
+			deafult: 0,
 			max: 5,
 		},
-		numOfBid: {
-			type: Number,
-			default: 0,
-		},
-		biddingDuration: {
-			type: String,
-			require: true,
+		isRated: {
+			type: Boolean,
+			default: false,
 		},
 		isValid: {
 			type: Boolean,
@@ -109,6 +106,14 @@ const ProjectSchema = new mongoose.Schema(
 		isIssued: {
 			type: Boolean,
 			default: false,
+		},
+		numOfBid: {
+			type: Number,
+			default: 0,
+		},
+		biddingDuration: {
+			type: String,
+			require: true,
 		},
 		wonBy: {
 			id: {
@@ -142,6 +147,9 @@ const ProjectSchema = new mongoose.Schema(
 			default: 0,
 			// nothing, design, code, test, deploy
 			// 0, 1, 2, 3, 4
+		},
+		actualFinishTime: {
+			type: Date,
 		},
 	},
 	{

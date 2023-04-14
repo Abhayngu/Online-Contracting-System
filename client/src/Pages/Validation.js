@@ -20,6 +20,7 @@ function Validation() {
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
 	const [contract_, setContract] = useState(null);
+	const [msg, setMsg] = useState('');
 
 	// Handling the email change
 	const handle_Project_Name = (e) => {
@@ -97,6 +98,9 @@ function Validation() {
 			biddingCompletionDate == ''
 		) {
 			setError(true);
+		} else if (tokens <= 1000) {
+			// setError(true);
+			setMsg('Token should be more than 1000');
 		} else {
 
 			console.log(
@@ -181,6 +185,7 @@ function Validation() {
 							<div className="messages">
 								{errorMessage()}
 								{successMessage()}
+								<div style={{ color: 'red' }}>{msg}</div>
 							</div>
 							<label className="label">
 								Name Of The Project*

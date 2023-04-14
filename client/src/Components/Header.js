@@ -4,22 +4,24 @@ import '../styles/styles.css';
 import { RiArrowDropDownFill } from 'react-icons/ri';
 import axios from 'axios';
 
-function Header({ c }) {
+function Header({ c, handleLoggedIn }) {
 	const navigate = useNavigate();
 	const [display, setDisplay] = useState('hide-it');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [username, setUsername] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
+	const [isValidator, setIsValidator] = useState(false);
 	const [id, setId] = useState('');
 
 	useEffect(() => {
 		const loggedIn = sessionStorage.getItem('isLoggedIn');
-
+		// console.log('loggedIn : ', loggedIn);
 		if (loggedIn == 'true') {
 			setIsLoggedIn(true);
 			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
 			setId(JSON.parse(sessionStorage.getItem('user'))._id);
-			setIsAdmin(sessionStorage.getItem('isAdmin'));
+			setIsAdmin(JSON.parse(sessionStorage.getItem('isAdmin')));
+			setIsValidator(JSON.parse(sessionStorage.getItem('isValidator')));
 		} else {
 			// console.log('loggedin value', typeof loggedIn);
 		}
@@ -138,6 +140,10 @@ function Header({ c }) {
 		// sessionStorage.setItem('isLoggedIn', false);
 		sessionStorage.clear();
 		setIsLoggedIn(false);
+		if (handleLoggedIn) {
+			handleLoggedIn(false);
+		}
+		sessionStorage.setItem('isLoggedIn', false);
 		navigate('/');
 	};
 
@@ -183,7 +189,7 @@ function Header({ c }) {
 						) : (
 							<></>
 						)}
-						{isLoggedIn == false ? (
+						{isLoggedIn == false || isValidator == false ? (
 							<></>
 						) : (
 							<div
@@ -219,7 +225,7 @@ function Header({ c }) {
 									...customStyle.icons,
 								}}
 							>
-								My projects
+								Projects Won
 							</div>
 						)}
 						{isLoggedIn == false ? (
