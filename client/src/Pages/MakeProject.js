@@ -7,67 +7,81 @@ export default function MakeProject() {
 	const [projects, setProjects] = useState([
 		{
 			name: 'Project 1',
-			tokens: 123,
+			expectedTokens: 123,
 			proposedBy: 'sdafdsf',
-			proposedByIsAnonymous: true,
+			proposedBy: {
+				isAnonymous: false,
+			},
 			expectedFinishTime: new Date(),
+			milestonesAchieved: 0,
 		},
 		{
 			name: 'Project 2',
-			tokens: 420,
+			expectedTokens: 420,
 			proposedBy: 'sdgsdagasdgsdg',
-			proposedByIsAnonymous: false,
+			proposedBy: {
+				isAnonymous: true,
+			},
 			expectedFinishTime: new Date(),
+			milestonesAchieved: 1,
 		},
 		{
 			name: 'Project 3',
-			tokens: 265,
+			expectedTokens: 265,
 			proposedBy: 'gagd',
-			proposedByIsAnonymous: false,
+			proposedBy: {
+				isAnonymous: false,
+			},
 			expectedFinishTime: new Date(),
+			milestonesAchieved: 2,
 		},
 		{
 			name: 'Project 4',
-			tokens: 290,
+			expectedTokens: 290,
 			proposedBy: 'dsfa',
-			proposedByIsAnonymous: false,
+			proposedBy: {
+				isAnonymous: false,
+			},
 			expectedFinishTime: new Date(),
+			milestonesAchieved: 3,
 		},
 		{
 			name: 'Project 5',
-			tokens: 232,
+			expectedTokens: 232,
 			proposedBy: 'fdhahf',
-			proposedByIsAnonymous: false,
+			proposedBy: {
+				isAnonymous: false,
+			},
 			expectedFinishTime: new Date(),
+			milestonesAchieved: 4,
 		},
 	]);
+	useEffect(() => {
+		// getProjectsWon();
+	}, []);
 
-	const options = {
-		method: 'GET',
-		url: `http://localhost:2000/projectsWon`,
-		headers: {
-			'content-type': 'application/json',
-		},
-		data: {
-			partyId: sessionStorage.getItem('id'),
-		},
+	const getProjectsWon = () => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/projectsWon`,
+			headers: {
+				'content-type': 'application/json',
+			},
+			data: {
+				partyId: sessionStorage.getItem('id'),
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setProjects(response.data.data);
+			})
+			.catch(function (error) {
+				console.error(error);
+			});
 	};
-
-	axios
-		.request(options)
-		.then((response) => {
-			console.log(response.data);
-			setMyProject(response.data);
-			sessionStorage.setItem(
-				'projectProposed',
-				JSON.stringify(response.data)
-			);
-			setLoading(false);
-		})
-		.catch(function (error) {
-			console.error(error);
-			setLoading(false);
-		});
 
 	const customStyle = {
 		projectsContainer: {
@@ -94,12 +108,13 @@ export default function MakeProject() {
 				{projects.map((project) => {
 					return (
 						<MakeProjectBox
-							id={project.id}
+							id={project._id}
 							name={project.name}
-							tokens={project.tokens}
-							proposedBy={project.proposedBy}
-							isAnonymous={project.proposedByIsAnonymous}
+							tokens={project.expectedTokens}
+							proposedBy={project.proposedBy.name}
+							isAnonymous={project.proposedBy.isAnonymous}
 							finishTime={project.expectedFinishTime}
+							mileStonesDone={project.milestonesAchieved}
 						/>
 					);
 				})}

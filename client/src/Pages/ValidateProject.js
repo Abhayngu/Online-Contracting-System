@@ -6,9 +6,27 @@ import axios from 'axios';
 
 export default function Validate() {
 	const [validation, setProjects] = useState([
-		{ name: 'Project 1', tokens: 12, issuers_name: 'Abhay', time: '12' },
-		{ name: 'Project 2', tokens: 42, issuers_name: 'Subhajit', time: '14' },
-		{ name: 'Project 3', tokens: 2, issuers_name: 'Hrithik', time: '12' },
+		{
+			id: '12',
+			name: 'Project 1',
+			tokens: 12,
+			issuers_name: 'Abhay',
+			time: '12',
+		},
+		{
+			id: '176',
+			name: 'Project 2',
+			tokens: 42,
+			issuers_name: 'Subhajit',
+			time: '14',
+		},
+		{
+			id: '100',
+			name: 'Project 3',
+			tokens: 2,
+			issuers_name: 'Hrithik',
+			time: '12',
+		},
 	]);
 	const customStyle = {
 		projectsContainer: {
@@ -35,6 +53,7 @@ export default function Validate() {
 				{validation.map((ob) => {
 					return (
 						<ValidationBox
+							id={ob.id}
 							name={ob.name}
 							issuers_name={ob.issuers_name}
 							tokens={ob.tokens}
