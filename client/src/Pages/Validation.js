@@ -83,11 +83,11 @@ function Validation() {
 			// setError(true);
 			setMsg('Token should be more than 1000');
 		} else {
-			const date = new Date();
-			const x = new Date(completionDate);
 			console.log(completionDate);
-			console.log(date.toISOString());
-			console.log(x);
+			const date = new Date(completionDate.replace('T', ' '));
+			// console.log(date.getTime());
+			console.log(Date.now() - date.getTime());
+			// console.log(x);
 			// registerProject();
 			// setProjectName('');
 			// setTokens('');

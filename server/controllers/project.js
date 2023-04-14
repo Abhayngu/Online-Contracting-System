@@ -311,8 +311,8 @@ exports.notValidatedProject = async (req, res, next) => {
 // 		"timeline" : "2023-04-07T07:10:08.068+00:00"
 // }
 exports.validateProject = async (req, res, next) => {
+	console.log(req.body);
 	let { partyId, projectId, decision, isValidator } = req.body;
-	console.log(typeof decision);
 	// console.log(partyId, projectId, decision, isValidator);
 	const party = await Party.findById(partyId);
 	if (!party) {
@@ -334,6 +334,8 @@ exports.validateProject = async (req, res, next) => {
 		});
 	}
 	let project = await Project.findById(projectId);
+	// console.log(projectId);
+	// console.log(project);
 	if (!project) {
 		return res.status(400).json({ msg: 'Project not found' });
 	}
@@ -604,12 +606,10 @@ exports.bidOnProject = async (req, res, next) => {
 			.json({ success: false, msg: 'Project already implemented' });
 	}
 	if (project.proposedBy.id == partyId) {
-		return res
-			.status(400)
-			.json({
-				success: false,
-				msg: 'You can not bid on the project you have proposed',
-			});
+		return res.status(400).json({
+			success: false,
+			msg: 'You can not bid on the project you have proposed',
+		});
 	}
 	const hasValidated = await Project.findOne({
 		_id: projectId,

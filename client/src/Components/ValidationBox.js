@@ -5,8 +5,8 @@ import Spinner from './Spinner';
 function ValidationBox({ id, name, issuers_name, time, tokens }) {
 	const [validationDecision, setValidationDecision] = useState(false);
 	const [msg, setMessage] = useState('');
-	const [error, setError] = useState(false);
 	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState(false);
 	const handleValidate = (decision) => {
 		setLoading(true);
 		if (decision) {
@@ -27,6 +27,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 				isValidator: sessionStorage.getItem('isValidator'),
 			},
 		};
+		console.log('id of project', id, name, issuers_name, time, tokens);
 
 		axios
 			.request(options)
@@ -35,12 +36,13 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 					console.log(response.data);
 					setError(true);
 					setMessage(response.data.msg);
+					setLoading(false);
 				} else {
 					console.log(response.data);
 					setError(false);
 					setMessage(response.data.msg);
+					setLoading(false);
 				}
-				setLoading(false);
 			})
 			.catch(function (error) {
 				console.error(error);
@@ -136,15 +138,15 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 								</button>
 							</div>
 						</div>
-					</div>
-					<div
-						style={{
-							color: error ? 'red' : 'green',
-							fontSize: '14px',
-							textAlign: 'center',
-						}}
-					>
-						{msg}
+						<div
+							style={{
+								color: error ? 'red' : 'green',
+								fontSize: '14px',
+								textAlign: 'center',
+							}}
+						>
+							{msg}
+						</div>
 					</div>
 				</>
 			)}
