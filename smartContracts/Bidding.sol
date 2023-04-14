@@ -25,12 +25,12 @@ contract Bidding {
     mapping(address => bool) permission;
     mapping(uint => uint) count_validator;
 
-    function createParty(address party, string memory name) public{
-        emit createParties(party,name);
+    function createParty(string memory name) public{
+        emit createParties(msg.sender,name);
     }
 
-    function deleteParty(address party, string memory name) public{
-        emit deletedParties(party,name);
+    function deleteParty( string memory name) public{
+        emit deletedParties(msg.sender,name);
     }
 
     function providePermission(address addr) public{

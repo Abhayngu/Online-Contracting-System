@@ -26,7 +26,14 @@ contract Bidding {
     mapping(uint => uint) count_validator;
 
     function createParty(address party, string memory name) public{
-        emit createParties(party,name);
+        try{
+            emit createParties(party,name);
+        } catch Error(string memory error) {
+        revert(string(abi.encodePacked("Error occurred: ", error)));
+        } catch {
+        revert("Unknown error occurred");
+        }
+        
     }
 
     function deleteParty(address party, string memory name) public{

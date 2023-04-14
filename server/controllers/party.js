@@ -4,42 +4,30 @@ const System = require('../models/System')
 
 exports.createParty = async (req, res)=> {
     console.log(req.body);
-    let {name, email, password,description} = req.body;
+    let {name, email, password,description, walletAddress} = req.body;
     
 
 	let userData = {
-		name: name,
-		email: email,
-		description: description,
+		name,
+		email,
+		description,
+		walletAddress
+
 	};
+	console.log(userData);
 
     Party.register(userData, password, (err, user)=> {
         if(err) {
            
-            // res.redirect('/signup');
             console.log(err);
             res.send(err);
         }
         passport.authenticate('local') (req, res, ()=> {
             return res.json({ message: 'Party registered sucessfully' });
-            // res.redirect('/login');
-            // res.send('success');
         });
     });
 
 }
-
-	Party.register(userData, password, (err, user) => {
-		if (err) {
-			// res.redirect('/signup');
-			res.send(err);
-		}
-		passport.authenticate('local')(req, res, () => {
-			return res.json({ message: 'Party registered sucessfully' });
-			// res.redirect('/login');
-			// res.send('success');
-		});
-	});
 
 
 exports.login = async (req, res, next) => {
@@ -200,7 +188,7 @@ exports.changeValidators = async (req, res, next) => {
 	const idToken = []
 	parties.map(party => {
 		if(!party.isAdmin){
-			idToken.push({id : party._id, token : party.tokens, name : party.name})
+			idToken.push({id : party._id, token : party.tokens, name : party.name , walletAddress: party.walletAddress})
 		}
 	})
 	idToken.sort((a, b) => {

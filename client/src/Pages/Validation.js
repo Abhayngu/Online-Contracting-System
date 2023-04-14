@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState } from 'react';
+import {Link} from 'react-router-dom'
 import Header from '../Components/Header';
 import axios from 'axios';
 import Spinner from '../Components/Spinner';
+import getWalletAddress from '../utils/connection';
+import contract_instance  from '../utils/getContract';
+// import createProject  from '../utils/CreateProject';
+
+
 function Validation() {
 	// States for validation
 	const [loading, setLoading] = useState(false);
@@ -13,6 +19,7 @@ function Validation() {
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
+	const [contract_, setContract] = useState(null);
 
 	// Handling the email change
 	const handle_Project_Name = (e) => {
@@ -56,7 +63,19 @@ function Validation() {
 		axios
 			.request(options)
 			.then((response) => {
-				console.log(response.data);
+				console.log(response.data.party,response.data.party);
+				// try{
+					// createProject(response.data.party._id,100,response.data.party.walletAddress);
+				contract_.methods.createProject(response.data.project._id,100).send({
+					from: response.data.party.walletAddress
+				})
+					
+				console.log("response",response.data.party._id,response.data.party.walletAddress);
+				// }
+				// catch(error){	
+				// 	console.log("Error : ",error);
+				// }
+
 				setLoading(false);
 				setSubmitted(true);
 			})
@@ -79,6 +98,7 @@ function Validation() {
 		) {
 			setError(true);
 		} else {
+
 			console.log(
 				projectName,
 				description,
@@ -86,6 +106,9 @@ function Validation() {
 				completionDate,
 				biddingCompletionDate
 			);
+
+			
+
 			registerProject();
 			setProjectName('');
 			setTokens('');
@@ -94,6 +117,18 @@ function Validation() {
 			setBiddingCompletionDate('');
 		}
 	};
+	const init = async () => {
+		const instance = await contract_instance();
+		console.log(instance);
+		setContract(instance);
+	};
+
+	useEffect(() => {
+		console.log('useeffect')
+		init();
+		console.log(contract_);
+		// window.location.reload()
+	  }, []);
 
 	// Showing success message
 	const successMessage = () => {
@@ -111,6 +146,7 @@ function Validation() {
 		);
 	};
 
+
 	// Showing error message if error is true
 	const errorMessage = () => {
 		return (
@@ -126,7 +162,7 @@ function Validation() {
 			</div>
 		);
 	};
-
+    console.log('render')
 	return (
 		<>
 			<Header c="#d9d9d9" />

@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect,useState } from 'react';
 import style from '../styles/style.css';
 import axios from 'axios';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
+import getWalletAddress from '../utils/connection';
+import contract_instance  from '../utils/getContract';
 function Form() {
 	// States for registration
 	const navigate = useNavigate();
@@ -10,6 +12,8 @@ function Form() {
 	const [tempName, setTempName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [walletAddress, setWalletAddress] = useState('');
+	const [contract_, setContract] = useState(null);
 
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
@@ -54,12 +58,33 @@ function Form() {
 					email: email,
 					password: password,
 					description: 'some kind of description',
+					walletAddress: walletAddress
 				},
 			};
 
 			axios
 				.request(options)
 				.then((response) => {
+					// Smart contract function call of createParty
+					// console.log("name",walletAddress);
+					// createParty(name,walletAddress);
+					console.log(contract_.methods);
+					const tx = contract_.methods.createParty(name).send({
+						from: walletAddress
+						// value: web3.utils.toWei('1', 'ether')
+					})
+					console.log(tx);
+			
+					tx.on('transactionHash', function(hash) {
+						console.log('Transaction hash:', hash);
+					}).on('confirmation', function(confirmationNumber, receipt) {
+						console.log('Confirmation number:', confirmationNumber);
+					}).on('receipt', function(receipt) {
+						console.log('Transaction receipt:', receipt);
+					}).on('error', function(error) {
+						console.error(error);
+					});
+
 					console.log(response.data);
 					setSubmitted(true);
 					setError(false);
@@ -75,6 +100,24 @@ function Form() {
 				});
 		}
 	};
+
+	useEffect(() => {
+		// setContract(contract_instance());
+		// console.log(contract_);
+
+		const init = async () => {
+			const instance = await contract_instance();
+			setContract(instance);
+		};
+		init();
+		getWalletAddress()
+		  .then(address => {
+			setWalletAddress(address);
+		  })
+		  .catch(error => {
+			console.error(`Error getting wallet address: ${error}`);
+		  });
+	  }, []);
 
 	// axios
 	// 		.get('http://localhost:2401/api/zomato/getCities')

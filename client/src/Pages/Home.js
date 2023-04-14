@@ -175,7 +175,7 @@ function Home() {
 	];
 
 	const goToValidationPage = () => {
-		navigate('/validation');
+		window.location.href = "/validation"
 	};
 	const goToIssuePage = () => {
 		navigate('/issuer');

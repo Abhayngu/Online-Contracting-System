@@ -30,6 +30,7 @@ const Bidder = new mongoose.Schema({
 
 const ProjectSchema = new mongoose.Schema(
 	{
+
 		name: {
 			type: String,
 			required: true,

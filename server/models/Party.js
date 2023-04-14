@@ -46,7 +46,7 @@ const PartySchema = new mongoose.Schema(
 			trim: true,
 			unique: true,
 		},
-		walletAddres: {
+		walletAddress: {
 			type: String,
 			default: '',
 		},

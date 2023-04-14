@@ -20,8 +20,8 @@ function App() {
 	return (
 		<BrowserRouter>
 			<Routes> 
-				<Route path="/" element={<Home />} />
 				<Route path="/test" element={<MyComponent />} />
+				<Route path="/" element={<Home />} />
 				<Route path="/project" element={<Project />} />
 				<Route path="/profile" element={<Profile />} />
 				<Route path="/login" element={<Login />} />

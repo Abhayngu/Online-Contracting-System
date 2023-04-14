@@ -1,12 +1,24 @@
 import Bidding from '../build/contracts/Bidding.json';
-import Web3 from 'web3';
+// import getWeb3 from './getWeb3';
+// const web3 = await getWeb3();
+
+// const web3 = new Web3('http://localhost:7545')
 // var contract = require('@truffle/contract');
 
-function getWalletAddress() {
+
+// async function createParty(name) {
+//   const instance = await loadcontract();
+//   instance.createParty(name);
+// }
+
+
+async function getWalletAddress() {
+    // console.log(Web3.eth.currentProvider);
+    // console.log(getWeb3.eth);
+    // const web3 = await getWeb3();
+    // console.log(web3.eth.getAccounts()[0]);
     return new Promise((resolve, reject) => {
-      // Check if Metamask is installed and enabled
       if (typeof window.ethereum !== 'undefined' && window.ethereum.isMetaMask) {
-        // Get the current wallet address
         window.ethereum.request({ method: 'eth_accounts' })
           .then(accounts => {
             if (accounts.length > 0) {
@@ -23,6 +35,15 @@ function getWalletAddress() {
       }
     });
 }
+
+// async function loadContract () {
+//   const contractAddress = '0x1aeF0b8c69953B9350bEba7a34431B0f8d6Eabb2';
+//   const contractInstance = new web3.eth.Contract(Bidding, contractAddress)
+//   // const theContract = contract(Bidding);
+//   theContract.setProvider(Web3.eth.currentProvider);
+//   const todoContract = await theContract.deployed();
+//   return todoContract;
+// };
   
 
 // const loadWeb3 = async () => {
@@ -54,5 +75,14 @@ function getWalletAddress() {
 //   // return window.ethereum.request({ method: 'eth_accounts' });
 //   return "kdfkjd";
 // }
+
+// const loadcontract = async() => {
+//   const web3 = await getWeb3();
+//   const contractAddress = '0x1aeF0b8c69953B9350bEba7a34431B0f8d6Eabb2';
+//   const contract = new web3.eth.Contract(Bidding, contractAddress);
+//   return contract;
+// }
+
+// export default getWalletAddress;
 
 export default getWalletAddress;

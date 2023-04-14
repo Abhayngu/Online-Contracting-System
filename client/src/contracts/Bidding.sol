@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 contract Bidding {
 
     struct Project{
-        uint projectId;
+        string projectId;
         address payable owner;
         uint highestBid;
         address payable highestBidder;
@@ -16,21 +16,22 @@ contract Bidding {
     }
 
 
-    event BidderLoges(uint indexed project_id,address bidder, uint amount);
+
+    event BidderLoges(string indexed project_id,address bidder, uint amount);
     event createParties(address party, string name);
     event deletedParties(address party, string name);
 
-    mapping(uint=>mapping(address=>uint)) bids;
-    mapping(uint => Project) projects;
+    mapping(string=>mapping(address=>uint)) bids;
+    mapping(string => Project) projects;
     mapping(address => bool) permission;
-    mapping(uint => uint) count_validator;
+    mapping(string => uint) count_validator;
 
-    function createParty(address party, string memory name) public{
-        emit createParties(party,name);
+    function createParty(string memory name) public{
+        emit createParties(msg.sender,name);
     }
 
-    function deleteParty(address party, string memory name) public{
-        emit deletedParties(party,name);
+    function deleteParty( string memory name) public{
+        emit deletedParties(msg.sender,name);
     }
 
     function providePermission(address addr) public{
@@ -41,7 +42,7 @@ contract Bidding {
         permission[addr] = false;
     }
 
-    function validateProject(uint project_id) public{
+    function validateProject(string memory project_id) public{
         Project storage temp = projects[project_id];
         require(temp.exists,"Project doesn't exist");
         require(permission[msg.sender],"You have no permission to validate project");
@@ -52,10 +53,10 @@ contract Bidding {
         } 
     }
 
-    function createProject(uint project_id , uint _seconds)public {
+    function createProject(string memory project_id , uint _seconds)public {
         Project storage temp = projects[project_id];
         require(!temp.exists,"Project already exist");
-
+        // require(temp.validated,"Project is not validate yet");
         projects[project_id] = Project(
             project_id,
             payable(msg.sender),
@@ -70,7 +71,7 @@ contract Bidding {
 
     
 
-    function bid(uint project_id) public payable {
+    function bid(string memory project_id) public payable {
 
         Project storage temp = projects[project_id];
 
@@ -107,7 +108,7 @@ contract Bidding {
         // bidder_address.send(amount);
     }
 
-    function endAuction(uint project_id) public {
+    function endAuction(string memory project_id) public {
 
         Project memory temp = projects[project_id];
         require(temp.validated,"Project is not validated yet");
