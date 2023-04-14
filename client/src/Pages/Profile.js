@@ -237,6 +237,10 @@ function Profile() {
 											isValidated={project.isValidated}
 											isIssued={project.isIssued}
 											partyName={project.proposedBy.name}
+											numOfBid={project.numOfBid}
+											implementationDone={
+												project.implementationDone
+											}
 										/>
 									);
 								})}
@@ -268,6 +272,9 @@ function Profile() {
 											isValidated={project.isValidated}
 											isIssued={project.isIssued}
 											partyName={project.proposedBy.name}
+											implementationDone={
+												project.implementationDone
+											}
 										/>
 									);
 								})}

@@ -4,7 +4,7 @@ import '../styles/styles.css';
 import { RiArrowDropDownFill } from 'react-icons/ri';
 import axios from 'axios';
 
-function Header({ c }) {
+function Header({ c, handleLoggedIn }) {
 	const navigate = useNavigate();
 	const [display, setDisplay] = useState('hide-it');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -140,6 +140,9 @@ function Header({ c }) {
 		// sessionStorage.setItem('isLoggedIn', false);
 		sessionStorage.clear();
 		setIsLoggedIn(false);
+		if (handleLoggedIn) {
+			handleLoggedIn(false);
+		}
 		sessionStorage.setItem('isLoggedIn', false);
 		navigate('/');
 	};

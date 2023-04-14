@@ -19,13 +19,11 @@ exports.createParty = async (req, res) => {
 
 	Party.register(userData, password, (err, user) => {
 		if (err) {
-			// res.redirect('/signup');
+			console.log('error', error);
 			res.send(err);
 		}
 		passport.authenticate('local')(req, res, () => {
 			return res.json({ message: 'Party registered sucessfully' });
-			// res.redirect('/login');
-			// res.send('success');
 		});
 	});
 };
@@ -191,6 +189,7 @@ exports.changeValidators = async (req, res, next) => {
 				id: party._id,
 				token: party.tokens,
 				name: party.name,
+				walletAddress: party.walletAddres,
 			});
 		}
 	});

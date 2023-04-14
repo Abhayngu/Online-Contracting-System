@@ -86,8 +86,8 @@ export default function MakeProject() {
 			) : (
 				<>
 					<Header c="#d9d9d9" />
-					<h1 style={customStyle.issuedHeadingStyle}>
-						Projects Pending
+					{/* <h1 style={customStyle.issuedHeadingStyle}>
+						Projects Implemented
 					</h1>
 					<div style={customStyle.projectsContainer}>
 						{projectsPending.map((project) => {
@@ -103,9 +103,9 @@ export default function MakeProject() {
 								/>
 							);
 						})}
-					</div>
+					</div> */}
 					<h1 style={customStyle.issuedHeadingStyle}>
-						Projects You Won in bidding
+						Projects Pending
 					</h1>
 					<div style={customStyle.projectsContainer}>
 						{projectsWon.map((project) => {

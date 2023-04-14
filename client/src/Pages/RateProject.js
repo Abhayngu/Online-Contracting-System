@@ -52,6 +52,7 @@ function RateProject() {
 							projects.map((project) => {
 								return (
 									<ProjectBox
+										key={project._id}
 										id={project._id}
 										name={project.name}
 										isValidated={project.isValidated}

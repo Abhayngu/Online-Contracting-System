@@ -11,10 +11,11 @@ function ProjectBox({
 	partyWonBid,
 	canRate,
 	rating,
+	numOfBid,
 	implementationDone,
 }) {
 	// console.log(id);\
-	console.log(id, name, isValidated, isIssued, partyName, canRate, rating);
+	// console.log(id, name, isValidated, isIssued, partyName, canRate, rating);
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const [proId, setProId] = useState(id);
@@ -27,7 +28,11 @@ function ProjectBox({
 		if (implementationDone == true) {
 			setProjectStatus('Implemented');
 		} else if (isIssued == true) {
-			setProjectStatus('Issued');
+			if (numOfBid == 0) {
+				setProjectStatus('No Bid');
+			} else {
+				setProjectStatus('Issued');
+			}
 		} else if (isValidated == true) {
 			setProjectStatus('Validated');
 		} else {
@@ -52,7 +57,7 @@ function ProjectBox({
 				projectId: proId,
 				projectProposingParty: partyId,
 				projectImplementingParty: partyWonBid,
-				rating,
+				rating: projectRating,
 			},
 		};
 
@@ -70,8 +75,8 @@ function ProjectBox({
 	const customStyle = {
 		projectBox: {
 			backgroundColor: '#A9EDC4',
-			width: '200px',
-			height: '200px',
+			width: '225px',
+			height: '225px',
 			overflow: 'hidden',
 			padding: '10px',
 			textAlign: 'center',
@@ -124,7 +129,17 @@ function ProjectBox({
 						{proposedBy}
 					</div>
 					<div>
-						{canRate && rating == 0 ? (
+						{isIssued && numOfBid == 0 ? (
+							<div style={{ color: 'red', fontSize: '14px' }}>
+								{' '}
+								No Bid Happened in this project!{' '}
+							</div>
+						) : (
+							<></>
+						)}
+					</div>
+					<div>
+						{canRate ? (
 							<>
 								<span>Rating</span> :{' '}
 								<input
@@ -137,6 +152,10 @@ function ProjectBox({
 									style={{
 										display: 'block',
 										marginTop: '2px',
+										background: 'rgb(216 92 88)',
+										color: 'white',
+										marginTop: '10px',
+										borderRadius: '5px',
 										cursor: 'pointer',
 									}}
 									onClick={rateProject}

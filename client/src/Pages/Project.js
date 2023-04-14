@@ -36,13 +36,22 @@ function Project() {
 					setBidWonBy('Bidding Not Over Yet');
 					setWinningBidPrice('None');
 				} else {
-					setBidWonBy(project.wonBy.name);
-					setWinningBidPrice(project.wonBy.token);
+					if (project.numOfBid == 0) {
+						setBidWonBy('No bid happened in this project');
+						setWinningBidPrice(0);
+					} else {
+						setBidWonBy(project.wonBy.name);
+						setWinningBidPrice(project.wonBy.token);
+					}
 				}
 				if (project.implementationDone == true) {
 					setProjectStatus('Implemented');
 				} else if (project.isIssued == true) {
-					setProjectStatus('Issued');
+					if (project.numOfBid == 0) {
+						setProjectStatus('No Bid');
+					} else {
+						setProjectStatus('Issued');
+					}
 				} else if (project.isValidated == 'true') {
 					setProjectStatus('Validated');
 				} else {

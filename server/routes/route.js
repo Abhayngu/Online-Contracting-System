@@ -72,7 +72,7 @@ router.put('/project/updateRating', updateRating);
 
 // Validator Related routes
 router.put('/validateProj', validateProject);
-router.get('/listOfValidProj/:id', getAllValidatedProject);
+router.get('/listOfValidProj', getAllValidatedProject);
 router.get('/projectsNotValidated/:id', notValidatedProject);
 
 // Bidding Related routes

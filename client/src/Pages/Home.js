@@ -1,18 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Header from '../Components/Header';
 import homepageimg from './homepage.jpg';
-import { useNavigate } from 'react-router-dom';
 import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
 import { greenColor, blueColor } from '../globalVars';
 import Spinner from '../Components/Spinner';
 import axios from 'axios';
-function Home() {
-	const [loading, setLoading] = useState(true);
-	const [loggedIn, setLoggedIn] = useState(false);
-	const navigate = useNavigate();
-	const [topThreeProjects, setTopThreeProjects] = useState([]);
-	const customStyle = {
+export default class Home extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			loading: false,
+			loggedIn: false,
+			topThreeProjects: [],
+		};
+	}
+	componentDidMount() {
+		if (
+			sessionStorage.getItem('isLoggedIn') == null ||
+			sessionStorage.getItem('isLoggedIn') == 'false' ||
+			sessionStorage.getItem('isLoggedIn') == false
+		) {
+			sessionStorage.setItem('isLoggedIn', false);
+		} else {
+			this.setState({
+				loggedIn: true,
+			});
+		}
+		this.getTopBiddingProjects();
+	}
+	handleLoggedIn = (result) => {
+		console.log('handling logged in home page', result);
+		this.setState({ loggedIn: result });
+	};
+	goToValidationPage = () => {
+		this.props.history.push('/validation');
+	};
+	goToIssuePage = () => {
+		this.props.history.push('/rateProject');
+	};
+
+	customStyle = {
 		titleImageContainer: {
 			width: '100%',
 			height: '100vh',
@@ -127,7 +155,7 @@ function Home() {
 		},
 	};
 
-	const issuerWorkingSteps = [
+	issuerWorkingSteps = [
 		{
 			stepcount: 1,
 			imgsrc: homepageimg,
@@ -148,7 +176,7 @@ function Home() {
 		},
 	];
 
-	const bidderWorkingSteps = [
+	bidderWorkingSteps = [
 		{
 			stepcount: 1,
 			imgsrc: homepageimg,
@@ -169,8 +197,10 @@ function Home() {
 		},
 	];
 
-	const getTopBiddingProjects = () => {
-		setLoading(true);
+	getTopBiddingProjects = () => {
+		this.setState({
+			loading: true,
+		});
 		const options = {
 			method: 'GET',
 			url: `http://localhost:2000/project/getTopThreeProjects`,
@@ -183,121 +213,107 @@ function Home() {
 			.request(options)
 			.then((response) => {
 				// console.log(response.data);
-				setTopThreeProjects(response.data.data);
-				setLoading(false);
+				this.setState({
+					topThreeProjects: response.data.data,
+					loading: false,
+				});
 			})
 			.catch(function (error) {
 				console.error(error.message);
-				setLoading(false);
+				this.setState({
+					loading: false,
+				});
 			});
 	};
+	render() {
+		return (
+			<React.Fragment>
+				{this.state.loading ? (
+					<Spinner />
+				) : (
+					<>
+						<Header
+							loggedIn={this.state.loggedIn}
+							handleLoggedIn={(result) => this.handleLoggedIn()}
+						/>
+						<div style={this.customStyle.titleImageContainer}>
+							<img
+								style={this.customStyle.titleImage}
+								src={homepageimg}
+							></img>
 
-	useEffect(() => {
-		if (
-			sessionStorage.getItem('isLoggedIn') == null ||
-			sessionStorage.getItem('isLoggedIn') == 'false'
-		) {
-			console.log('exec', sessionStorage.getItem('isLoggedIn'));
-			sessionStorage.setItem('isLoggedIn', false);
-		} else {
-			console.log('executed', sessionStorage.getItem('isLoggedIn'));
-			setLoggedIn(true);
-		}
-		getTopBiddingProjects();
-	}, []);
-
-	const goToValidationPage = () => {
-		navigate('/validation');
-	};
-	const goToIssuePage = () => {
-		navigate('/rateProject');
-	};
-
-	return (
-		<React.Fragment>
-			{loading ? (
-				<Spinner />
-			) : (
-				<>
-					<Header />
-					<div style={customStyle.titleImageContainer}>
-						<img
-							style={customStyle.titleImage}
-							src={homepageimg}
-						></img>
-
-						{loggedIn ? (
-							<div
-								onClick={goToValidationPage}
-								style={customStyle.validationButton}
-							>
-								Get Your Project Validated
-							</div>
-						) : (
-							<></>
-						)}
-						{loggedIn ? (
-							<div
-								onClick={goToIssuePage}
-								style={customStyle.issueButton}
-							>
-								Rate your done projects
-							</div>
-						) : (
-							<></>
-						)}
-					</div>
-					<div style={customStyle.issuerStepsHeading}>
-						Understand How it Works for an Issuer ?
-					</div>
-					<div style={customStyle.issuerStepsContainer}>
-						{issuerWorkingSteps.map((step) => {
-							return (
-								<StepBox
-									key={step.stepcount}
-									stepcount={step.stepcount}
-									imgsrc={step.imgsrc}
-									desc={step.desc}
-									bgColor={step.bgColor}
-								/>
-							);
-						})}
-					</div>
-					<div style={customStyle.issuerStepsHeading}>
-						Understand How it Works for a Bidder ?
-					</div>
-					<div style={customStyle.bidderStepsContainer}>
-						{bidderWorkingSteps.map((step) => {
-							return (
-								<StepBox
-									key={step.stepcount}
-									stepcount={step.stepcount}
-									imgsrc={step.imgsrc}
-									desc={step.desc}
-									bgColor={step.bgColor}
-								/>
-							);
-						})}
-					</div>
-					<div style={customStyle.boldCenteredHeading}>
-						Some of the top Implemented projects
-					</div>
-					<div style={customStyle.topProjectsContainer}>
-						{topThreeProjects.map((project) => {
-							return (
-								<TopProject
-									key={project._id}
-									id={project._id}
-									name={project.name}
-									desc={project.description}
-									tokens={project.wonBy.token}
-								/>
-							);
-						})}
-					</div>
-				</>
-			)}
-		</React.Fragment>
-	);
+							{this.state.loggedIn ? (
+								<div
+									onClick={this.goToValidationPage}
+									style={this.customStyle.validationButton}
+								>
+									Get Your Project Validated
+								</div>
+							) : (
+								<></>
+							)}
+							{this.state.loggedIn ? (
+								<div
+									onClick={this.goToIssuePage}
+									style={this.customStyle.issueButton}
+								>
+									Rate your done projects
+								</div>
+							) : (
+								<></>
+							)}
+						</div>
+						<div style={this.customStyle.issuerStepsHeading}>
+							Understand How it Works for an Issuer ?
+						</div>
+						<div style={this.customStyle.issuerStepsContainer}>
+							{this.issuerWorkingSteps.map((step) => {
+								return (
+									<StepBox
+										key={step.stepcount}
+										stepcount={step.stepcount}
+										imgsrc={step.imgsrc}
+										desc={step.desc}
+										bgColor={step.bgColor}
+									/>
+								);
+							})}
+						</div>
+						<div style={this.customStyle.issuerStepsHeading}>
+							Understand How it Works for a Bidder ?
+						</div>
+						<div style={this.customStyle.bidderStepsContainer}>
+							{this.bidderWorkingSteps.map((step) => {
+								return (
+									<StepBox
+										key={step.stepcount}
+										stepcount={step.stepcount}
+										imgsrc={step.imgsrc}
+										desc={step.desc}
+										bgColor={step.bgColor}
+									/>
+								);
+							})}
+						</div>
+						<div style={this.customStyle.boldCenteredHeading}>
+							Some of the top Implemented projects
+						</div>
+						<div style={this.customStyle.topProjectsContainer}>
+							{this.state.topThreeProjects.map((project) => {
+								return (
+									<TopProject
+										key={project._id}
+										id={project._id}
+										name={project.name}
+										desc={project.description}
+										tokens={project.wonBy.token}
+									/>
+								);
+							})}
+						</div>
+					</>
+				)}
+			</React.Fragment>
+		);
+	}
 }
-export default Home;
