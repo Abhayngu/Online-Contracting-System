@@ -5,15 +5,14 @@ import Spinner from '../Components/Spinner';
 function Validation() {
 	// States for validation
 	const [loading, setLoading] = useState(false);
+	const [message, setMessage] = useState('');
 	const [projectName, setProjectName] = useState('');
 	const [description, setDescription] = useState('');
 	const [tokens, setTokens] = useState('');
 	const [completionDate, setCompletionDate] = useState('');
 	const [biddingCompletionDate, setBiddingCompletionDate] = useState('');
 	// States for checking the errors
-	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
-	const [msg, setMsg] = useState('');
 
 	// Handling the email change
 	const handle_Project_Name = (e) => {
@@ -53,18 +52,25 @@ function Validation() {
 				biddingDuration: '1hr',
 			},
 		};
-		console.log(options);
+		// console.log(options);
 		axios
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
 				setLoading(false);
-				setSubmitted(true);
+				setError(false);
+				setMessage('Registered project successfully');
+				setProjectName('');
+				setTokens('');
+				setDescription('');
+				setCompletionDate('');
+				setBiddingCompletionDate('');
 			})
 			.catch(function (error) {
 				console.error(error);
-				setLoading(false);
 				setError(true);
+				setMessage(error.response.data.msg);
+				setLoading(false);
 			});
 	};
 
@@ -79,54 +85,10 @@ function Validation() {
 			biddingCompletionDate == ''
 		) {
 			setError(true);
-		} else if (tokens <= 1000) {
-			// setError(true);
-			setMsg('Token should be more than 1000');
+			setMessage('Enter all fields');
 		} else {
-			console.log(completionDate);
-			const date = new Date(completionDate.replace('T', ' '));
-			// console.log(date.getTime());
-			console.log(Date.now() - date.getTime());
-			// console.log(x);
-			// registerProject();
-			// setProjectName('');
-			// setTokens('');
-			// setDescription('');
-			// setCompletionDate('');
-			// setBiddingCompletionDate('');
+			registerProject();
 		}
-	};
-
-	// Showing success message
-	const successMessage = () => {
-		return (
-			<div
-				className="success"
-				style={{
-					display: submitted ? '' : 'none',
-				}}
-			>
-				<h1 style={{ fontWeight: 100, fontSize: '16px' }}>
-					Project successfully registered!!
-				</h1>
-			</div>
-		);
-	};
-
-	// Showing error message if error is true
-	const errorMessage = () => {
-		return (
-			<div
-				className="error"
-				style={{
-					display: error ? '' : 'none',
-				}}
-			>
-				<h1 style={{ fontWeight: 100, fontSize: '16px' }}>
-					Please enter all the fields
-				</h1>
-			</div>
-		);
 	};
 
 	return (
@@ -145,9 +107,13 @@ function Validation() {
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
 						<form>
 							<div className="messages">
-								{errorMessage()}
-								{successMessage()}
-								<div style={{ color: 'red' }}>{msg}</div>
+								<div
+									style={{
+										color: error ? 'red' : 'green',
+									}}
+								>
+									{message}
+								</div>
 							</div>
 							<label className="label">
 								Name Of The Project*

@@ -4,6 +4,18 @@ const schedule = require('node-schedule');
 
 // project registration
 
+function countWords(desc) {
+	desc = desc.trim();
+	let l = desc.length;
+	let wordCount = 0;
+	for (let i = 0; i < l; i++) {
+		if (desc[i] == ' ') {
+			wordCount++;
+		}
+	}
+	return wordCount;
+}
+
 exports.registerProject = async (req, res, next) => {
 	let {
 		name,
@@ -13,6 +25,21 @@ exports.registerProject = async (req, res, next) => {
 		expectedTokens,
 		biddingDuration,
 	} = req.body;
+	let words = countWords(description);
+	words++;
+	console.log('Number of words : ', words);
+	if (words > 200) {
+		return res.status(400).json({
+			success: false,
+			msg: 'Description should be less than 200 words',
+		});
+	}
+	if (expectedTokens < 1000) {
+		return res.status(400).json({
+			success: false,
+			msg: 'Token should be atleast 1000',
+		});
+	}
 	const party = await Party.findById(proposedBy.id);
 	if (!party) {
 		return res
