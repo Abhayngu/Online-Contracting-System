@@ -14,11 +14,7 @@ function Profile() {
 	const [tokens, setTokens] = useState(0);
 	const [isValidator, setIsValidator] = useState(false);
 	const [loading, setLoading] = useState(true);
-	const contextVal = useContext(GlobalContext);
-	console.log(contextVal);
 	const navigate = useNavigate();
-	const queryParameters = new URLSearchParams(window.location.search);
-	const partyId = queryParameters.get('id');
 
 	const saveProposedProjects = (idOfUser) => {
 		setLoading(true);
@@ -93,7 +89,7 @@ function Profile() {
 				setTokens(user.tokens);
 				setIsValidator(user.isValidator);
 				saveProposedProjects(user._id);
-				// saveBidProjects(user._id);
+				saveBidProjects(user._id);
 				setLoading(false);
 			})
 			.catch(function (error) {
@@ -195,10 +191,12 @@ function Profile() {
 			display: 'flex',
 			justifyContent: 'flex-start',
 			marginBottom: '60px',
+			flexWrap: 'wrap',
 		},
 		projectBidContainer: {
 			display: 'flex',
 			justifyContent: 'flex-start',
+			flexWrap: 'wrap',
 			// marginBottom: '40px',
 		},
 	};

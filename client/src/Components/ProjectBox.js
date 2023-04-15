@@ -83,6 +83,7 @@ function ProjectBox({
 			borderRadius: '20px',
 			paddingTop: '30px',
 			marginRight: '20px',
+			marginBottom: '20px',
 		},
 		projectFlex: {
 			marginTop: '20px',
