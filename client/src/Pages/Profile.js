@@ -15,6 +15,7 @@ function Profile() {
 	const [isValidator, setIsValidator] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate();
+	const val = useContext(GlobalContext);
 
 	const saveProposedProjects = (idOfUser) => {
 		setLoading(true);
@@ -107,9 +108,34 @@ function Profile() {
 		getUser();
 	}, []);
 	// /party/delete/:id
-	const handleDelete = () => {
+	const handleDelete = async() => {
 		setLoading(true);
+
+		try {
+			// const address = await getWalletAddress();
+			const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
+			// setWalletAddress(userAddress);
+			// console.log('walletaddress', walletAddress);
+			console.log(val.contract_);
+			await val.contract_.methods.deleteParty(name).send({
+				from: userAddress,
+				// value: web3.utils.toWei('1', 'ether')
+			});
+			setLoading(false);
+		} catch (error) {
+			const x = error.message.indexOf('reason');
+			const temp = error.message.substring(x, error.message.length);
+			const fb = temp.indexOf('}');
+			const error_message = temp.substring(8, fb);
+			// setError(true);
+			// setMessage(error_message);
+			console.log(error);
+			setLoading(false);
+			return;
+		}
+
 		const options = {
+			
 			method: 'DELETE',
 			url: `http://localhost:2000/party/delete/${sessionStorage.getItem(
 				'id'
