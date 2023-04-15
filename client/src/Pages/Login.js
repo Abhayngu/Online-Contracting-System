@@ -21,11 +21,36 @@ function Login() {
 	const [message, setMessage] = useState('');
 	const [id, setId] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
-	const val = useContext(GlobalContext);
+	const [walletAddress, setWalletAddress] = useState('');
+	const [isWalletAddressSame, setIsWalletAddressSame] = useState(false);
 
 	//  val.updateContract("string");
 	// console.log(val)
 
+	const isWalletAddressValid = (idOfUser) => {
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000//party/getWalletAddress/${idOfUser}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				if (response.data.walletAddress == walletAddress) {
+					setIsWalletAddressSame(true);
+				} else {
+					setIsWalletAddressSame(false);
+				}
+			})
+			.catch((err) => {
+				setError(true);
+				setMessage(err.response.data.msg);
+				console.error(err);
+			});
+	};
 	const login = () => {
 		if (username == '' || password == '') {
 			setError(true);
@@ -49,22 +74,33 @@ function Login() {
 			.request(options)
 			.then((response) => {
 				const idOfUser = response.data.user._id;
-				setUsername('');
-				setPassword('');
-				setId(idOfUser);
-				sessionStorage.setItem('isLoggedIn', true);
-				sessionStorage.setItem(
-					'user',
-					JSON.stringify(response.data.user)
-				);
-				sessionStorage.setItem('id', idOfUser);
-				sessionStorage.setItem('isAdmin', response.data.user.isAdmin);
-				sessionStorage.setItem(
-					'isValidator',
-					response.data.user.isValidator
-				);
+				isWalletAddressValid(idOfUser);
+				if (isWalletAddressSame) {
+					setUsername('');
+					setPassword('');
+					setId(idOfUser);
+					sessionStorage.setItem('isLoggedIn', true);
+					sessionStorage.setItem(
+						'user',
+						JSON.stringify(response.data.user)
+					);
+					sessionStorage.setItem('id', idOfUser);
+					sessionStorage.setItem(
+						'isAdmin',
+						response.data.user.isAdmin
+					);
+					sessionStorage.setItem(
+						'isValidator',
+						response.data.user.isValidator
+					);
+					navigate(`/profile?id=${idOfUser}`);
+				} else {
+					setError(true);
+					setMessage(
+						'Wallet address of current user in metamask and platform is different'
+					);
+				}
 				setLoading(false);
-				navigate(`/profile?id=${idOfUser}`);
 			})
 			.catch((error) => {
 				console.log(error.message);

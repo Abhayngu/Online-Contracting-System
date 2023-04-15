@@ -2,33 +2,28 @@ const Party = require('../models/Party');
 const passport = require('passport');
 const System = require('../models/System');
 
-exports.createParty = async (req, res)=> {
-    console.log(req.body);
-    let {name, email, password,description, walletAddress} = req.body;
-    
+exports.createParty = async (req, res) => {
+	console.log(req.body);
+	let { name, email, password, description, walletAddress } = req.body;
 
 	let userData = {
 		name,
 		email,
 		description,
-		walletAddress
-
+		walletAddress,
 	};
 	console.log(userData);
 
-    Party.register(userData, password, (err, user)=> {
-        if(err) {
-           
-            console.log(err);
-            res.send(err);
-        }
-        passport.authenticate('local') (req, res, ()=> {
-            return res.json({ message: 'Party registered sucessfully' });
-        });
-    });
-
-}
-
+	Party.register(userData, password, (err, user) => {
+		if (err) {
+			console.log(err);
+			res.send(err);
+		}
+		passport.authenticate('local')(req, res, () => {
+			return res.json({ message: 'Party registered sucessfully' });
+		});
+	});
+};
 
 exports.login = async (req, res, next) => {
 	passport.authenticate('local', (err, user, info) => {
@@ -52,6 +47,19 @@ exports.login = async (req, res, next) => {
 			// res.render('update');
 		});
 	})(req, res, next);
+};
+
+// route : /party/getWalletAddress/:id
+
+exports.getWalletAddress = async (req, res, next) => {
+	const id = req.params.id;
+	const party = await Party.findById(id);
+	if (!party) {
+		return res.json(400).json({ success: false, msg: 'Party not found' });
+	}
+	return res
+		.json(200)
+		.json({ success: true, walletAddress: party.walletAddress });
 };
 
 exports.updateParty = async (req, res, next) => {
@@ -193,14 +201,18 @@ exports.changeValidators = async (req, res, next) => {
 			);
 		});
 	}
-	
-	
-	const idToken = []
-	parties.map(party => {
-		if(!party.isAdmin){
-			idToken.push({id : party._id, token : party.tokens, name : party.name , walletAddress: party.walletAddress})
+
+	const idToken = [];
+	parties.map((party) => {
+		if (!party.isAdmin) {
+			idToken.push({
+				id: party._id,
+				token: party.tokens,
+				name: party.name,
+				walletAddress: party.walletAddress,
+			});
 		}
-	})
+	});
 	idToken.sort((a, b) => {
 		if (a.token < b.token) return 1;
 		else return -1;
@@ -222,7 +234,7 @@ exports.changeValidators = async (req, res, next) => {
 		data: topSixParties,
 		length: topSixParties.length,
 	});
-}
+};
 
 exports.createSystem = async (req, res, next) => {
 	const system = await System.create({});
