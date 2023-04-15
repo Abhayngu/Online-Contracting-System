@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 import { RiCollageLine } from 'react-icons/ri';
 import { GlobalContext } from '../App';
 import Spinner from '../Components/Spinner';
-import { GlobalContext } from '../App';
 
 import axios from 'axios';
 function Login() {

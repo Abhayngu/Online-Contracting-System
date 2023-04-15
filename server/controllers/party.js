@@ -227,9 +227,6 @@ exports.changeValidators = async (req, res, next) => {
 exports.createSystem = async (req, res, next) => {
 	const system = await System.create({});
 	res.json({ success: true, msg: 'System created successfully' });
-<<<<<<< HEAD
-}
-=======
 };
 
 exports.isPermissioned = async (req, res, next) => {
@@ -251,4 +248,3 @@ exports.isPermissioned = async (req, res, next) => {
 		return res.status(400).json({ Success: false, msg: 'server error' });
 	}
 };
->>>>>>> d29b1cac8991c0815449e6fb77de74335e124c72

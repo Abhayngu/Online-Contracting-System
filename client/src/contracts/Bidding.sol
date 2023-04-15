@@ -62,7 +62,7 @@ contract Bidding {
             0,
             payable(address(0)),
             true,
-            _seconds,
+            block.timestamp+_seconds,
             false,
             new address[](0)
         );

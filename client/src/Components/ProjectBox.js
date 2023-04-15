@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext,useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GlobalContext } from '../App';
 function ProjectBox({
 	id,
 	name,
@@ -26,6 +27,7 @@ function ProjectBox({
 	const [projectStatus, setProjectStatus] = useState('');
 	const [message, setMessage] = useState('');
 	const [proposedBy, setProposedBy] = useState(partyName);
+	const val = useContext(GlobalContext);
 	useEffect(() => {
 		if (implementationDone == true) {
 			setProjectStatus('Implemented');
@@ -74,10 +76,33 @@ function ProjectBox({
 				setLoading(false);
 			});
 	};
-	const stopBidding = () => {
-		if (true) {
-			setMessage('Bidding Can not be stopped now');
+	const stopBidding = async () => {
+		// if (true) {
+		// 	setMessage('Bidding Can not be stopped now');
+		// }
+		setLoading(true);
+		try{
+			const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
+			// const tokenAmount = val.web3_.utils.toBN(token.toString());
+			// console.log("toekns",token);
+			await val.contract_.methods.endAuction(id).send({
+				from: userAddress,
+				// value: val.web3_.utils.toWei(token.toString(), 'wei')
+				// value : tokenAmount
+			});
+			setLoading(false);
 		}
+		catch(error){
+			const x = error.message.indexOf('reason')
+			const temp = error.message.substring(x, error.message.length)
+			const fb = temp.indexOf('}')
+			const error_message = temp.substring(8, fb);
+			// setError(true);
+			setMessage(error_message);
+			setLoading(false);
+			return ;
+		}
+
 	};
 	const customStyle = {
 		projectBox: {
