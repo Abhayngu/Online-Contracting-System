@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../Components/Header';
 import ProjectBox from '../Components/ProjectBox';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '../Components/Spinner';
+import { GlobalContext } from '../App';
 
 function Profile() {
 	const [name, setName] = useState('');
@@ -13,6 +14,8 @@ function Profile() {
 	const [tokens, setTokens] = useState(0);
 	const [isValidator, setIsValidator] = useState(false);
 	const [loading, setLoading] = useState(true);
+	const contextVal = useContext(GlobalContext);
+	console.log(contextVal);
 	const navigate = useNavigate();
 	const queryParameters = new URLSearchParams(window.location.search);
 	const partyId = queryParameters.get('id');
@@ -232,6 +235,7 @@ function Profile() {
 								myProject.map((project) => {
 									return (
 										<ProjectBox
+											key={project._id}
 											id={project._id}
 											name={project.name}
 											isValidated={project.isValidated}
@@ -267,6 +271,7 @@ function Profile() {
 								projectBidFor.map((project) => {
 									return (
 										<ProjectBox
+											key={project._id}
 											id={project._id}
 											name={project.name}
 											isValidated={project.isValidated}
