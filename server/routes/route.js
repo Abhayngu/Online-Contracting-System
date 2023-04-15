@@ -1,38 +1,36 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const crypto = require('crypto');
-const async = require('async');
-const Project = require('../models/Project');
-const Party = require('../models/Party');
 const {
 	createParty,
 	login,
 	updateParty,
 	deleteParty,
 	anonymityOfParty,
-	changePassword,
 	getPartytById,
 	changeValidators,
-	createSystem
+	createSystem,
 } = require('../controllers/party');
 
 const {
 	registerProject,
 	getTop3Projects,
+	updateRating,
 	getAllProjects,
 	getProjectsByEmail,
 	getProjectById,
+	getImplementedProjects,
 	issueProject,
+	listOfProjectsBidByUser,
+	getProjectProposedByUser,
+	notValidatedProject,
 	validateProject,
 	getAllValidatedProject,
-	getProjectProposedByUser,
-	partyBiddingForProjects,
-	listOfProjectsBidByUser,
 	getProjectsForBidding,
+	bidOnProject,
 	projectBidWonByParty,
-	notValidatedProject,
-	bidWonByParty
+	addMileStone,
+	projectsToDo,
+	testFunction,
 } = require('../controllers/project');
 
 router.get('/signup', (req, res) => {
@@ -44,7 +42,7 @@ router.get('/login', (req, res) => {
 router.get('/update', (req, res) => {
 	res.render('update');
 });
-router.get('/delete', deleteParty);
+router.delete('/party/delete/:id', deleteParty);
 
 // Party routes
 
@@ -54,28 +52,44 @@ router.get('/partyById/:id', getPartytById);
 
 router.put('/update', updateParty);
 router.put('/updateAnonymity/:id', anonymityOfParty);
-router.get('/changeValidators', changeValidators)
-
+router.get('/changeValidators', changeValidators);
 
 // Project routes
-router.post('/registerProject', registerProject);
-router.get('/top3', getTop3Projects);
+
+// Project Get routes
+router.get('/project/getTopThreeProjects', getTop3Projects);
+router.get('/projectProposedBy/:id', getProjectProposedByUser);
+router.get('/project/projectImplemented/:id', getImplementedProjects);
 router.get('/getAllProj', getAllProjects);
 router.get('/byEmail', getProjectsByEmail);
 router.get('/byId/:id', getProjectById);
-router.put('/issueProj', issueProject);
+
+// Project post routes
+router.post('/registerProject', registerProject);
+
+// Project put routes
+router.put('/project/updateRating', updateRating);
+
+// Validator Related routes
 router.put('/validateProj', validateProject);
 router.get('/listOfValidProj', getAllValidatedProject);
-router.get('/projectProposedBy/:id', getProjectProposedByUser);
-router.put('/projectBidding', partyBiddingForProjects);
+router.get('/projectsNotValidated/:id', notValidatedProject);
+
+// Bidding Related routes
+router.put('/projectBidding', bidOnProject);
 router.get('/projectBidBy/:id', listOfProjectsBidByUser);
-router.get('/projectForBid', getProjectsForBidding);
-router.get('/projectsWon',projectBidWonByParty);
-router.get('/projectsNotValidated', notValidatedProject);
-router.put('/bidWonByParty', bidWonByParty);
+router.get('/projectForBid/:id', getProjectsForBidding);
 
-
+// Working on project related routes
+router.get('/projectsWon/:id', projectBidWonByParty);
+router.get('/projectsToDo/:id', projectsToDo);
+router.put('/project/addMilestone', addMileStone);
 
 // Create system route
-router.post('/createSystem', createSystem)
+router.post('/createSystem', createSystem);
+
+// Extra APIs
+router.put('/issueProj', issueProject);
+router.get('/test', testFunction);
+
 module.exports = router;

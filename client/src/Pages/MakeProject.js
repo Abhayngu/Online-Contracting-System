@@ -2,73 +2,27 @@ import React, { useState, useEffect } from 'react';
 import Header from '../Components/Header';
 import MakeProjectBox from '../Components/MakeProjectBox';
 import axios from 'axios';
+import Spinner from '../Components/Spinner';
 // projectName, tokens, proposedByName, proposedByIsAnonymous, expectedFinishTime
 export default function MakeProject() {
-	const [projects, setProjects] = useState([
-		{
-			name: 'Project 1',
-			expectedTokens: 123,
-			proposedBy: 'sdafdsf',
-			proposedBy: {
-				isAnonymous: false,
-			},
-			expectedFinishTime: new Date(),
-			milestonesAchieved: 0,
-		},
-		{
-			name: 'Project 2',
-			expectedTokens: 420,
-			proposedBy: 'sdgsdagasdgsdg',
-			proposedBy: {
-				isAnonymous: true,
-			},
-			expectedFinishTime: new Date(),
-			milestonesAchieved: 1,
-		},
-		{
-			name: 'Project 3',
-			expectedTokens: 265,
-			proposedBy: 'gagd',
-			proposedBy: {
-				isAnonymous: false,
-			},
-			expectedFinishTime: new Date(),
-			milestonesAchieved: 2,
-		},
-		{
-			name: 'Project 4',
-			expectedTokens: 290,
-			proposedBy: 'dsfa',
-			proposedBy: {
-				isAnonymous: false,
-			},
-			expectedFinishTime: new Date(),
-			milestonesAchieved: 3,
-		},
-		{
-			name: 'Project 5',
-			expectedTokens: 232,
-			proposedBy: 'fdhahf',
-			proposedBy: {
-				isAnonymous: false,
-			},
-			expectedFinishTime: new Date(),
-			milestonesAchieved: 4,
-		},
-	]);
+	const [projectsPending, setProjectsPending] = useState([]);
+	const [loading, setLoading] = useState(false);
+	const [projectsWon, setProjectsWon] = useState([]);
+
 	useEffect(() => {
-		// getProjectsWon();
+		getProjectsWon();
+		getProjectsToDo();
 	}, []);
 
-	const getProjectsWon = () => {
+	const getProjectsToDo = () => {
+		setLoading(true);
 		const options = {
 			method: 'GET',
-			url: `http://localhost:2000/projectsWon`,
+			url: `http://localhost:2000/projectsToDo/${sessionStorage.getItem(
+				'id'
+			)}`,
 			headers: {
 				'content-type': 'application/json',
-			},
-			data: {
-				partyId: sessionStorage.getItem('id'),
 			},
 		};
 
@@ -76,10 +30,37 @@ export default function MakeProject() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
-				setProjects(response.data.data);
+				setProjectsPending(response.data.data);
+				setLoading(false);
 			})
 			.catch(function (error) {
 				console.error(error);
+				setLoading(false);
+			});
+	};
+
+	const getProjectsWon = () => {
+		setLoading(true);
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/projectsWon/${sessionStorage.getItem(
+				'id'
+			)}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setProjectsWon(response.data.data);
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error);
+				setLoading(false);
 			});
 	};
 
@@ -100,25 +81,49 @@ export default function MakeProject() {
 	};
 	return (
 		<React.Fragment>
-			<Header c="#d9d9d9" />
-			<h1 style={customStyle.issuedHeadingStyle}>
-				Projects You are currently working on
-			</h1>
-			<div style={customStyle.projectsContainer}>
-				{projects.map((project) => {
-					return (
-						<MakeProjectBox
-							id={project._id}
-							name={project.name}
-							tokens={project.expectedTokens}
-							proposedBy={project.proposedBy.name}
-							isAnonymous={project.proposedBy.isAnonymous}
-							finishTime={project.expectedFinishTime}
-							mileStonesDone={project.milestonesAchieved}
-						/>
-					);
-				})}
-			</div>
+			{loading ? (
+				<Spinner />
+			) : (
+				<>
+					<Header c="#d9d9d9" />
+					{/* <h1 style={customStyle.issuedHeadingStyle}>
+						Projects Implemented
+					</h1>
+					<div style={customStyle.projectsContainer}>
+						{projectsPending.map((project) => {
+							return (
+								<MakeProjectBox
+									id={project._id}
+									name={project.name}
+									tokens={project.expectedTokens}
+									proposedBy={project.proposedBy.name}
+									isAnonymous={project.proposedBy.isAnonymous}
+									finishTime={project.expectedFinishTime}
+									mileStonesDone={project.milestonesAchieved}
+								/>
+							);
+						})}
+					</div> */}
+					<h1 style={customStyle.issuedHeadingStyle}>
+						Projects Pending
+					</h1>
+					<div style={customStyle.projectsContainer}>
+						{projectsWon.map((project) => {
+							return (
+								<MakeProjectBox
+									id={project._id}
+									name={project.name}
+									tokens={project.expectedTokens}
+									proposedBy={project.proposedBy.name}
+									isAnonymous={project.proposedBy.isAnonymous}
+									finishTime={project.expectedFinishTime}
+									mileStonesDone={project.milestonesAchieved}
+								/>
+							);
+						})}
+					</div>
+				</>
+			)}
 		</React.Fragment>
 	);
 }
