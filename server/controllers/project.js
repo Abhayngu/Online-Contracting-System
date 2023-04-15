@@ -427,7 +427,7 @@ exports.validateProject = async (req, res, next) => {
 				isValidated: true,
 				reasonIfNotValid: 'User does not have enough token',
 			});
-			const date = new Date(Date.now() + 5 * 60 * 1000);
+			const date = new Date(Date.now() + 3 * 60 * 1000);
 			schedule.scheduleJob(date, function () {
 				getBiddingResult(projectId);
 			});
