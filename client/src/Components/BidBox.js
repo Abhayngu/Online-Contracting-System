@@ -42,6 +42,9 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 				})
 				.catch(function (error) {
 					console.error(error);
+					setError(true);
+					setMessage(error.response.data.msg);
+
 					setLoading(false);
 				});
 		}

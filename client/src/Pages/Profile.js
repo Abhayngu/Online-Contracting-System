@@ -151,6 +151,10 @@ function Profile() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
+				sessionStorage.setItem(
+					'user',
+					JSON.stringify(response.data.party)
+				);
 				setLoading(false);
 			})
 			.catch(function (error) {
@@ -273,6 +277,9 @@ function Profile() {
 										<ProjectBox
 											key={project._id}
 											id={project._id}
+											isAnonymous={
+												project.proposedBy.isAnonymous
+											}
 											name={project.name}
 											isValidated={project.isValidated}
 											isIssued={project.isIssued}

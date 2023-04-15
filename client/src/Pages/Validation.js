@@ -46,6 +46,8 @@ function Validation() {
 				proposedBy: {
 					id: sessionStorage.getItem('id'),
 					name: JSON.parse(sessionStorage.getItem('user')).name,
+					isAnonymous: JSON.parse(sessionStorage.getItem('user'))
+						.isAnonymous,
 				},
 				expectedFinishTime: completionDate,
 				expectedTokens: tokens,

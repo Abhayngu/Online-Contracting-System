@@ -171,7 +171,7 @@ exports.anonymityOfParty = async (req, res, next) => {
 		{ isAnonymous: isAnonymous },
 		{ new: true }
 	);
-	res.status(200).json({ msg: 'Sucessfully set.' });
+	res.status(200).json({ success: true, party, msg: 'Sucessfully set.' });
 };
 
 // Assigning validators
@@ -226,21 +226,26 @@ exports.changeValidators = async (req, res, next) => {
 };
 
 exports.createSystem = async (req, res, next) => {
-	const system = await System.create({})
-	res.json({success : true, msg : 'System created successfully'})
-}
+	const system = await System.create({});
+	res.json({ success: true, msg: 'System created successfully' });
+};
 
-exports.isPermissioned = async (req,res,next) => {
-	let {party_Id, isPermissioned}=req.body;
-	const party = await Party.findById(party_Id)
-	if(!party){
-		return res.status(400).json({Success: false,msg:'party not found'})
+exports.isPermissioned = async (req, res, next) => {
+	let { party_Id, isPermissioned } = req.body;
+	const party = await Party.findById(party_Id);
+	if (!party) {
+		return res.status(400).json({ Success: false, msg: 'party not found' });
 	}
 	try {
-		await party.findOneAndUpdate({_id:party_Id},{isPermissioned:isPermissioned},{new:true})
-		return res.status(400).json({Success: true,msg:'Updated successfully'})
-	}
-	catch{
-		return res.status(400).json({Success: false,msg:'server error'})
+		await party.findOneAndUpdate(
+			{ _id: party_Id },
+			{ isPermissioned: isPermissioned },
+			{ new: true }
+		);
+		return res
+			.status(400)
+			.json({ Success: true, msg: 'Updated successfully' });
+	} catch {
+		return res.status(400).json({ Success: false, msg: 'server error' });
 	}
 };

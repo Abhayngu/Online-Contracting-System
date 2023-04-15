@@ -12,6 +12,7 @@ function ProjectBox({
 	canRate,
 	rating,
 	numOfBid,
+	isAnonymous,
 	implementationDone,
 }) {
 	// console.log(id);\
@@ -127,7 +128,7 @@ function ProjectBox({
 					</div>
 					<div style={customStyle.projectProposedBy}>
 						<span style={{ color: 'blue' }}>Proposed By</span> :{' '}
-						{proposedBy}
+						{isAnonymous ? 'Anonymous' : proposedBy}
 					</div>
 					<div>
 						{isIssued && numOfBid == 0 ? (
