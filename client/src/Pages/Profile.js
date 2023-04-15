@@ -327,6 +327,7 @@ function Profile() {
 											implementationDone={
 												project.implementationDone
 											}
+											forBid={true}
 										/>
 									);
 								})}

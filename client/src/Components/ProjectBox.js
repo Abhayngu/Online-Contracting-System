@@ -14,6 +14,7 @@ function ProjectBox({
 	numOfBid,
 	isAnonymous,
 	implementationDone,
+	forBid,
 }) {
 	// console.log(id);\
 	// console.log(id, name, isValidated, isIssued, partyName, canRate, rating);
@@ -23,7 +24,7 @@ function ProjectBox({
 	const [projectRating, setProjectRating] = useState(rating);
 	const [projectName, setProjectName] = useState(name);
 	const [projectStatus, setProjectStatus] = useState('');
-
+	const [message, setMessage] = useState('');
 	const [proposedBy, setProposedBy] = useState(partyName);
 	useEffect(() => {
 		if (implementationDone == true) {
@@ -73,11 +74,16 @@ function ProjectBox({
 				setLoading(false);
 			});
 	};
+	const stopBidding = () => {
+		if (true) {
+			setMessage('Bidding Can not be stopped now');
+		}
+	};
 	const customStyle = {
 		projectBox: {
 			backgroundColor: '#A9EDC4',
 			width: '225px',
-			height: '225px',
+			// height: '225px',
 			overflow: 'hidden',
 			padding: '10px',
 			textAlign: 'center',
@@ -129,6 +135,36 @@ function ProjectBox({
 					<div style={customStyle.projectProposedBy}>
 						<span style={{ color: 'blue' }}>Proposed By</span> :{' '}
 						{isAnonymous ? 'Anonymous' : proposedBy}
+					</div>
+					<div>
+						{!forBid && isValidated && !isIssued ? (
+							<div
+								onClick={stopBidding}
+								style={{
+									// marginRight: '15px',
+									color: 'white',
+									marginTop: '20px',
+									padding: '10px',
+									borderRadius: '4px',
+									display: 'inline-block',
+									cursor: 'pointer',
+									background: '#f54a3b',
+								}}
+							>
+								Stop Bidding
+							</div>
+						) : (
+							<></>
+						)}
+					</div>
+					<div
+						style={{
+							marginTop: '5px',
+							fontSize: '12px',
+							color: 'red',
+						}}
+					>
+						{message}
 					</div>
 					<div>
 						{isIssued && numOfBid == 0 ? (
