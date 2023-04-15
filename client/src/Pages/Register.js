@@ -53,16 +53,11 @@ function Register() {
 			setSubmitted(false);
 		} else {
 			try {
-				await getWalletAddress()
-					.then((address) => {
-						setWalletAddress(address);
-					})
-					.catch((error) => {
-						console.error(`Error getting wallet address: ${error}`);
-					});
-				console.log(walletAddress);
+				const address = await getWalletAddress();
+				setWalletAddress(address);
+				// console.log('walletaddress', walletAddress);
 				const tx = await val.contract_.methods.createParty(name).send({
-					from: walletAddress,
+					from: address,
 					// value: web3.utils.toWei('1', 'ether')
 				});
 			} catch (error) {
