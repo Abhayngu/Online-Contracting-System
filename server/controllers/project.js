@@ -601,7 +601,6 @@ exports.getProjectsForBidding = async (req, res, next) => {
 // }
 exports.bidOnProject = async (req, res, next) => {
 	let { partyId, projectId, tokenBid, timeline } = req.body;
-	console.log(typeof tokenBid);
 	const party = await Party.findById(partyId);
 	if (!party) {
 		return res.status(400).json({ success: false, msg: 'Party not found' });
@@ -670,6 +669,12 @@ exports.bidOnProject = async (req, res, next) => {
 		return res.status(400).json({
 			success: false,
 			msg: 'You have already placed a bid on the project',
+		});
+	}
+	if (project.numOfBid == 15) {
+		return res.status(400).json({
+			success: false,
+			msg: 'Maximum number of bids limit reached!',
 		});
 	}
 	await party.updateOne({
