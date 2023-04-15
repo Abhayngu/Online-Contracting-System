@@ -110,6 +110,30 @@ function Profile() {
 		}
 		getUser();
 	}, []);
+	// /party/delete/:id
+	const handleDelete = () => {
+		setLoading(true);
+		const options = {
+			method: 'DELETE',
+			url: `http://localhost:2000/party/delete/${sessionStorage.getItem(
+				'id'
+			)}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error.response.data.message);
+				setLoading(false);
+			});
+	};
 
 	const handleAnonymity = () => {
 		setLoading(true);
@@ -195,26 +219,40 @@ function Profile() {
 							<div style={customStyle.partyName}>
 								{isAnonymous ? 'Anonymous' : name}
 							</div>
+
 							<div>
 								<label
 									onClick={handleAnonymity}
 									style={{
 										marginRight: '15px',
 										marginBottom: '20px',
+										padding: '10px',
+										borderRadius: '4px',
 										display: 'inline-block',
 										cursor: 'pointer',
+										background: '#2f7cc4',
+										color: 'white',
 									}}
 								>
 									{isAnonymous
 										? 'Click to show your profile'
 										: 'Click here to be anonymous?'}
 								</label>
-								{/* <input
-									type="checkbox"
-									name="agreement"
-									checked={isAnonymous}
-									onChange={handleAnonymity}
-								/> */}
+								<span
+									style={{
+										// marginRight: '15px',
+										color: 'white',
+										marginTop: '20px',
+										padding: '10px',
+										borderRadius: '4px',
+										display: 'inline-block',
+										cursor: 'pointer',
+										background: '#f54a3b',
+									}}
+									onClick={handleDelete}
+								>
+									Delete Profile
+								</span>
 							</div>
 						</div>
 

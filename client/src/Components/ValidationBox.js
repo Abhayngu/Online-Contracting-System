@@ -7,6 +7,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 	const [msg, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(false);
+	const [color, setColorRed] = useState(false);
 	const handleValidate = (decision) => {
 		setLoading(true);
 		if (decision) {
@@ -36,11 +37,17 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 					console.log(response.data);
 					setError(true);
 					setMessage(response.data.msg);
+					setColorRed(false);
 					setLoading(false);
 				} else {
 					console.log(response.data);
 					setError(false);
 					setMessage(response.data.msg);
+					if (response.data.decision == false) {
+						setColorRed(true);
+					} else {
+						setColorRed(false);
+					}
 					setLoading(false);
 				}
 			})
@@ -140,7 +147,7 @@ function ValidationBox({ id, name, issuers_name, time, tokens }) {
 						</div>
 						<div
 							style={{
-								color: error ? 'red' : 'green',
+								color: error ? 'red' : color ? 'red' : 'green',
 								fontSize: '14px',
 								textAlign: 'center',
 							}}

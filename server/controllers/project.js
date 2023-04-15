@@ -390,7 +390,11 @@ exports.validateProject = async (req, res, next) => {
 	if (decision == false) {
 		return res
 			.status(200)
-			.json({ sucess: true, msg: 'Discarded project successfully' });
+			.json({
+				sucess: true,
+				decision: false,
+				msg: 'Discarded project successfully',
+			});
 	}
 	if (count >= 3 && decision == true) {
 		try {
@@ -405,16 +409,22 @@ exports.validateProject = async (req, res, next) => {
 
 			return res
 				.status(200)
-				.json({ sucess: true, msg: 'Project validated successfully.' });
+				.json({
+					sucess: true,
+					decision: true,
+					msg: 'Project validated successfully.',
+				});
 		} catch {
 			return res.status(400).json({
 				sucess: false,
+				decision: true,
 				msg: 'Validation done! Please validate manually in schema',
 			});
 		}
 	} else {
 		return res.status(200).json({
 			sucess: true,
+			decision: true,
 			msg: 'Validated! Project need more validators',
 		});
 	}

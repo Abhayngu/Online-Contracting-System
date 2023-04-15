@@ -42,7 +42,7 @@ router.get('/login', (req, res) => {
 router.get('/update', (req, res) => {
 	res.render('update');
 });
-router.get('/delete', deleteParty);
+router.delete('/party/delete/:id', deleteParty);
 
 // Party routes
 

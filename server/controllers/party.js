@@ -78,19 +78,28 @@ exports.updateParty = async (req, res, next) => {
 	}
 };
 
+// route : /party/delete/:id
 exports.deleteParty = async (req, res, next) => {
-	const email = req.session.email;
-
+	const id = req.params.id;
+	console.log(id);
 	try {
-		const deletedUser = await Party.findOneAndDelete(email);
-
+		const deletedUser = await Party.findOneAndDelete({ _id: id });
+		let system = await System.findOne();
+		// system.deletedParties.push(id);
+		// await system.save();
 		if (!deletedUser) {
 			return res.status(404).json({ message: 'User not found' });
 		}
-		res.json({ message: 'User deleted successfully' });
+
+		res.json({
+			success: true,
+			system,
+			deletedUser,
+			message: 'User deleted successfully',
+		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).json({ message: 'Server error' });
+		res.status(500).json({ success: false, message: error.message });
 	}
 };
 
