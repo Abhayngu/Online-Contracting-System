@@ -52,7 +52,7 @@ function Project() {
 					} else {
 						setProjectStatus('Issued');
 					}
-				} else if (project.isValidated == 'true') {
+				} else if (project.isValidated == true) {
 					setProjectStatus('Validated');
 				} else {
 					setProjectStatus('Not Validated');

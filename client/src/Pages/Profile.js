@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Header from '../Components/Header';
 import ProjectBox from '../Components/ProjectBox';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Spinner from '../Components/Spinner';
+import { GlobalContext } from '../App';
 
 function Profile() {
 	const [name, setName] = useState('');
@@ -14,8 +15,6 @@ function Profile() {
 	const [isValidator, setIsValidator] = useState(false);
 	const [loading, setLoading] = useState(true);
 	const navigate = useNavigate();
-	const queryParameters = new URLSearchParams(window.location.search);
-	const partyId = queryParameters.get('id');
 
 	const saveProposedProjects = (idOfUser) => {
 		setLoading(true);
@@ -90,7 +89,7 @@ function Profile() {
 				setTokens(user.tokens);
 				setIsValidator(user.isValidator);
 				saveProposedProjects(user._id);
-				// saveBidProjects(user._id);
+				saveBidProjects(user._id);
 				setLoading(false);
 			})
 			.catch(function (error) {
@@ -107,6 +106,34 @@ function Profile() {
 		}
 		getUser();
 	}, []);
+	// /party/delete/:id
+	const handleDelete = () => {
+		setLoading(true);
+		const options = {
+			method: 'DELETE',
+			url: `http://localhost:2000/party/delete/${sessionStorage.getItem(
+				'id'
+			)}`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
+
+		axios
+			.request(options)
+			.then((response) => {
+				console.log(response.data);
+				sessionStorage.clear();
+				sessionStorage.setItem('isLoggedIn', false);
+				window.alert('Your account has been deleted successfully');
+				navigate('/');
+				setLoading(false);
+			})
+			.catch(function (error) {
+				console.error(error.response.data.message);
+				setLoading(false);
+			});
+	};
 
 	const handleAnonymity = () => {
 		setLoading(true);
@@ -128,6 +155,10 @@ function Profile() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
+				sessionStorage.setItem(
+					'user',
+					JSON.stringify(response.data.party)
+				);
 				setLoading(false);
 			})
 			.catch(function (error) {
@@ -168,10 +199,12 @@ function Profile() {
 			display: 'flex',
 			justifyContent: 'flex-start',
 			marginBottom: '60px',
+			flexWrap: 'wrap',
 		},
 		projectBidContainer: {
 			display: 'flex',
 			justifyContent: 'flex-start',
+			flexWrap: 'wrap',
 			// marginBottom: '40px',
 		},
 	};
@@ -192,26 +225,40 @@ function Profile() {
 							<div style={customStyle.partyName}>
 								{isAnonymous ? 'Anonymous' : name}
 							</div>
+
 							<div>
 								<label
 									onClick={handleAnonymity}
 									style={{
 										marginRight: '15px',
 										marginBottom: '20px',
+										padding: '10px',
+										borderRadius: '4px',
 										display: 'inline-block',
 										cursor: 'pointer',
+										background: '#2f7cc4',
+										color: 'white',
 									}}
 								>
 									{isAnonymous
 										? 'Click to show your profile'
 										: 'Click here to be anonymous?'}
 								</label>
-								{/* <input
-									type="checkbox"
-									name="agreement"
-									checked={isAnonymous}
-									onChange={handleAnonymity}
-								/> */}
+								<span
+									style={{
+										// marginRight: '15px',
+										color: 'white',
+										marginTop: '20px',
+										padding: '10px',
+										borderRadius: '4px',
+										display: 'inline-block',
+										cursor: 'pointer',
+										background: '#f54a3b',
+									}}
+									onClick={handleDelete}
+								>
+									Delete Profile
+								</span>
 							</div>
 						</div>
 
@@ -232,7 +279,11 @@ function Profile() {
 								myProject.map((project) => {
 									return (
 										<ProjectBox
+											key={project._id}
 											id={project._id}
+											isAnonymous={
+												project.proposedBy.isAnonymous
+											}
 											name={project.name}
 											isValidated={project.isValidated}
 											isIssued={project.isIssued}
@@ -267,6 +318,7 @@ function Profile() {
 								projectBidFor.map((project) => {
 									return (
 										<ProjectBox
+											key={project._id}
 											id={project._id}
 											name={project.name}
 											isValidated={project.isValidated}
@@ -275,6 +327,7 @@ function Profile() {
 											implementationDone={
 												project.implementationDone
 											}
+											forBid={true}
 										/>
 									);
 								})}

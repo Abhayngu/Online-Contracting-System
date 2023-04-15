@@ -38,7 +38,6 @@ const ProjectSchema = new mongoose.Schema(
 		},
 		description: {
 			type: String,
-			maxLength: 200,
 		},
 		proposedBy: {
 			id: {
@@ -64,6 +63,7 @@ const ProjectSchema = new mongoose.Schema(
 		},
 		expectedTokens: {
 			type: Number,
+			min: 1000,
 		},
 		bidders: {
 			type: [Bidder],

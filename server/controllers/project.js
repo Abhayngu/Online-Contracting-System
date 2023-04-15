@@ -4,6 +4,18 @@ const schedule = require('node-schedule');
 
 // project registration
 
+function countWords(desc) {
+	desc = desc.trim();
+	let l = desc.length;
+	let wordCount = 0;
+	for (let i = 0; i < l; i++) {
+		if (desc[i] == ' ') {
+			wordCount++;
+		}
+	}
+	return wordCount;
+}
+
 exports.registerProject = async (req, res, next) => {
 	let {
 		name,
@@ -14,6 +26,21 @@ exports.registerProject = async (req, res, next) => {
 		biddingDuration,
 
 	} = req.body;
+	let words = countWords(description);
+	words++;
+	console.log('Number of words : ', words);
+	if (words > 200) {
+		return res.status(400).json({
+			success: false,
+			msg: 'Description should be less than 200 words',
+		});
+	}
+	if (expectedTokens < 1000) {
+		return res.status(400).json({
+			success: false,
+			msg: 'Token should be atleast 1000',
+		});
+	}
 	const party = await Party.findById(proposedBy.id);
 	if (!party) {
 		return res
@@ -311,8 +338,8 @@ exports.notValidatedProject = async (req, res, next) => {
 // 		"timeline" : "2023-04-07T07:10:08.068+00:00"
 // }
 exports.validateProject = async (req, res, next) => {
+	console.log(req.body);
 	let { partyId, projectId, decision, isValidator } = req.body;
-	console.log(typeof decision);
 	// console.log(partyId, projectId, decision, isValidator);
 	const party = await Party.findById(partyId);
 	if (!party) {
@@ -334,6 +361,8 @@ exports.validateProject = async (req, res, next) => {
 		});
 	}
 	let project = await Project.findById(projectId);
+	// console.log(projectId);
+	// console.log(project);
 	if (!project) {
 		return res.status(400).json({ msg: 'Project not found' });
 	}
@@ -386,9 +415,11 @@ exports.validateProject = async (req, res, next) => {
 		},
 	});
 	if (decision == false) {
-		return res
-			.status(200)
-			.json({ sucess: true, msg: 'Discarded project successfully' });
+		return res.status(200).json({
+			sucess: true,
+			decision: false,
+			msg: 'Discarded project successfully',
+		});
 	}
 	if (count >= 3 && decision == true) {
 		try {
@@ -396,23 +427,27 @@ exports.validateProject = async (req, res, next) => {
 				isValidated: true,
 				reasonIfNotValid: 'User does not have enough token',
 			});
-			const date = new Date(Date.now() + 5 * 60 * 1000);
+			const date = new Date(Date.now() + 3 * 60 * 1000);
 			schedule.scheduleJob(date, function () {
 				getBiddingResult(projectId);
 			});
 
-			return res
-				.status(200)
-				.json({ sucess: true, msg: 'Project validated successfully.' });
+			return res.status(200).json({
+				sucess: true,
+				decision: true,
+				msg: 'Project validated successfully.',
+			});
 		} catch {
 			return res.status(400).json({
 				sucess: false,
+				decision: true,
 				msg: 'Validation done! Please validate manually in schema',
 			});
 		}
 	} else {
 		return res.status(200).json({
 			sucess: true,
+			decision: true,
 			msg: 'Validated! Project need more validators',
 		});
 	}
@@ -530,7 +565,7 @@ exports.getProjectsForBidding = async (req, res, next) => {
 			$and: [
 				{ isValidated: true },
 				{ isIssued: false },
-				{ proposedBy: { $ne: id } },
+				{ 'proposedBy.id': { $ne: id } },
 				{
 					bidders: {
 						$not: {
@@ -566,7 +601,6 @@ exports.getProjectsForBidding = async (req, res, next) => {
 // }
 exports.bidOnProject = async (req, res, next) => {
 	let { partyId, projectId, tokenBid, timeline } = req.body;
-	console.log(typeof tokenBid);
 	const party = await Party.findById(partyId);
 	if (!party) {
 		return res.status(400).json({ success: false, msg: 'Party not found' });
@@ -604,12 +638,10 @@ exports.bidOnProject = async (req, res, next) => {
 			.json({ success: false, msg: 'Project already implemented' });
 	}
 	if (project.proposedBy.id == partyId) {
-		return res
-			.status(400)
-			.json({
-				success: false,
-				msg: 'You can not bid on the project you have proposed',
-			});
+		return res.status(400).json({
+			success: false,
+			msg: 'You can not bid on the project you have proposed',
+		});
 	}
 	const hasValidated = await Project.findOne({
 		_id: projectId,
@@ -637,6 +669,12 @@ exports.bidOnProject = async (req, res, next) => {
 		return res.status(400).json({
 			success: false,
 			msg: 'You have already placed a bid on the project',
+		});
+	}
+	if (project.numOfBid == 15) {
+		return res.status(400).json({
+			success: false,
+			msg: 'Maximum number of bids limit reached!',
 		});
 	}
 	await party.updateOne({
@@ -674,7 +712,7 @@ exports.projectBidWonByParty = async (req, res, next) => {
 	try {
 		const projects = await Project.find({
 			'wonBy.id': partyId,
-			isImplemented: true,
+			implementationDone: true,
 		});
 		return res.status(200).json({ success: true, data: projects });
 	} catch (err) {
@@ -689,7 +727,7 @@ exports.projectsToDo = async (req, res, next) => {
 	try {
 		const projects = await Project.find({
 			'wonBy.id': partyId,
-			isImplemented: false,
+			implementationDone: false,
 		});
 		return res.status(200).json({ success: true, data: projects });
 	} catch (err) {

@@ -11,13 +11,13 @@ import { GlobalContext } from '../App';
  function Validation() {
 	// States for validation
 	const [loading, setLoading] = useState(false);
+	const [message, setMessage] = useState('');
 	const [projectName, setProjectName] = useState('');
 	const [description, setDescription] = useState('');
 	const [tokens, setTokens] = useState('');
 	const [completionDate, setCompletionDate] = useState('');
 	const [biddingCompletionDate, setBiddingCompletionDate] = useState('');
 	// States for checking the errors
-	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
 	// const [contract_, setContract] = useState(null);
 	const [msg, setMsg] = useState('');
@@ -73,13 +73,15 @@ import { GlobalContext } from '../App';
 				proposedBy: {
 					id: sessionStorage.getItem('id'),
 					name: JSON.parse(sessionStorage.getItem('user')).name,
+					isAnonymous: JSON.parse(sessionStorage.getItem('user'))
+						.isAnonymous,
 				},
 				expectedFinishTime: completionDate,
 				expectedTokens: tokens,
 				biddingDuration: '1hr',
 			},
 		};
-		console.log(options);
+		// console.log(options);
 		axios
 			.request(options)
 			.then((response) => {
@@ -98,12 +100,19 @@ import { GlobalContext } from '../App';
 				// }
 
 				setLoading(false);
-				setSubmitted(true);
+				setError(false);
+				setMessage('Registered project successfully');
+				setProjectName('');
+				setTokens('');
+				setDescription('');
+				setCompletionDate('');
+				setBiddingCompletionDate('');
 			})
 			.catch(function (error) {
 				console.error(error);
-				setLoading(false);
 				setError(true);
+				setMessage(error.response.data.msg);
+				setLoading(false);
 			});
 	};
 
@@ -118,9 +127,7 @@ import { GlobalContext } from '../App';
 			biddingCompletionDate == ''
 		) {
 			setError(true);
-		} else if (tokens <= 1000) {
-			// setError(true);
-			setMsg('Token should be more than 1000');
+			setMessage('Enter all fields');
 		} else {
 
 			console.log(
@@ -154,39 +161,6 @@ import { GlobalContext } from '../App';
 	// 	// window.location.reload()
 	//   }, []);
 
-	// Showing success message
-	const successMessage = () => {
-		return (
-			<div
-				className="success"
-				style={{
-					display: submitted ? '' : 'none',
-				}}
-			>
-				<h1 style={{ fontWeight: 100, fontSize: '16px' }}>
-					Project successfully registered!!
-				</h1>
-			</div>
-		);
-	};
-
-
-	// Showing error message if error is true
-	const errorMessage = () => {
-		return (
-			<div
-				className="error"
-				style={{
-					display: error ? '' : 'none',
-				}}
-			>
-				<h1 style={{ fontWeight: 100, fontSize: '16px' }}>
-					Please enter all the fields
-				</h1>
-			</div>
-		);
-	};
-    console.log('render')
 	return (
 		<>
 			<Header c="#d9d9d9" />
@@ -203,9 +177,13 @@ import { GlobalContext } from '../App';
 					<div style={{ display: 'flex', justifyContent: 'center' }}>
 						<form>
 							<div className="messages">
-								{errorMessage()}
-								{successMessage()}
-								<div style={{ color: 'red' }}>{msg}</div>
+								<div
+									style={{
+										color: error ? 'red' : 'green',
+									}}
+								>
+									{message}
+								</div>
 							</div>
 							<label className="label">
 								Name Of The Project*

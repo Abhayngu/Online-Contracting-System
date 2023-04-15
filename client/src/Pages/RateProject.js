@@ -47,6 +47,17 @@ function RateProject() {
 			) : (
 				<>
 					<Header c="#d9d9d9" />
+					<div
+						style={{
+							textAlign: 'center',
+							marginTop: '20px',
+							fontSize: '20px',
+							fontWeight: '600',
+							marginBottom: '50px',
+						}}
+					>
+						Rate Your Proposed Projects
+					</div>
 					<div style={customStyle.divContainer}>
 						{projects.length > 0 &&
 							projects.map((project) => {

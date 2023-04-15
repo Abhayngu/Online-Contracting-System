@@ -8,6 +8,7 @@ const {
 	anonymityOfParty,
 	getPartytById,
 	changeValidators,
+	isPermissioned,
 	createSystem,
 } = require('../controllers/party');
 
@@ -42,7 +43,7 @@ router.get('/login', (req, res) => {
 router.get('/update', (req, res) => {
 	res.render('update');
 });
-router.get('/delete', deleteParty);
+router.delete('/party/delete/:id', deleteParty);
 
 // Party routes
 
@@ -53,6 +54,7 @@ router.get('/partyById/:id', getPartytById);
 router.put('/update', updateParty);
 router.put('/updateAnonymity/:id', anonymityOfParty);
 router.get('/changeValidators', changeValidators);
+router.put('/party/permissionchanged', isPermissioned);
 
 // Project routes
 

@@ -6,12 +6,15 @@ import pass from '../image/c.png';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
 import { RiCollageLine } from 'react-icons/ri';
+import { GlobalContext } from '../App';
 import Spinner from '../Components/Spinner';
 import { GlobalContext } from '../App';
 
 import axios from 'axios';
 function Login() {
 	const navigate = useNavigate();
+	const contextVal = useContext(GlobalContext);
+	console.log(contextVal);
 	const [loading, setLoading] = useState(false);
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');

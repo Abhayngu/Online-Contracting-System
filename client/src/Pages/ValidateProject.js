@@ -65,6 +65,9 @@ export default function Validate() {
 							projects.map((project) => {
 								return (
 									<ValidationBox
+										loading={loading}
+										setLoading={setLoading}
+										key={project._id}
 										id={project._id}
 										name={project.name}
 										issuers_name={project.proposedBy.name}
@@ -97,7 +100,7 @@ export default function Validate() {
 							</h3>
 						</div>
 					) : (
-						<Spinner />
+						<></>
 					)}
 				</>
 			)}

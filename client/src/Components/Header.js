@@ -17,6 +17,10 @@ function Header({ c, handleLoggedIn }) {
 		const loggedIn = sessionStorage.getItem('isLoggedIn');
 		// console.log('loggedIn : ', loggedIn);
 		if (loggedIn == 'true') {
+			console.log(
+				'user logged in header',
+				JSON.parse(sessionStorage.getItem('isAdmin'))
+			);
 			setIsLoggedIn(true);
 			setUsername(JSON.parse(sessionStorage.getItem('user')).name);
 			setId(JSON.parse(sessionStorage.getItem('user'))._id);
@@ -161,6 +165,7 @@ function Header({ c, handleLoggedIn }) {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
+				window.alert('Validator changed!');
 			})
 			.catch(function (error) {
 				console.error(error);
@@ -176,7 +181,7 @@ function Header({ c, handleLoggedIn }) {
 						Contracting System
 					</div>
 					<div style={customStyle.headerIconContainer}>
-						{isAdmin == 'true' ? (
+						{isAdmin == true ? (
 							<div
 								onClick={changeValidators}
 								style={{

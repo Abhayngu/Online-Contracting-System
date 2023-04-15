@@ -14,9 +14,9 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 		if (token == '' || dateTime == '') {
 			setError(true);
 			setMessage('Enter all the fields');
-		} else if (token == 0) {
+		} else if (token < 1000) {
 			setError(true);
-			setMessage('Token value should be more than 0');
+			setMessage('Token value should be more than 1000');
 		} else {
 			setLoading(true);
 			setError(false);
@@ -70,6 +70,9 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 				})
 				.catch(function (error) {
 					console.error(error);
+					setError(true);
+					setMessage(error.response.data.msg);
+
 					setLoading(false);
 				});
 		}
