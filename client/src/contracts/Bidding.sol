@@ -16,7 +16,6 @@ contract Bidding {
     }
 
 
-
     event BidderLoges(string indexed project_id,address bidder, uint amount);
     event createParties(address party, string name);
     event deletedParties(address party, string name);
@@ -30,7 +29,7 @@ contract Bidding {
         emit createParties(msg.sender,name);
     }
 
-    function deleteParty( string memory name) public{
+    function deleteParty(string memory name) public{
         emit deletedParties(msg.sender,name);
     }
 
@@ -56,7 +55,7 @@ contract Bidding {
     function createProject(string memory project_id , uint _seconds)public {
         Project storage temp = projects[project_id];
         require(!temp.exists,"Project already exist");
-        // require(temp.validated,"Project is not validate yet");
+
         projects[project_id] = Project(
             project_id,
             payable(msg.sender),

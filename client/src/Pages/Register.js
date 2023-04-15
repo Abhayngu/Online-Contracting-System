@@ -3,13 +3,9 @@ import style from '../styles/style.css';
 import axios from 'axios';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
 import getWalletAddress from '../utils/connection';
 import contract_instance  from '../utils/getContract';
-function Form() {
-=======
 function Register() {
->>>>>>> f02d010620f24086d363ec623add55745ad31003
 	// States for registration
 	const navigate = useNavigate();
 	const [name, setName] = useState('');
@@ -107,7 +103,6 @@ function Register() {
 		}
 	};
 
-<<<<<<< HEAD
 	useEffect(() => {
 		// setContract(contract_instance());
 		// console.log(contract_);
@@ -137,8 +132,6 @@ function Register() {
 	// 			console.log(error);
 	// 		});
 
-=======
->>>>>>> f02d010620f24086d363ec623add55745ad31003
 	// Showing success message
 	const successMessage = () => {
 		return (

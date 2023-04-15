@@ -1,5 +1,4 @@
 import React, {useEffect, useState } from 'react';
-import {Link} from 'react-router-dom'
 import Header from '../Components/Header';
 import axios from 'axios';
 import Spinner from '../Components/Spinner';
@@ -64,14 +63,15 @@ function Validation() {
 		axios
 			.request(options)
 			.then((response) => {
-				console.log(response.data.party,response.data.party);
+				console.log(response.data.project);
+				console.log( response.data.party.walletAddress)
 				// try{
 					// createProject(response.data.party._id,100,response.data.party.walletAddress);
 				contract_.methods.createProject(response.data.project._id,100).send({
 					from: response.data.party.walletAddress
 				})
 					
-				console.log("response",response.data.party._id,response.data.party.walletAddress);
+				// console.log("response",response.data.party._id,response.data.party.walletAddress);
 				// }
 				// catch(error){	
 				// 	console.log("Error : ",error);

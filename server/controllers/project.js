@@ -44,18 +44,9 @@ exports.registerProject = async (req, res, next) => {
 			},
 			{ new: true }
 		);
-<<<<<<< HEAD
 		res.status(200).json({ success : true, project, party,msg: 'Project registered sucessfully.' });
 	} catch (err) {
 		res.status(400).json({ success : false, msg: err.message });
-=======
-		res.status(200).json({
-			success: true,
-			msg: 'Project registered sucessfully.',
-		});
-	} catch (err) {
-		res.status(400).json({ success: false, msg: err.message });
->>>>>>> f02d010620f24086d363ec623add55745ad31003
 	}
 };
 
