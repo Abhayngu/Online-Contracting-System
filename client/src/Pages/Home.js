@@ -208,7 +208,7 @@ class Home extends React.Component {
 		axios
 			.request(options)
 			.then((response) => {
-				// console.log(response.data);
+				console.log(response.data);
 				this.setState({
 					topThreeProjects: response.data.data,
 					loading: false,
