@@ -123,6 +123,10 @@ function Profile() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
+				sessionStorage.clear();
+				sessionStorage.setItem('isLoggedIn', false);
+				window.alert('Your account has been deleted successfully');
+				navigate('/');
 				setLoading(false);
 			})
 			.catch(function (error) {
