@@ -707,7 +707,7 @@ exports.projectBidWonByParty = async (req, res, next) => {
 	try {
 		const projects = await Project.find({
 			'wonBy.id': partyId,
-			isImplemented: true,
+			implementationDone: true,
 		});
 		return res.status(200).json({ success: true, data: projects });
 	} catch (err) {
@@ -722,7 +722,7 @@ exports.projectsToDo = async (req, res, next) => {
 	try {
 		const projects = await Project.find({
 			'wonBy.id': partyId,
-			isImplemented: false,
+			implementationDone: false,
 		});
 		return res.status(200).json({ success: true, data: projects });
 	} catch (err) {
