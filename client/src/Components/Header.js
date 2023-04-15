@@ -165,6 +165,7 @@ function Header({ c, handleLoggedIn }) {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
+				window.alert('Validator changed!');
 			})
 			.catch(function (error) {
 				console.error(error);
