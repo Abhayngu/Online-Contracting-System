@@ -3,3 +3,5 @@
 /client/node_modules
 node_modules
 /client/src/build
+/client/src/build/
+/client/src/build/contracts/Bidding.json
