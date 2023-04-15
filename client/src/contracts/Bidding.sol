@@ -7,8 +7,8 @@ contract Bidding {
     struct Project{
         string projectId;
         address payable owner;
-        uint highestBid;
-        address payable highestBidder;
+        uint lowestBid;
+        address payable lowestBidder;
         bool exists;
         uint endTime;
         bool validated;
@@ -19,6 +19,7 @@ contract Bidding {
     event BidderLoges(string indexed project_id,address bidder, uint amount);
     event createParties(address party, string name);
     event deletedParties(address party, string name);
+    event createProjects(address,string);
 
     mapping(string=>mapping(address=>uint)) bids;
     mapping(string => Project) projects;
@@ -66,11 +67,12 @@ contract Bidding {
             false,
             new address[](0)
         );
+        emit createProjects(msg.sender, project_id);
     }
 
     
 
-    function bid(string memory project_id) public payable {
+    function bid(string memory project_id,uint amount) public  {
 
         Project storage temp = projects[project_id];
 
@@ -78,23 +80,24 @@ contract Bidding {
         // require(temp.validated,"Project is not validated yet");
         require(temp.endTime>block.timestamp, "Bidding is ended for this project");
         require(!IsOwner(temp.owner), "Project Issuer is not allowed to bid");
-        require(msg.value!=0, "Zero amount is not allowed.");
+        require(amount!=0, "Zero amount is not allowed.");
         require(bids[project_id][msg.sender]==0,"You have already bidded for this project");
       
-        if(temp.highestBid == 0){
-            temp.highestBid = msg.value;
+        if(temp.lowestBid == 0){
+            temp.lowestBid = amount;
+            temp.lowestBidder = payable(msg.sender);
         }
         else{
-            if(msg.value<temp.highestBid){
-                temp.highestBidder = payable(msg.sender);
-                temp.highestBid = msg.value;
+            if(amount<temp.lowestBid){
+                temp.lowestBidder = payable(msg.sender);
+                temp.lowestBid = amount;
             }
         }
 
-        bids[project_id][msg.sender] = msg.value;
+        bids[project_id][msg.sender] = amount;
         temp.bidAdd.push(msg.sender);
 
-        emit BidderLoges(project_id , msg.sender , msg.value);
+        emit BidderLoges(project_id , msg.sender , amount);
     }
 
     function IsOwner(address owner_) private view returns (bool){
@@ -107,28 +110,34 @@ contract Bidding {
         // bidder_address.send(amount);
     }
 
-    function endAuction(string memory project_id) public returns (address){
+    function getLowestBid(string memory project_id) public view returns(uint){
+        Project memory temp = projects[project_id];
+        require(temp.endTime<block.timestamp, "Bidding is still going on");
+        require(IsOwner(temp.owner), "Only the owner can end the auction.");
+        require(temp.lowestBid != 0, "There is no bid at the moment.");
+        return temp.lowestBid;
+    }
+
+    function getLowestBidder(string memory project_id) public view returns(address){
+        Project memory temp = projects[project_id];
+        require(temp.endTime<block.timestamp, "Bidding is still going on");
+        require(IsOwner(temp.owner), "Only the owner can end the auction.");
+        require(temp.lowestBid != 0, "There is no bid at the moment.");
+        return temp.lowestBidder;
+    }
+
+    function endAuction(string memory project_id) public payable{
 
         Project memory temp = projects[project_id];
         // require(temp.validated,"Project is not validated yet");
+        require(temp.exists,"Project Doesn't exist");
         require(temp.endTime<block.timestamp, "Bidding is still going on");
         require(IsOwner(temp.owner), "Only the owner can end the auction.");
-        require(temp.highestBid != 0, "There is no bid at the moment.");
+        require(temp.lowestBid != 0, "There is no bid at the moment.");
 
-        bool success = temp.owner.send(temp.highestBid);
+        // temp.owner.transfer(temp.highestBid);
+        temp.lowestBidder.transfer(msg.value);
 
-        if (!success) {
-            temp.highestBidder = payable(address(0));
-        }
-
-
-        for( uint256 i = 0 ; i < temp.bidAdd.length ; i++){
-            if(temp.bidAdd[i]!=temp.highestBidder){
-                address addr = temp.bidAdd[i];
-                uint amount = bids[project_id][addr];
-                withdraw(payable(addr),amount);
-            }
-        }
-        return temp.highestBidder;
+    
     }
 }

@@ -87,21 +87,27 @@ function ProjectBox({
 			).walletAddress;
 			// const tokenAmount = val.web3_.utils.toBN(token.toString());
 			// console.log("toekns",token);
-			const walletAddress = await val.contract_.methods
-				.endAuction(id)
-				.send({
-					from: userAddress,
-					// value: val.web3_.utils.toWei(token.toString(), 'wei')
-					// value : tokenAmount
-				});
-			console.log('Wallet Address After Bidding', walletAddress);
-			setLoading(false);
+			console.log(userAddress);
+			const amount = await val.contract_.methods.getLowestBid(id).call({
+				from: userAddress,
+			});
+			console.log('amount ', amount);
+			const wt = await val.contract_.methods.endAuction(id).send({
+				from: userAddress,
+				value: val.web3_.utils.toWei(amount, 'wei'),
+				// value : tokenAmount
+			});
+			console.log('Wallet Address After Bidding', wt, typeof wt);
+			// setMessage(wt.from);
+			// setLoading(false);
+			// return ;
 		} catch (error) {
 			const x = error.message.indexOf('reason');
 			const temp = error.message.substring(x, error.message.length);
 			const fb = temp.indexOf('}');
 			const error_message = temp.substring(8, fb);
 			// setError(true);
+			console.log(error);
 			setMessage(error_message);
 			setLoading(false);
 			return;
