@@ -57,8 +57,9 @@ exports.getWalletAddress = async (req, res, next) => {
 	if (!party) {
 		return res.json(400).json({ success: false, msg: 'Party not found' });
 	}
+
 	return res
-		.json(200)
+		.status(200)
 		.json({ success: true, walletAddress: party.walletAddress });
 };
 
