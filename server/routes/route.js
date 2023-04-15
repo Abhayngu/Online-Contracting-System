@@ -9,6 +9,7 @@ const {
 	getPartytById,
 	changeValidators,
 	isPermissioned,
+	getWalletAddress,
 	createSystem,
 } = require('../controllers/party');
 
@@ -50,6 +51,8 @@ router.delete('/party/delete/:id', deleteParty);
 router.post('/signup', createParty);
 router.post('/login', login);
 router.get('/partyById/:id', getPartytById);
+
+router.get('/party/getWalletAddress/:id', getWalletAddress);
 
 router.put('/update', updateParty);
 router.put('/updateAnonymity/:id', anonymityOfParty);
