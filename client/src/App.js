@@ -15,10 +15,40 @@ import ValidateProject from './Pages/ValidateProject';
 import BidProject from './Pages/BidProject';
 import MakeProject from './Pages/MakeProject';
 import MyComponent from './Pages/Demo';
+import { useState,createContext } from 'react';
 
 import RateProject from './Pages/RateProject';
+import get_contract from './utils/getContract';
+import getWeb3 from './utils/getWeb3';
+// import { get } from 'http';
+
+export const GlobalContext = createContext({});
 function App() {
+	const [ contract_ , setContract] = useState(null);
+	const [ web3_ , setWeb3] = useState(null);
+	const init1 = async () => {
+		const instance = await get_contract();
+		// const _web3 = await getWeb3();
+		// console.log(instance,web);
+		setContract(instance);
+		// setWeb3(_web3)
+	};
+	init1();
+	const init2 = async () => {
+		// const instance = await get_contract();
+		const _web3 = await getWeb3();
+		// console.log(instance,web);
+		// setContract(instance);
+		setWeb3(_web3)
+	};
+	init2();
+	console.log(contract_,web3_);
+	//  const updateContract = (newVal) => {
+	// 	setContract(newVal);
+	//  }
+
 	return (
+		<GlobalContext.Provider value={{ contract_ ,web3_}}>
 		<BrowserRouter>
 			<Routes> 
 				<Route path="/test" element={<MyComponent />} />
@@ -35,6 +65,7 @@ function App() {
 				<Route path="/makeProject" element={<MakeProject />} />
 			</Routes>
 		</BrowserRouter>
+		</GlobalContext.Provider>
 	);
 }
 

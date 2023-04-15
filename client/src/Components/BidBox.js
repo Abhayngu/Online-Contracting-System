@@ -1,12 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext,useState, useEffect } from 'react';
 import axios from 'axios';
+import { GlobalContext } from '../App';
 function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 	const [token, setToken] = useState(0);
 	const [dateTime, setDateTime] = useState('');
 	const [error, setError] = useState(false);
 	const [msg, setMessage] = useState('');
 	const [loading, setLoading] = useState(false);
-	const handleBid = () => {
+	const val = useContext(GlobalContext);
+
+	console.log(val.contract_,val.web3_);
+	const handleBid = async () => {
 		if (token == '' || dateTime == '') {
 			setError(true);
 			setMessage('Enter all the fields');
@@ -16,7 +20,31 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 		} else {
 			setLoading(true);
 			setError(false);
-			setError('');
+			setMessage('');
+
+			try{
+				const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
+				const tokenAmount = val.web3_.utils.toBN(token.toString());
+				console.log("toekns",token);
+				await val.contract_.methods.bid(id).send({
+					from: userAddress,
+					// value: val.web3_.utils.toWei(token.toString(), 'wei')
+					value : tokenAmount
+				});
+			}
+			catch(error){
+				const x = error.message.indexOf('reason')
+				const temp = error.message.substring(x, error.message.length)
+				const fb = temp.indexOf('}')
+				const error_message = temp.substring(8, fb);
+				setError(true);
+				setMessage(error_message);
+				setLoading(false);
+				return ;
+			}
+
+			console.log("after token");
+
 
 			const options = {
 				method: 'PUT',

@@ -1,13 +1,14 @@
-import React, {useEffect, useState } from 'react';
+import React, {useContext,useEffect, useState } from 'react';
 import Header from '../Components/Header';
 import axios from 'axios';
 import Spinner from '../Components/Spinner';
-import getWalletAddress from '../utils/connection';
-import contract_instance  from '../utils/getContract';
+// import getWalletAddress from '../utils/connection';
+// import contract_instance  from '../utils/getContract';
+import { GlobalContext } from '../App';
 // import createProject  from '../utils/CreateProject';
 
 
-function Validation() {
+ function Validation() {
 	// States for validation
 	const [loading, setLoading] = useState(false);
 	const [projectName, setProjectName] = useState('');
@@ -18,10 +19,12 @@ function Validation() {
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
-	const [contract_, setContract] = useState(null);
+	// const [contract_, setContract] = useState(null);
 	const [msg, setMsg] = useState('');
+	const val = useContext(GlobalContext);
 
 	// Handling the email change
+	console.log(val.contract_,val.web3_);
 	const handle_Project_Name = (e) => {
 		setProjectName(e.target.value);
 	};
@@ -39,8 +42,25 @@ function Validation() {
 	const handle_Bidding_Completion_Date = (e) => {
 		setBiddingCompletionDate(e.target.value);
 	};
-	const registerProject = () => {
-		setLoading(true);
+	const registerProject =  ()  => {
+		// setLoading(true);
+		// try{
+		// 	const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
+		// 	await val.contract_.methods.createProject(response.data.project._id,100).send({
+		// 		from: userAddress
+		// 	})
+		// }
+		// catch{
+		// 	const x = error.message.indexOf('reason')
+		// 	const temp = error.message.substring(x, error.message.length)
+		// 	const fb = temp.indexOf('}')
+		// 	const error_message = temp.substring(8, fb);
+		// 	setError(true);
+		// 	setMsg(error_message);
+		// 	setLoading(false);
+		// 	return ;
+		// }
+
 		const options = {
 			method: 'POST',
 			url: `http://localhost:2000/registerProject`,
@@ -67,7 +87,7 @@ function Validation() {
 				console.log( response.data.party.walletAddress)
 				// try{
 					// createProject(response.data.party._id,100,response.data.party.walletAddress);
-				contract_.methods.createProject(response.data.project._id,100).send({
+				val.contract_.methods.createProject(response.data.project._id,100).send({
 					from: response.data.party.walletAddress
 				})
 					
@@ -121,18 +141,18 @@ function Validation() {
 			setBiddingCompletionDate('');
 		}
 	};
-	const init = async () => {
-		const instance = await contract_instance();
-		console.log(instance);
-		setContract(instance);
-	};
+	// const init = async () => {
+	// 	const instance = await contract_instance();
+	// 	console.log(instance);
+	// 	setContract(instance);
+	// };
 
-	useEffect(() => {
-		console.log('useeffect')
-		init();
-		console.log(contract_);
-		// window.location.reload()
-	  }, []);
+	// useEffect(() => {
+	// 	console.log('useeffect')
+	// 	init();
+	// 	console.log(contract_);
+	// 	// window.location.reload()
+	//   }, []);
 
 	// Showing success message
 	const successMessage = () => {

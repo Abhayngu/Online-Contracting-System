@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import '../styles/Login.css';
 import profile from '../image/a.png';
 import email from '../image/b.png';
@@ -7,6 +7,8 @@ import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
 import { RiCollageLine } from 'react-icons/ri';
 import Spinner from '../Components/Spinner';
+import { GlobalContext } from '../App';
+
 import axios from 'axios';
 function Login() {
 	const navigate = useNavigate();
@@ -17,6 +19,10 @@ function Login() {
 	const [message, setMessage] = useState('');
 	const [id, setId] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
+	const val = useContext(GlobalContext);
+
+	//  val.updateContract("string");
+	// console.log(val)
 
 	const login = () => {
 		if (username == '' || password == '') {

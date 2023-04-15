@@ -1,10 +1,12 @@
-import React, { useEffect,useState } from 'react';
+import React, {useContext , useEffect,useState } from 'react';
 import style from '../styles/style.css';
 import axios from 'axios';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
 import getWalletAddress from '../utils/connection';
-import contract_instance  from '../utils/getContract';
+// import contract_instance  from '../utils/getContract';
+import { GlobalContext } from '../App';
+
 function Register() {
 	// States for registration
 	const navigate = useNavigate();
@@ -13,11 +15,13 @@ function Register() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [walletAddress, setWalletAddress] = useState('');
-	const [contract_, setContract] = useState(null);
+	// const [contract_, setContract] = useState(null);
 
 	// States for checking the errors
 	const [submitted, setSubmitted] = useState(false);
 	const [error, setError] = useState(false);
+	const val = useContext(GlobalContext);
+	// console.log(val.contract_);
 
 	// Handling the name change
 	const handleName = (e) => {
@@ -69,8 +73,8 @@ function Register() {
 					// Smart contract function call of createParty
 					// console.log("name",walletAddress);
 					// createParty(name,walletAddress);
-					console.log(contract_.methods);
-					const tx = contract_.methods.createParty(name).send({
+					console.log("contract",val.contract_);
+					const tx = val.contract_.methods.createParty(name).send({
 						from: walletAddress
 						// value: web3.utils.toWei('1', 'ether')
 					})
@@ -107,11 +111,11 @@ function Register() {
 		// setContract(contract_instance());
 		// console.log(contract_);
 
-		const init = async () => {
-			const instance = await contract_instance();
-			setContract(instance);
-		};
-		init();
+		// const init = async () => {
+		// 	const instance = await contract_instance();
+		// 	setContract(instance);
+		// };
+		// init();
 		getWalletAddress()
 		  .then(address => {
 			setWalletAddress(address);

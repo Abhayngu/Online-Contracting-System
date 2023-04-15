@@ -75,7 +75,7 @@ contract Bidding {
         Project storage temp = projects[project_id];
 
         require(temp.exists,"Project Doesn't exist");
-        require(temp.validated,"Project is not validated yet");
+        // require(temp.validated,"Project is not validated yet");
         require(temp.endTime>block.timestamp, "Bidding is ended for this project");
         require(!IsOwner(temp.owner), "Project Issuer is not allowed to bid");
         require(msg.value!=0, "Zero amount is not allowed.");
@@ -110,7 +110,7 @@ contract Bidding {
     function endAuction(string memory project_id) public {
 
         Project memory temp = projects[project_id];
-        require(temp.validated,"Project is not validated yet");
+        // require(temp.validated,"Project is not validated yet");
         require(temp.endTime<block.timestamp, "Bidding is still going on");
         require(IsOwner(temp.owner), "Only the owner can end the auction.");
         require(temp.highestBid != 0, "There is no bid at the moment.");
