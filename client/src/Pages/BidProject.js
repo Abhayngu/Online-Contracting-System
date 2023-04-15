@@ -96,7 +96,7 @@ export default function BidProject() {
 								</h3>
 							</div>
 						) : (
-							<Spinner />
+							<></>
 						)}
 					</div>
 				</>
