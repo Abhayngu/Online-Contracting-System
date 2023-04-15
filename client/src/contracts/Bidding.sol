@@ -19,6 +19,7 @@ contract Bidding {
     event BidderLoges(string indexed project_id,address bidder, uint amount);
     event createParties(address party, string name);
     event deletedParties(address party, string name);
+    event ProjectLoges(Project P);
 
     mapping(string=>mapping(address=>uint)) bids;
     mapping(string => Project) projects;
@@ -66,6 +67,8 @@ contract Bidding {
             false,
             new address[](0)
         );
+        emit ProjectLoges(projects[project_id]);
+
     }
 
     
