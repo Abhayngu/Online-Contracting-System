@@ -1,4 +1,4 @@
-import React, {useContext , useEffect,useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import style from '../styles/style.css';
 import axios from 'axios';
 import Header from '../Components/Header';
@@ -52,35 +52,30 @@ function Register() {
 			setError(true);
 			setSubmitted(false);
 		} else {
-
-			try{
+			try {
 				await getWalletAddress()
-				.then(address => {
-					setWalletAddress(address);
-				})
-				.catch(error => {
-					console.error(`Error getting wallet address: ${error}`);
-				});
+					.then((address) => {
+						setWalletAddress(address);
+					})
+					.catch((error) => {
+						console.error(`Error getting wallet address: ${error}`);
+					});
 				console.log(walletAddress);
 				const tx = await val.contract_.methods.createParty(name).send({
-					from: walletAddress
+					from: walletAddress,
 					// value: web3.utils.toWei('1', 'ether')
 				});
-			}
-			catch(error){
-				const x = error.message.indexOf('reason')
-				const temp = error.message.substring(x, error.message.length)
-				const fb = temp.indexOf('}')
+			} catch (error) {
+				const x = error.message.indexOf('reason');
+				const temp = error.message.substring(x, error.message.length);
+				const fb = temp.indexOf('}');
 				const error_message = temp.substring(8, fb);
 				setError(true);
 				// setMessage(error_message);
 				// setLoading(false);
-				return ;
+				return;
 			}
 			const options = {
-
-				
-
 				method: 'POST',
 				url: 'http://localhost:2000/signup',
 				headers: {
@@ -91,7 +86,7 @@ function Register() {
 					email: email,
 					password: password,
 					description: 'some kind of description',
-					walletAddress: walletAddress
+					walletAddress: walletAddress,
 				},
 			};
 
@@ -107,7 +102,7 @@ function Register() {
 					// 	// value: web3.utils.toWei('1', 'ether')
 					// })
 					// console.log(tx);
-			
+
 					// tx.on('transactionHash', function(hash) {
 					// 	console.log('Transaction hash:', hash);
 					// }).on('confirmation', function(confirmationNumber, receipt) {
@@ -138,7 +133,6 @@ function Register() {
 	useEffect(() => {
 		// setContract(contract_instance());
 		// console.log(contract_);
-
 		// const init = async () => {
 		// 	const instance = await contract_instance();
 		// 	setContract(instance);
@@ -151,7 +145,7 @@ function Register() {
 		//   .catch(error => {
 		// 	console.error(`Error getting wallet address: ${error}`);
 		//   });
-	  }, []);
+	}, []);
 
 	// axios
 	// 		.get('http://localhost:2401/api/zomato/getCities')
