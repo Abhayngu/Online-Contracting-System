@@ -388,13 +388,11 @@ exports.validateProject = async (req, res, next) => {
 		},
 	});
 	if (decision == false) {
-		return res
-			.status(200)
-			.json({
-				sucess: true,
-				decision: false,
-				msg: 'Discarded project successfully',
-			});
+		return res.status(200).json({
+			sucess: true,
+			decision: false,
+			msg: 'Discarded project successfully',
+		});
 	}
 	if (count >= 3 && decision == true) {
 		try {
@@ -407,13 +405,11 @@ exports.validateProject = async (req, res, next) => {
 				getBiddingResult(projectId);
 			});
 
-			return res
-				.status(200)
-				.json({
-					sucess: true,
-					decision: true,
-					msg: 'Project validated successfully.',
-				});
+			return res.status(200).json({
+				sucess: true,
+				decision: true,
+				msg: 'Project validated successfully.',
+			});
 		} catch {
 			return res.status(400).json({
 				sucess: false,
@@ -542,7 +538,7 @@ exports.getProjectsForBidding = async (req, res, next) => {
 			$and: [
 				{ isValidated: true },
 				{ isIssued: false },
-				{ proposedBy: { $ne: id } },
+				{ 'proposedBy.id': { $ne: id } },
 				{
 					bidders: {
 						$not: {
