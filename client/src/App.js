@@ -12,7 +12,7 @@ import Issue from './Pages/Issue';
 import ValidateProject from './Pages/ValidateProject';
 import BidProject from './Pages/BidProject';
 import MakeProject from './Pages/MakeProject';
-import MyComponent from './Pages/Demo';
+// import MyComponent from './Pages/Demo';
 import { useState, createContext } from 'react';
 import UpdateContract from './Pages/UpdateContract';
 import RateProject from './Pages/RateProject';
@@ -49,7 +49,7 @@ function App() {
 		<GlobalContext.Provider value={{ contract_, web3_ }}>
 			<BrowserRouter>
 				<Routes>
-					<Route path="/test" element={<MyComponent />} />
+					{/* <Route path="/test" element={<MyComponent />} /> */}
 					<Route path="/" element={<Home />} />
 					<Route path="/project" element={<Project />} />
 					<Route path="/profile" element={<Profile />} />
