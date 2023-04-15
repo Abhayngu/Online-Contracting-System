@@ -5,6 +5,7 @@ import email from '../image/b.png';
 import pass from '../image/c.png';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
+import getWalletAddress from '../utils/connection';
 import { RiCollageLine } from 'react-icons/ri';
 import { GlobalContext } from '../App';
 import Spinner from '../Components/Spinner';
@@ -27,10 +28,12 @@ function Login() {
 	//  val.updateContract("string");
 	// console.log(val)
 
-	const isWalletAddressValid = (idOfUser) => {
+	const isWalletAddressValid = async (idOfUser) => {
+		const address = await getWalletAddress();
+		setWalletAddress(address);
 		const options = {
 			method: 'GET',
-			url: `http://localhost:2000//party/getWalletAddress/${idOfUser}`,
+			url: `http://localhost:2000/party/getWalletAddress/${idOfUser}`,
 			headers: {
 				'content-type': 'application/json',
 			},
@@ -39,7 +42,8 @@ function Login() {
 			.request(options)
 			.then((response) => {
 				console.log(response.data);
-				if (response.data.walletAddress == walletAddress) {
+				console.log(address);
+				if (response.data.walletAddress == address) {
 					setIsWalletAddressSame(true);
 				} else {
 					setIsWalletAddressSame(false);
@@ -74,32 +78,30 @@ function Login() {
 			.request(options)
 			.then((response) => {
 				const idOfUser = response.data.user._id;
-				// isWalletAddressValid(idOfUser);
-				if (isWalletAddressSame) {
-					setUsername('');
-					setPassword('');
-					setId(idOfUser);
-					sessionStorage.setItem('isLoggedIn', true);
-					sessionStorage.setItem(
-						'user',
-						JSON.stringify(response.data.user)
-					);
-					sessionStorage.setItem('id', idOfUser);
-					sessionStorage.setItem(
-						'isAdmin',
-						response.data.user.isAdmin
-					);
-					sessionStorage.setItem(
-						'isValidator',
-						response.data.user.isValidator
-					);
-					navigate(`/profile?id=${idOfUser}`);
-				} else {
-					setError(true);
-					setMessage(
-						'Wallet address of current user in metamask and platform is different'
-					);
-				}
+				// let x = isWalletAddressValid(idOfUser);
+				// console.log(isWalletAddressSame);
+				// if (x) {
+				setUsername('');
+				setPassword('');
+				setId(idOfUser);
+				sessionStorage.setItem('isLoggedIn', true);
+				sessionStorage.setItem(
+					'user',
+					JSON.stringify(response.data.user)
+				);
+				sessionStorage.setItem('id', idOfUser);
+				sessionStorage.setItem('isAdmin', response.data.user.isAdmin);
+				sessionStorage.setItem(
+					'isValidator',
+					response.data.user.isValidator
+				);
+				navigate(`/profile?id=${idOfUser}`);
+				// } else {
+				// 	setError(true);
+				// 	setMessage(
+				// 		'Wallet address of current user in metamask and platform is different'
+				// 	);
+				// }
 				setLoading(false);
 			})
 			.catch((error) => {
