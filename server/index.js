@@ -18,6 +18,7 @@ app.use((req, res, next) => {
 	res.setHeader('Access-Control-Allow-Headers', 'content-type');
 	next();
 });
+app.use(express.json());
 app.use(
 	session({
 		secret: 'screte key',
@@ -25,8 +26,6 @@ app.use(
 		saveUninitialized: true,
 	})
 );
-
-app.use(express.json());
 
 app.use(passport.session());
 app.use(passport.initialize());

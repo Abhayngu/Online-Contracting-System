@@ -1,18 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Header from '../Components/Header';
+import { Link } from 'react-router-dom';
 import homepageimg from './homepage.jpg';
-import { useNavigate } from 'react-router-dom';
 import StepBox from '../Components/StepBox';
 import TopProject from '../Components/TopProject';
 import { greenColor, blueColor } from '../globalVars';
 import Spinner from '../Components/Spinner';
-function Home() {
-	const [loading, setLoading] = useState(true);
-	const navigate = useNavigate();
-	const customStyle = {
+import axios from 'axios';
+class Home extends React.Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			loading: false,
+			loggedIn: false,
+			topThreeProjects: [],
+		};
+	}
+	componentDidMount() {
+		if (
+			sessionStorage.getItem('isLoggedIn') == null ||
+			sessionStorage.getItem('isLoggedIn') == 'false' ||
+			sessionStorage.getItem('isLoggedIn') == false
+		) {
+			sessionStorage.setItem('isLoggedIn', false);
+		} else {
+			this.setState({
+				loggedIn: true,
+			});
+		}
+		this.getTopBiddingProjects();
+	}
+	handleLoggedIn = (result) => {
+		console.log('handling logged in home page', result);
+		this.setState({ loggedIn: result });
+	};
+
+	customStyle = {
 		titleImageContainer: {
 			width: '100%',
 			height: '100vh',
+			minHeight: '600px',
 			marginBottom: '100px',
 			position: 'relative',
 		},
@@ -124,7 +151,7 @@ function Home() {
 		},
 	};
 
-	const issuerWorkingSteps = [
+	issuerWorkingSteps = [
 		{
 			stepcount: 1,
 			imgsrc: homepageimg,
@@ -145,7 +172,7 @@ function Home() {
 		},
 	];
 
-	const bidderWorkingSteps = [
+	bidderWorkingSteps = [
 		{
 			stepcount: 1,
 			imgsrc: homepageimg,
@@ -166,120 +193,131 @@ function Home() {
 		},
 	];
 
-	// API call to fetch these projects
-	// Hardcoded as of now
-	const topBiddingProjects = [
-		{ id: 1, name: 'abc', desc: 'sadfsdf' },
-		{ id: 2, name: 'def', desc: 'sagasdgdf' },
-		{ id: 3, name: 'ghi', desc: 'dsgjds' },
-	];
+	getTopBiddingProjects = () => {
+		this.setState({
+			loading: true,
+		});
+		const options = {
+			method: 'GET',
+			url: `http://localhost:2000/project/getTopThreeProjects`,
+			headers: {
+				'content-type': 'application/json',
+			},
+		};
 
-	const goToValidationPage = () => {
-		navigate('/validation');
+		axios
+			.request(options)
+			.then((response) => {
+				// console.log(response.data);
+				this.setState({
+					topThreeProjects: response.data.data,
+					loading: false,
+				});
+			})
+			.catch(function (error) {
+				console.error(error.message);
+				this.setState({
+					loading: false,
+				});
+			});
 	};
-	const goToIssuePage = () => {
-		navigate('/issuer');
-	};
+	render() {
+		return (
+			<React.Fragment>
+				{this.state.loading ? (
+					<Spinner />
+				) : (
+					<>
+						<Header
+							loggedIn={this.state.loggedIn}
+							handleLoggedIn={(result) => this.handleLoggedIn()}
+						/>
+						<div style={this.customStyle.titleImageContainer}>
+							<img
+								style={this.customStyle.titleImage}
+								src={homepageimg}
+							></img>
 
-	return (
-		<React.Fragment>
-			<Header />
-			<div style={customStyle.titleImageContainer}>
-				<img style={customStyle.titleImage} src={homepageimg}></img>
-				<div
-					onClick={goToValidationPage}
-					style={customStyle.validationButton}
-				>
-					Get Your Project Validated
-				</div>
-				<div onClick={goToIssuePage} style={customStyle.issueButton}>
-					Get Your Project Issued
-				</div>
-			</div>
-			<div style={customStyle.issuerStepsHeading}>
-				Understand How it Works for an Issuer ?
-			</div>
-			<div style={customStyle.issuerStepsContainer}>
-				{issuerWorkingSteps.map((step) => {
-					return (
-						<StepBox
-							stepcount={step.stepcount}
-							imgsrc={step.imgsrc}
-							desc={step.desc}
-							bgColor={step.bgColor}
-						/>
-					);
-				})}
-			</div>
-			<div style={customStyle.issuerStepsHeading}>
-				Understand How it Works for a Bidder ?
-			</div>
-			<div style={customStyle.bidderStepsContainer}>
-				{bidderWorkingSteps.map((step) => {
-					return (
-						<StepBox
-							stepcount={step.stepcount}
-							imgsrc={step.imgsrc}
-							desc={step.desc}
-							bgColor={step.bgColor}
-						/>
-					);
-				})}
-			</div>
-			<div style={customStyle.boldCenteredHeading}>
-				Some of the top bidding projects
-			</div>
-			<div style={customStyle.topProjectsContainer}>
-				{topBiddingProjects.map((project) => {
-					return (
-						<TopProject
-							id={project.id}
-							name={project.name}
-							desc={project.desc}
-						/>
-					);
-				})}
-			</div>
-			{/* <div style={customStyle.boldCenteredHeading}>
-				What do you get on Sign up?
-			</div> */}
-			{/* <div style={customStyle.signUpDesc}>
-				This Platform helps you to let your project done by some of the
-				top contractors as well as to bid for projects with no hassle
-				and 100% transparency!
-			</div>
-			<div style={customStyle.signUpContainer}>
-				<div style={customStyle.signUpLeftContainer}>
-					<div style={customStyle.signUpLeft}>
-						<div style={customStyle.signUpLeftHeading}>
-							Web Dashboard
+							{this.state.loggedIn ? (
+								<Link to="/validation">
+									<div
+										onClick={this.goToValidationPage}
+										style={
+											this.customStyle.validationButton
+										}
+									>
+										Get Your Project Validated
+									</div>
+								</Link>
+							) : (
+								<></>
+							)}
+							{this.state.loggedIn ? (
+								<Link to="/rateProject">
+									<div
+										onClick={this.goToIssuePage}
+										style={this.customStyle.issueButton}
+									>
+										Rate your done projects
+									</div>
+								</Link>
+							) : (
+								<></>
+							)}
 						</div>
-						<div style={customStyle.signUpLeftDesc}>
-							Manage all your projects and bidding at one place
+						<div style={this.customStyle.issuerStepsHeading}>
+							Understand How it Works for an Issuer ?
 						</div>
-					</div>
-					<div style={customStyle.signUpLeft}>
-						<div style={customStyle.signUpLeftHeading}>
-							API integration
+						<div style={this.customStyle.issuerStepsContainer}>
+							{this.issuerWorkingSteps.map((step) => {
+								return (
+									<StepBox
+										key={step.stepcount}
+										stepcount={step.stepcount}
+										imgsrc={step.imgsrc}
+										desc={step.desc}
+										bgColor={step.bgColor}
+									/>
+								);
+							})}
 						</div>
-						<div style={customStyle.signUpLeftDesc}>
-							Integration with third party APIs to manage all your
-							projects
+						<div style={this.customStyle.issuerStepsHeading}>
+							Understand How it Works for a Bidder ?
 						</div>
-					</div>
-					<div style={customStyle.signUpLeft}>
-						<div style={customStyle.signUpLeftHeading}>
-							Blockchain integration
+						<div style={this.customStyle.bidderStepsContainer}>
+							{this.bidderWorkingSteps.map((step) => {
+								return (
+									<StepBox
+										key={step.stepcount}
+										stepcount={step.stepcount}
+										imgsrc={step.imgsrc}
+										desc={step.desc}
+										bgColor={step.bgColor}
+									/>
+								);
+							})}
 						</div>
-						<div style={customStyle.signUpLeftDesc}>
-							Integration with Blockchain to give full
-							transparency and consistency in the bidding process
+						<div style={this.customStyle.boldCenteredHeading}>
+							Some of the top Implemented projects
 						</div>
-					</div>
-				</div>
-				<div style={customStyle.signUpRightContainer}></div>
-			</div> */}
-		</React.Fragment>
-	);
+						<div style={this.customStyle.topProjectsContainer}>
+							{this.state.topThreeProjects.map((project) => {
+								return (
+									<TopProject
+										key={project._id}
+										id={project._id}
+										name={project.name}
+										desc={project.description}
+										tokens={project.wonBy.token}
+									/>
+								);
+							})}
+						</div>
+					</>
+				)}
+			</React.Fragment>
+		);
+	}
 }
+
 export default Home;

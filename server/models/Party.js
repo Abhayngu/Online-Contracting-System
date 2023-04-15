@@ -57,10 +57,6 @@ const PartySchema = new mongoose.Schema(
 			type: String,
 			select: false,
 		},
-		description: {
-			type: String,
-			required: true,
-		},
 		isAnonymous: {
 			type: Boolean,
 			default: false,
@@ -83,9 +79,11 @@ const PartySchema = new mongoose.Schema(
 		},
 		rating: {
 			type: Number,
-			min: 0,
+			min: 1,
+
 			max: 5,
 		},
+
 		isAdmin: {
 			type: Boolean,
 			default: false,

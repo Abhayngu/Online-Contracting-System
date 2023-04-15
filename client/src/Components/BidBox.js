@@ -1,18 +1,49 @@
 import React, { useState, useEffect } from 'react';
-
-function BidBox({ name, tokens, proposedBy, isAnonymous, finishTime }) {
+import axios from 'axios';
+function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 	const [token, setToken] = useState(0);
 	const [dateTime, setDateTime] = useState('');
-	const [isError, setIsError] = useState(false);
-	const [error, setError] = useState('');
+	const [error, setError] = useState(false);
+	const [msg, setMessage] = useState('');
+	const [loading, setLoading] = useState(false);
 	const handleBid = () => {
-		if (token == '' || token == 0 || dateTime == '') {
-			setIsError(true);
-			setError('Enter all the fields');
-			console.log(tokens, proposedBy, name, isAnonymous, finishTime);
+		if (token == '' || dateTime == '') {
+			setError(true);
+			setMessage('Enter all the fields');
+		} else if (token == 0) {
+			setError(true);
+			setMessage('Token value should be more than 0');
 		} else {
-			setIsError(false);
+			setLoading(true);
+			setError(false);
 			setError('');
+
+			const options = {
+				method: 'PUT',
+				url: `http://localhost:2000/projectBidding`,
+				headers: {
+					'content-type': 'application/json',
+				},
+				data: {
+					partyId: sessionStorage.getItem('id'),
+					projectId: id,
+					tokenBid: token,
+					timeline: dateTime,
+				},
+			};
+
+			axios
+				.request(options)
+				.then((response) => {
+					console.log(response.data);
+					setError(true);
+					setMessage(response.data.msg);
+					setLoading(false);
+				})
+				.catch(function (error) {
+					console.error(error);
+					setLoading(false);
+				});
 		}
 	};
 	const handleTokenChange = (e) => {
@@ -88,16 +119,18 @@ function BidBox({ name, tokens, proposedBy, isAnonymous, finishTime }) {
 				<div style={customStyle.stepHeading}>
 					<span>{name}</span>
 				</div>
-				<div style={customStyle.stepHeading}>
-					Expected tokens : <span>{tokens}</span>
-				</div>
 				{isAnonymous ? (
 					<div style={customStyle.stepboxDesc}>{'Anonymous'}</div>
 				) : (
-					<div style={customStyle.stepboxDesc}>{proposedBy}</div>
+					<div style={customStyle.stepboxDesc}>
+						Proposed by : {proposedBy}
+					</div>
 				)}
+				{/* <div style={customStyle.stepHeading}>
+					Expected tokens : <span>{tokens}</span>
+				</div> */}
 				<div style={customStyle.stepboxDesc}>
-					Expected finish time : {finishTime.toISOString()}
+					Expected finish time : {finishTime}
 				</div>
 				<div
 					style={{
@@ -152,7 +185,7 @@ function BidBox({ name, tokens, proposedBy, isAnonymous, finishTime }) {
 						/>
 					</div>
 				</div>
-				{isError ? (
+				{error ? (
 					<div
 						style={{
 							color: 'red',
@@ -161,7 +194,7 @@ function BidBox({ name, tokens, proposedBy, isAnonymous, finishTime }) {
 							fontSize: '14px',
 						}}
 					>
-						{error}{' '}
+						{msg}{' '}
 					</div>
 				) : (
 					<></>

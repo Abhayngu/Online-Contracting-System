@@ -3,7 +3,7 @@ import style from '../styles/style.css';
 import axios from 'axios';
 import Header from '../Components/Header';
 import { useNavigate } from 'react-router-dom';
-function Form() {
+function Register() {
 	// States for registration
 	const navigate = useNavigate();
 	const [name, setName] = useState('');
@@ -42,6 +42,7 @@ function Form() {
 		e.preventDefault();
 		if (name === '' || email === '' || password === '') {
 			setError(true);
+			setSubmitted(false);
 		} else {
 			const options = {
 				method: 'POST',
@@ -72,20 +73,10 @@ function Form() {
 				.catch(function (error) {
 					console.error(error);
 					setError(true);
+					setSubmitted(false);
 				});
 		}
 	};
-
-	// axios
-	// 		.get('http://localhost:2401/api/zomato/getCities')
-	// 		.then((result) => {
-	// 			this.setState({
-	// 				cities: result.data.cities,
-	// 			});
-	// 		})
-	// 		.catch((error) => {
-	// 			console.log(error);
-	// 		});
 
 	// Showing success message
 	const successMessage = () => {
@@ -195,4 +186,4 @@ function Form() {
 	);
 }
 
-export default Form;
+export default Register;

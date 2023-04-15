@@ -43,6 +43,10 @@ const SystemSchema = new mongoose.Schema({
 		type: [mongoose.Schema.ObjectId],
 		ref: 'Party',
 	},
+	deletedParties: {
+		type: [mongoose.Schema.ObjectId],
+		ref: 'Party',
+	},
 });
 
 module.exports = mongoose.model('System', SystemSchema);
