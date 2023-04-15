@@ -24,7 +24,6 @@ exports.registerProject = async (req, res, next) => {
 		expectedFinishTime,
 		expectedTokens,
 		biddingDuration,
-
 	} = req.body;
 	let words = countWords(description);
 	words++;
@@ -55,7 +54,6 @@ exports.registerProject = async (req, res, next) => {
 			expectedFinishTime,
 			expectedTokens,
 			biddingDuration,
-	
 		});
 		const party = await Party.findByIdAndUpdate(
 			proposedBy.id,
@@ -65,15 +63,19 @@ exports.registerProject = async (req, res, next) => {
 						projectId: project._id,
 						projectName: name,
 						proposed: true,
-						
 					},
 				},
 			},
 			{ new: true }
 		);
-		res.status(200).json({ success : true, project, party,msg: 'Project registered sucessfully.' });
+		res.status(200).json({
+			success: true,
+			project,
+			party,
+			msg: 'Project registered sucessfully.',
+		});
 	} catch (err) {
-		res.status(400).json({ success : false, msg: err.message });
+		res.status(400).json({ success: false, msg: err.message });
 	}
 };
 
