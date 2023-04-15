@@ -89,7 +89,7 @@ import { GlobalContext } from '../App';
 				console.log( response.data.party.walletAddress)
 				// try{
 					// createProject(response.data.party._id,100,response.data.party.walletAddress);
-				val.contract_.methods.createProject(response.data.project._id,100).send({
+				val.contract_.methods.createProject(response.data.project._id,300).send({
 					from: response.data.party.walletAddress
 				})
 					

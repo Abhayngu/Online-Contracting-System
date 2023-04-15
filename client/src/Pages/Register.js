@@ -46,13 +46,41 @@ function Register() {
 	};
 
 	// Handling the form submission
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (name === '' || email === '' || password === '') {
 			setError(true);
 			setSubmitted(false);
 		} else {
+
+			try{
+				await getWalletAddress()
+				.then(address => {
+					setWalletAddress(address);
+				})
+				.catch(error => {
+					console.error(`Error getting wallet address: ${error}`);
+				});
+				console.log(walletAddress);
+				const tx = await val.contract_.methods.createParty(name).send({
+					from: walletAddress
+					// value: web3.utils.toWei('1', 'ether')
+				});
+			}
+			catch(error){
+				const x = error.message.indexOf('reason')
+				const temp = error.message.substring(x, error.message.length)
+				const fb = temp.indexOf('}')
+				const error_message = temp.substring(8, fb);
+				setError(true);
+				// setMessage(error_message);
+				// setLoading(false);
+				return ;
+			}
 			const options = {
+
+				
+
 				method: 'POST',
 				url: 'http://localhost:2000/signup',
 				headers: {
@@ -73,24 +101,24 @@ function Register() {
 					// Smart contract function call of createParty
 					// console.log("name",walletAddress);
 					// createParty(name,walletAddress);
-					console.log("contract",val.contract_);
-					const tx = val.contract_.methods.createParty(name).send({
-						from: walletAddress
-						// value: web3.utils.toWei('1', 'ether')
-					})
-					console.log(tx);
+					// console.log("contract",val.contract_);
+					// const tx = val.contract_.methods.createParty(name).send({
+					// 	from: walletAddress
+					// 	// value: web3.utils.toWei('1', 'ether')
+					// })
+					// console.log(tx);
 			
-					tx.on('transactionHash', function(hash) {
-						console.log('Transaction hash:', hash);
-					}).on('confirmation', function(confirmationNumber, receipt) {
-						console.log('Confirmation number:', confirmationNumber);
-					}).on('receipt', function(receipt) {
-						console.log('Transaction receipt:', receipt);
-					}).on('error', function(error) {
-						console.error(error);
-					});
+					// tx.on('transactionHash', function(hash) {
+					// 	console.log('Transaction hash:', hash);
+					// }).on('confirmation', function(confirmationNumber, receipt) {
+					// 	console.log('Confirmation number:', confirmationNumber);
+					// }).on('receipt', function(receipt) {
+					// 	console.log('Transaction receipt:', receipt);
+					// }).on('error', function(error) {
+					// 	console.error(error);
+					// });
 
-					console.log(response.data);
+					// console.log(response.data);
 					setSubmitted(true);
 					setError(false);
 					setEmail('');
@@ -116,13 +144,13 @@ function Register() {
 		// 	setContract(instance);
 		// };
 		// init();
-		getWalletAddress()
-		  .then(address => {
-			setWalletAddress(address);
-		  })
-		  .catch(error => {
-			console.error(`Error getting wallet address: ${error}`);
-		  });
+		// getWalletAddress()
+		//   .then(address => {
+		// 	setWalletAddress(address);
+		//   })
+		//   .catch(error => {
+		// 	console.error(`Error getting wallet address: ${error}`);
+		//   });
 	  }, []);
 
 	// axios

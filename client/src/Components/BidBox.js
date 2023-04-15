@@ -28,7 +28,7 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 				console.log("toekns",token);
 				await val.contract_.methods.bid(id).send({
 					from: userAddress,
-					// value: val.web3_.utils.toWei(token.toString(), 'wei')
+					// value: val.web3_.utils.toWei(token.toString(), 'ether')
 					value : tokenAmount
 				});
 			}

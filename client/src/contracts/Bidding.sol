@@ -107,7 +107,7 @@ contract Bidding {
         // bidder_address.send(amount);
     }
 
-    function endAuction(string memory project_id) public {
+    function endAuction(string memory project_id) public returns (address){
 
         Project memory temp = projects[project_id];
         // require(temp.validated,"Project is not validated yet");
@@ -129,5 +129,6 @@ contract Bidding {
                 withdraw(payable(addr),amount);
             }
         }
+        return temp.highestBidder;
     }
 }

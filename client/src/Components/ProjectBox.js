@@ -85,11 +85,12 @@ function ProjectBox({
 			const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
 			// const tokenAmount = val.web3_.utils.toBN(token.toString());
 			// console.log("toekns",token);
-			await val.contract_.methods.endAuction(id).send({
+			const walletAddress = await val.contract_.methods.endAuction(id).send({
 				from: userAddress,
 				// value: val.web3_.utils.toWei(token.toString(), 'wei')
 				// value : tokenAmount
 			});
+			console.log("Wallet Address After Bidding",walletAddress);
 			setLoading(false);
 		}
 		catch(error){
