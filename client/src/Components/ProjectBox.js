@@ -1,4 +1,4 @@
-import React, { useContext,useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { GlobalContext } from '../App';
@@ -81,29 +81,31 @@ function ProjectBox({
 		// 	setMessage('Bidding Can not be stopped now');
 		// }
 		setLoading(true);
-		try{
-			const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
+		try {
+			const userAddress = JSON.parse(
+				sessionStorage.getItem('user')
+			).walletAddress;
 			// const tokenAmount = val.web3_.utils.toBN(token.toString());
 			// console.log("toekns",token);
-			const walletAddress = await val.contract_.methods.endAuction(id).send({
-				from: userAddress,
-				// value: val.web3_.utils.toWei(token.toString(), 'wei')
-				// value : tokenAmount
-			});
-			console.log("Wallet Address After Bidding",walletAddress);
+			const walletAddress = await val.contract_.methods
+				.endAuction(id)
+				.send({
+					from: userAddress,
+					// value: val.web3_.utils.toWei(token.toString(), 'wei')
+					// value : tokenAmount
+				});
+			console.log('Wallet Address After Bidding', walletAddress);
 			setLoading(false);
-		}
-		catch(error){
-			const x = error.message.indexOf('reason')
-			const temp = error.message.substring(x, error.message.length)
-			const fb = temp.indexOf('}')
+		} catch (error) {
+			const x = error.message.indexOf('reason');
+			const temp = error.message.substring(x, error.message.length);
+			const fb = temp.indexOf('}');
 			const error_message = temp.substring(8, fb);
 			// setError(true);
 			setMessage(error_message);
 			setLoading(false);
-			return ;
+			return;
 		}
-
 	};
 	const customStyle = {
 		projectBox: {
@@ -183,6 +185,7 @@ function ProjectBox({
 							<></>
 						)}
 					</div>
+
 					<div
 						style={{
 							marginTop: '5px',

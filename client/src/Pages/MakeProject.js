@@ -96,6 +96,7 @@ export default function MakeProject() {
 									id={project._id}
 									name={project.name}
 									tokens={project.expectedTokens}
+									proposedById={project.proposedBy._id}
 									proposedBy={project.proposedBy.name}
 									isAnonymous={project.proposedBy.isAnonymous}
 									finishTime={project.expectedFinishTime}

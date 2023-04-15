@@ -79,6 +79,24 @@ exports.registerProject = async (req, res, next) => {
 	}
 };
 
+exports.updateProject = async (req, res, next) => {
+	const { projectId, tokens, description } = req.body;
+	if (Number(tokens) < 1000) {
+		return res
+			.status(400)
+			.json({ success: false, msg: 'At least 1000 tokens' });
+	}
+	if (description == '') {
+		return res
+			.status(400)
+			.json({ success: false, msg: 'Description cannot be empty' });
+	}
+	const project = await Project.findById(projectId);
+	await project.updateOne({ expectedTokens: tokens, description });
+	await project.save();
+	return res.status(200).json({ sucess: true, updateProject: project });
+};
+
 // get list of top three projects
 exports.getTop3Projects = async (req, res, next) => {
 	const projects = await Project.find({ implementationDone: true })
@@ -740,7 +758,7 @@ exports.projectsToDo = async (req, res, next) => {
 // To add a milestone
 // route : (put)/project/addMilestone
 exports.addMileStone = async (req, res, next) => {
-	const { partyId, projectId, milestoneDone } = req.body;
+	const { partyId, proposedId, projectId, milestoneDone } = req.body;
 	const party = await Party.findById(partyId);
 	if (!party) {
 		return res.status(400).json({ success: false, msg: 'Party Not Found' });
@@ -751,6 +769,12 @@ exports.addMileStone = async (req, res, next) => {
 		return res
 			.status(400)
 			.json({ success: false, msg: 'Project not found.' });
+	}
+	const proposedParty = await Party.findById(proposedId);
+	if (!proposedParty) {
+		return res
+			.status(400)
+			.json({ success: false, msg: 'Proposed party Not Found' });
 	}
 	const isNum = /^\d+$/.test(milestoneDone);
 	if (!isNum) {
@@ -793,6 +817,9 @@ exports.addMileStone = async (req, res, next) => {
 		await party.updateOne({
 			tokens: party.tokens + project.wonBy.token / 4,
 		});
+		await proposedParty.updateOne({
+			tokens: proposedParty - project.wonBy.token / 4,
+		});
 		return res.status(200).json({
 			success: true,
 			msg: `${milestoneDone} milestones are achieved out of ${4}`,
@@ -807,6 +834,9 @@ exports.addMileStone = async (req, res, next) => {
 	await party.updateOne({
 		projectsDone: party.projectsDone + 1,
 		tokens: party.tokens + project.wonBy.token / 4,
+	});
+	await proposedParty.updateOne({
+		tokens: proposedParty - project.wonBy.token / 4,
 	});
 	return res.status(200).json({
 		success: true,

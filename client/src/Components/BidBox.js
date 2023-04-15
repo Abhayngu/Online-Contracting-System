@@ -1,4 +1,4 @@
-import React, { useContext,useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { GlobalContext } from '../App';
 function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
@@ -9,7 +9,7 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 	const [loading, setLoading] = useState(false);
 	const val = useContext(GlobalContext);
 
-	console.log(val.contract_,val.web3_);
+	console.log(val.contract_, val.web3_);
 	const handleBid = async () => {
 		if (token == '' || dateTime == '') {
 			setError(true);
@@ -22,29 +22,29 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 			setError(false);
 			setMessage('');
 
-			try{
-				const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
+			try {
+				const userAddress = JSON.parse(
+					sessionStorage.getItem('user')
+				).walletAddress;
 				const tokenAmount = val.web3_.utils.toBN(token.toString());
-				console.log("toekns",token);
+				console.log('toekns', token);
 				await val.contract_.methods.bid(id).send({
 					from: userAddress,
 					// value: val.web3_.utils.toWei(token.toString(), 'ether')
-					value : tokenAmount
+					value: tokenAmount,
 				});
-			}
-			catch(error){
-				const x = error.message.indexOf('reason')
-				const temp = error.message.substring(x, error.message.length)
-				const fb = temp.indexOf('}')
+			} catch (error) {
+				const x = error.message.indexOf('reason');
+				const temp = error.message.substring(x, error.message.length);
+				const fb = temp.indexOf('}');
 				const error_message = temp.substring(8, fb);
 				setError(true);
 				setMessage(error_message);
 				setLoading(false);
-				return ;
+				return;
 			}
 
-			console.log("after token");
-
+			console.log('after token');
 
 			const options = {
 				method: 'PUT',
@@ -91,6 +91,7 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 			backgroundColor: 'lightgreen',
 			borderRadius: '10px',
 			padding: '15px',
+			marginBottom: '20px',
 		},
 		stepHeading: {
 			marginTop: '10px',

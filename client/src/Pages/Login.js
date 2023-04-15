@@ -22,7 +22,7 @@ function Login() {
 	const [id, setId] = useState('');
 	const [isAdmin, setIsAdmin] = useState(false);
 	const [walletAddress, setWalletAddress] = useState('');
-	const [isWalletAddressSame, setIsWalletAddressSame] = useState(false);
+	const [isWalletAddressSame, setIsWalletAddressSame] = useState(true);
 
 	//  val.updateContract("string");
 	// console.log(val)
@@ -74,7 +74,7 @@ function Login() {
 			.request(options)
 			.then((response) => {
 				const idOfUser = response.data.user._id;
-				isWalletAddressValid(idOfUser);
+				// isWalletAddressValid(idOfUser);
 				if (isWalletAddressSame) {
 					setUsername('');
 					setPassword('');

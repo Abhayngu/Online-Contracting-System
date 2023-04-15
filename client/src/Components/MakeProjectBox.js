@@ -6,6 +6,7 @@ function MakeProjectBox({
 	name,
 	tokens,
 	proposedBy,
+	proposedById,
 	isAnonymous,
 	finishTime,
 	mileStonesDone,
@@ -29,6 +30,7 @@ function MakeProjectBox({
 			},
 			data: {
 				partyId: sessionStorage.getItem('id'),
+				proposedId: proposedById,
 				projectId: id,
 				milestoneDone: currentMilestone + 1,
 			},

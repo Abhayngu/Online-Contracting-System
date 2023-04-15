@@ -27,6 +27,7 @@ const {
 	notValidatedProject,
 	validateProject,
 	getAllValidatedProject,
+	updateProject,
 	getProjectsForBidding,
 	bidOnProject,
 	projectBidWonByParty,
@@ -74,6 +75,7 @@ router.post('/registerProject', registerProject);
 
 // Project put routes
 router.put('/project/updateRating', updateRating);
+router.put('/project/updateProject', updateProject);
 
 // Validator Related routes
 router.put('/validateProj', validateProject);
