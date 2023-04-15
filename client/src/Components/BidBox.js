@@ -24,12 +24,12 @@ function BidBox({ id, name, tokens, proposedBy, isAnonymous, finishTime }) {
 
 			try{
 				const userAddress = JSON.parse(sessionStorage.getItem('user')).walletAddress;
-				const tokenAmount = val.web3_.utils.toBN(token.toString());
-				console.log("toekns",token);
-				await val.contract_.methods.bid(id).send({
+				// const tokenAmount = val.web3_.utils.toBN(token.toString());
+				console.log("toekns",id,token);
+				await val.contract_.methods.bid(id,parseInt(token)).send({
 					from: userAddress,
 					// value: val.web3_.utils.toWei(token.toString(), 'ether')
-					value : tokenAmount
+					// value : tokenAmount
 				});
 			}
 			catch(error){
